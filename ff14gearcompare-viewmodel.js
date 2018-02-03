@@ -5,7 +5,8 @@ var parserViewModel = function() {
     var model = this;
 
     model.classList = ko.observableArray([
-        "Paladin"
+        ""
+        ,"Paladin"
         ,"Warrior"
         ,"Dark Knight"
         ,"White Mage"
