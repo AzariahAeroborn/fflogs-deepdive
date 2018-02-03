@@ -1,9 +1,13 @@
 <html>
 <head>
-    <title>FF14 Combat Timeline</title>
+    <title>FF14 Stat Comparisons - Based on Theoryjerks Spreadsheet</title>
     <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.4.2.js"></script>
 </head>
 <body>
-Hello world.
+Choose Class:
+<br><select data-bind="options: classList, value: selectedClass"></select>
+<br><br>
+<div data-bind="value: selectedClass"></div>
 </body>
+<script type="text/javascript" src="ff14parser-viewmodel.js"></script>
 </html>
