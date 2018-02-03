@@ -4,10 +4,30 @@
     <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.4.2.js"></script>
 </head>
 <body>
-Choose Class:
-<br><select data-bind="options: classList, value: selectedClass"></select>
+Choose Class: <select data-bind="options: classList, value: selectedClass"></select>
 <br><br>
-<div data-bind="value: selectedClass"></div>
+<div data-bind="text: selectedClass"></div>
+<br><br>
+<table data-bind="with: selectedClassGear">
+    <thead>
+        <tr>
+            <th>Item Name</th>
+            <th>Item Level</th>
+            <!-- ko foreach: stats -->
+            <th data-bind="text: $data"></th>
+            <!-- /ko -->
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: weapon">
+        <tr>
+            <td data-bind="text: name"></td>
+            <td data-bind="text: level"></td>
+            <!-- ko foreach: $parent.stats -->
+            <td>Bob</td>
+            <!-- /ko -->
+        </tr>
+    </tbody>
+</table>
 </body>
 <script type="text/javascript" src="ff14parser-viewmodel.js"></script>
 </html>
