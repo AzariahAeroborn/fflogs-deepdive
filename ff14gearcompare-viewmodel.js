@@ -26,7 +26,6 @@ var parserViewModel = function() {
     model.GearOptions = ko.observableArray([
         {class: "Paladin"
         ,stats: ["Strength", "Direct Hit", "Critical Hit", "Determination", "Skill Speed", "Vitality", "Tenacity"]
-        ,statproperties: ["strength", "directhit", "criticalhit", "determination", "skillspeed", "vitality", "tenacity"]
         ,weapon: [
                 {
                     name: "Nightsteel Sword"
@@ -109,24 +108,6 @@ var parserViewModel = function() {
         return filtered
     });
 
-    ko.bindingHandlers.displayStats = {
-        init: function(element, valueAccessor, allBindings) {
-            var itemStats = valueAccessor();
-            var itemStatsUnwrapped = ko.unwrap(itemstats);
-            var statsArray = allBindings.get('statsarray');
-
-            var child = ko.virtualElements.firstChild(elem),
-                childElems
-            ko.utils.arrayForEach(statsArray, function(stat){
-                output.push(itemStatsUnwrapped[stat]);
-            });
-
-            return output;
-        },
-        update: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
-
-        }
-    }
 };
 
 ko.applyBindings(new parserViewModel());
