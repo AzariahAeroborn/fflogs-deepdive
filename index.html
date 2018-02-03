@@ -2,6 +2,7 @@
 <head>
     <title>FF14 Stat Comparisons - Based on Theoryjerks Spreadsheet</title>
     <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.4.2.js"></script>
+    <script type="text/css" src="ff14gearcompare.css"></script>
 </head>
 <body>
 Choose Class: <select data-bind="options: classList, value: selectedClass"></select>
@@ -19,7 +20,7 @@ Choose Class: <select data-bind="options: classList, value: selectedClass"></sel
         </tr>
     </thead>
     <tbody data-bind="foreach: weapon">
-        <tr>
+        <tr data-bind="css: { selected: selected() }">
             <td data-bind="text: name"></td>
             <td data-bind="text: level"></td>
             <!-- ko foreach: stats -->
@@ -29,5 +30,5 @@ Choose Class: <select data-bind="options: classList, value: selectedClass"></sel
     </tbody>
 </table>
 </body>
-<script type="text/javascript" src="ff14parser-viewmodel.js"></script>
+<script type="text/javascript" src="ff14gearcompare-viewmodel.js"></script>
 </html>

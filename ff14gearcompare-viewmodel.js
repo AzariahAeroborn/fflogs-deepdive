@@ -40,6 +40,7 @@ var parserViewModel = function() {
                         , {name: "vitality", value: 241}
                         , {name: "tenacity", value: null}
                     ]
+                   ,selected: ko.observable(true)
                 }
                ,{
                     name: "Byakko's Stone Sword"
@@ -53,6 +54,7 @@ var parserViewModel = function() {
                         , {name: "vitality", value: 249}
                         , {name: "tenacity", value: null}
                     ]
+                    ,selected: ko.observable(false)
                 }
                 ,{
                     name: "Homura"
@@ -66,6 +68,7 @@ var parserViewModel = function() {
                         , {name: "vitality", value: 256}
                         , {name: "tenacity", value: 149}
                     ]
+                    ,selected: ko.observable(false)
                 }
                 ,{
                     name: "Homura Kai"
@@ -79,6 +82,7 @@ var parserViewModel = function() {
                         , {name: "vitality", value: 271}
                         , {name: "tenacity", value: 156}
                     ]
+                    ,selected: ko.observable(false)
                 }
                 ,{
                     name: "Diamond Sword"
@@ -92,6 +96,7 @@ var parserViewModel = function() {
                         , {name: "vitality", value: 279}
                         , {name: "tenacity", value: null}
                     ]
+                    ,selected: ko.observable(false)
                 }
         ]
         }
