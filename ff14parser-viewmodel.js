@@ -38,7 +38,7 @@ var parserViewModel = function() {
     ]);
     model.selectedClassGear = ko.computed(function() {
         return ko.utils.arrayFilter(model.GearOptions(), function(gear){
-            return gear.class == model.SelectedClass();
+            return gear.class == model.selectedClass();
         })
     });
 };
