@@ -22,8 +22,8 @@ Choose Class: <select data-bind="options: classList, value: selectedClass"></sel
         <tr>
             <td data-bind="text: name"></td>
             <td data-bind="text: level"></td>
-            <!-- ko foreach: $parent.stats -->
-            <td>Bob</td>
+            <!-- ko foreach: $parent.statproperties -->
+            <td data-bind="text: $data"></td>
             <!-- /ko -->
         </tr>
     </tbody>
