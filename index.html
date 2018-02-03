@@ -8,7 +8,7 @@ Choose Class: <select data-bind="options: classList, value: selectedClass"></sel
 <br><br>
 <div data-bind="text: selectedClass"></div>
 <br><br>
-<table data-bind="with: selectedClassGear">
+<table data-bind="foreach: selectedClassGear">
     <thead>
         <tr>
             <th>Item Name</th>
