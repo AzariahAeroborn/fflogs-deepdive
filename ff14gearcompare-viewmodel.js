@@ -64,7 +64,11 @@ var parserViewModel = function() {
     model.roleStat = ko.observable(0);
 
     model.effectiveWeaponDamage = ko.computed(function() {
-        return model.WeaponDamage() + Math.floor(292 + model.SelectedClass().weaponDamageMod / 1000);
+        // Default to 100 for weaponDamageMod if no class is selected (safety for initialization)
+        var weaponDamageMod = 100;
+        if ( model.selectedClass() ) { weaponDamageMod = model.selectedClass().weaponDamageMod }
+
+        return model.weaponDamage() + Math.floor(292 + weaponDamageMod / 1000);
     });
     model.mainStatDamage = ko.computed(function() {
         // include 3% party bonus to main stat
