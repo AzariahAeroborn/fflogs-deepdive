@@ -332,15 +332,15 @@ var parserViewModel = function() {
                     model.weaponDamage(),
                     weaponDamageMod,
                     model.mainStat(),
-                    model.criticalHit() + this.criticalHitEffect(),
-                    model.directHit() + this.directHitEffect(),
-                    model.determination() + this.determinationEffect(),
+                    model.criticalHit() + curFood.criticalHitEffect(),
+                    model.directHit() + curFood.directHitEffect(),
+                    model.determination() + curFood.determinationEffect(),
                     roleStatName,
-                    model.roleStat() + this.roleEffect()
+                    model.roleStat() + curFood.roleEffect()
                 );
             });
             curFood.hitDamageEffect = ko.computed(function() {
-                var change = this.hitDamage() / model.hitDamage();
+                var change = curFood.hitDamage() / model.hitDamage();
                 if ( change < 0 ) { return "-" + Math.Floor(change*1000)/10 + "%" }
                 else { return "+" + Math.Floor(change*1000)/10 + "%" }
             });
@@ -356,16 +356,16 @@ var parserViewModel = function() {
                     model.weaponDamage(),
                     weaponDamageMod,
                     model.mainStat(),
-                    model.criticalHit() + this.criticalHitEffect(),
-                    model.directHit() + this.directHitEffect(),
-                    model.determination() + this.determinationEffect(),
-                    model.speedStat() + this.speedEffect(),
+                    model.criticalHit() + curFood.criticalHitEffect(),
+                    model.directHit() + curFood.directHitEffect(),
+                    model.determination() + curFood.determinationEffect(),
+                    model.speedStat() + curFood.speedEffect(),
                     roleStatName,
-                    model.roleStat() + this.roleEffect()
+                    model.roleStat() + curFood.roleEffect()
                 );
             });
             curFood.dotDamageEffect = ko.computed(function() {
-                var change = this.dotDamage() / model.dotDamage();
+                var change = curFood.dotDamage() / model.dotDamage();
                 if ( change < 0 ) { return "-" + Math.Floor(change*1000)/10 + "%" }
                 else { return "+" + Math.Floor(change*1000)/10 + "%" }
             });
