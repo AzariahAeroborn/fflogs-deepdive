@@ -65,8 +65,8 @@ var parserViewModel = function() {
     });
     model.roleStatName = ko.computed(function() {
         // early return if no class selected yet, or if class does not have a specified roleStat
-        if ( model.selectedJob() === null || model.selectedJob() === undefined ) { return "" }
-        if ( model.selectedJob().roleStat === null ) { return "" }
+        if ( model.selectedJob() === null || model.selectedJob() === undefined ) { return null }
+        if ( model.selectedJob().roleStat === null ) { return null }
 
         var roleStat = ko.utils.arrayFilter(model.statNames(), function(stat){
             return stat.stat === model.selectedJob().roleStat;
@@ -87,7 +87,7 @@ var parserViewModel = function() {
         var weaponDamageMod = 100;
         if ( model.selectedJob() ) { weaponDamageMod = model.selectedJob().weaponDamageMod }
 
-        return Number(model.weaponDamage()) + Math.floor(292 + weaponDamageMod / 1000);
+        return Number(model.weaponDamage()) + Math.floor(292 * weaponDamageMod / 1000);
     });
     model.mainStatDamage = ko.computed(function() {
         // include 3% party bonus to main stat

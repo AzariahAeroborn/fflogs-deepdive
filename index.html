@@ -31,7 +31,7 @@ Choose Class: <select data-bind="options: jobList, optionsText: 'displayName', v
         <th data-bind="text: speedStatName"></th>
         <td><input type="text" data-bind="value: speedStat"></td>
     </tr>
-    <!-- ko if: roleStatName !== "" -->
+    <!-- ko if: roleStatName -->
     <tr>
         <th data-bind="text: roleStatName"></th>
         <td><input type="text" data-bind="value: roleStat"></td>
