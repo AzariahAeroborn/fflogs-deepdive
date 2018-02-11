@@ -340,7 +340,8 @@ var parserViewModel = function() {
                 );
             });
             curFood.hitDamageEffect = ko.computed(function() {
-                var change = Math.Floor(curFood.hitDamage() / model.hitDamage()*1000)/10;
+                var change = curFood.hitDamage() / model.hitDamage();
+                change = Math.Floor(change * 1000) / 10;
                 if ( change < 0 ) { return "-" + change + "%" }
                 else { return "+" + change + "%" }
             });
@@ -365,7 +366,8 @@ var parserViewModel = function() {
                 );
             });
             curFood.dotDamageEffect = ko.computed(function() {
-                var change = Math.Floor(curFood.dotDamage() / model.dotDamage()*1000)/10;
+                var change = curFood.dotDamage() / model.dotDamage();
+                change = Math.Floor(change * 1000) / 10;
                 if ( change < 0 ) { return "-" + change + "%" }
                 else { return "+" + change + "%" }
             });
