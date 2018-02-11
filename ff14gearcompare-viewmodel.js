@@ -225,19 +225,31 @@ var parserViewModel = function() {
                var foodEffect = ko.utils.arrayFirst(curFood.stats, function(stat){
                    return stat.stat === "criticalhit";
                });
-               return Math.min(Math.floor(model.criticalHit() * foodEffect.increase),foodEffect.max);
+               if ( foodEffect ) {
+                   return Math.min(Math.floor(model.criticalHit() * foodEffect.increase),foodEffect.max);
+               } else {
+                   return "";
+               }
             });
             curFood.directHitEffect = ko.computed(function(){
                 var foodEffect = ko.utils.arrayFirst(curFood.stats, function(stat){
                     return stat.stat === "directhit";
                 });
-                return Math.min(Math.floor(model.directHit() * foodEffect.increase),foodEffect.max);
+                if ( foodEffect ) {
+                    return Math.min(Math.floor(model.directHit() * foodEffect.increase),foodEffect.max);
+                } else {
+                    return "";
+                }
             });
             curFood.determinationEffect = ko.computed(function(){
                 var foodEffect = ko.utils.arrayFirst(curFood.stats, function(stat){
                     return stat.stat === "determination";
                 });
-                return Math.min(Math.floor(model.determination() * foodEffect.increase),foodEffect.max);
+                if ( foodEffect ) {
+                    return Math.min(Math.floor(model.determination() * foodEffect.increase),foodEffect.max);
+                } else {
+                    return "";
+                }
             });
             curFood.speedEffect = ko.computed(function(){
                 // early return if no class selected yet
@@ -246,7 +258,11 @@ var parserViewModel = function() {
                 var foodEffect = ko.utils.arrayFirst(curFood.stats, function(stat){
                     return stat.stat === model.selectedJob().speedStat;
                 });
-                return Math.min(Math.floor(model.speedStat() * foodEffect.increase),foodEffect.max);
+                if ( foodEffect ) {
+                    return Math.min(Math.floor(model.speedStat() * foodEffect.increase),foodEffect.max);
+                } else {
+                    return "";
+                }
             });
             curFood.roleEffect = ko.computed(function(){
                 // early return if no class selected yet
@@ -255,7 +271,11 @@ var parserViewModel = function() {
                 var foodEffect = ko.utils.arrayFirst(curFood.stats, function(stat){
                     return stat.stat === model.selectedJob().roleStat;
                 });
-                return Math.min(Math.floor(model.roleStat() * foodEffect.increase),foodEffect.max);
+                if ( foodEffect ) {
+                    return Math.min(Math.floor(model.roleStat() * foodEffect.increase),foodEffect.max);
+                } else {
+                    return "";
+                }
             });
         })
 
