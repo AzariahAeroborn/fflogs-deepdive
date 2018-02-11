@@ -36,21 +36,23 @@ var parserViewModel = function() {
     ]);
     model.selectedClass = ko.observable();
     model.selectedClass.mainStatName = ko.computed(function() {
+        // early return if no class selected yet
+        if ( model.selectedClass() === null ) { return "" }
+
         var mainStat = ko.utils.arrayFilter(model.statNames(), function(stat){
             return stat.stat === model.selectedClass().mainStat;
         });
         return mainStat.name;
     });
     model.selectedClass.roleStatName = ko.computed(function() {
-        if ( model.selectedClass().roleStat === null )
-        { return "" }
-        else
-        {
-            var roleStat = ko.utils.arrayFilter(model.statNames(), function(stat){
-                return stat.stat === model.selectedClass().roleStat;
-            });
-            return roleStat.name;
-        }
+        // early return if no class selected yet, or if class does not have a specified roleStat
+        if ( model.selectedClass() === null ) { return "" }
+        if ( model.selectedClass().roleStat === null ) { return "" }
+
+        var roleStat = ko.utils.arrayFilter(model.statNames(), function(stat){
+            return stat.stat === model.selectedClass().roleStat;
+        });
+        return roleStat.name;
     });
 
     model.weaponDamage = ko.observable(0);
@@ -61,22 +63,6 @@ var parserViewModel = function() {
     model.speedStat = ko.observable(0);
     model.roleStat = ko.observable(0);
 
-    model.damage = ko.computed(function() {
-        // calculate base damage of a 100 potency attack
-        var baseDamage = Math.floor(model.effectiveWeaponDamage() * model.mainStatDamage());
-        baseDamage = Math.floor(baseDamage * model.determinationDamage());
-        baseDamage = Math.floor(baseDamage * model.roleStatDamage());
-        var damage =
-        // Normal hit rate * base damage
-        ( 1 - model.criticalHitRate() - model.directHitRate() + model.criticalHitRate() * model.directHitRate() ) * baseDamage +
-        // Critical hit rate * critical damage (exclude critical + direct hits)
-        ( model.criticalHitRate() * ( 1 - model.directHitRate() ) ) * baseDamage * model.criticalHitDamage() +
-        // Direct hit rate * direct hit damage (exclude critical + direct hits)
-        ( model.directHitRate() * ( 1 - model.criticalHitRate() ) ) * baseDamage * model.directHitDamage() +
-        // Critical+Direct Hit rate * critical damage * direct hit damage
-        ( model.criticalHitRate() * model.directHitRate() ) * baseDamage * model.criticalHitDamage() * model.directHitDamage();
-        return damage;
-    });
     model.effectiveWeaponDamage = ko.computed(function() {
         return model.WeaponDamage() + Math.floor(292 + model.SelectedClass().weaponDamageMod / 1000);
     });
@@ -104,6 +90,23 @@ var parserViewModel = function() {
        } else {
            return 1;
        }
+    });
+
+    model.damage = ko.computed(function() {
+        // calculate base damage of a 100 potency attack
+        var baseDamage = Math.floor(model.effectiveWeaponDamage() * model.mainStatDamage());
+        baseDamage = Math.floor(baseDamage * model.determinationDamage());
+        baseDamage = Math.floor(baseDamage * model.roleStatDamage());
+        var damage =
+            // Normal hit rate * base damage
+            ( 1 - model.criticalHitRate() - model.directHitRate() + model.criticalHitRate() * model.directHitRate() ) * baseDamage +
+            // Critical hit rate * critical damage (exclude critical + direct hits)
+            ( model.criticalHitRate() * ( 1 - model.directHitRate() ) ) * baseDamage * model.criticalHitDamage() +
+            // Direct hit rate * direct hit damage (exclude critical + direct hits)
+            ( model.directHitRate() * ( 1 - model.criticalHitRate() ) ) * baseDamage * model.directHitDamage() +
+            // Critical+Direct Hit rate * critical damage * direct hit damage
+            ( model.criticalHitRate() * model.directHitRate() ) * baseDamage * model.criticalHitDamage() * model.directHitDamage();
+        return damage;
     });
 
     model.GearOptions = ko.observableArray([

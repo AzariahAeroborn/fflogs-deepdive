@@ -6,18 +6,42 @@
 </head>
 <body>
 Choose Class: <select data-bind="options: classList, value: selectedClass"></select>
-<br>
-<br><span>Weapon Damage</span><span><input type="text" data-bind="value: weaponDamage"></span>
-<br><span data-bind="text: selectedClass.mainStatName"></span><span><input type="text" data-bind="value: mainStat"></span>
-<br><span>Critical Hit</span><span><input type="text" data-bind="value: criticalHit"></span>
-<br><span>Direct Hit</span><span><input type="text" data-bind="value: directHit"></span>
-<br><span>Determination</span><span><input type="text" data-bind="value: determination"></span>
-<br><span data-bind="text: selectedClass.speedStatName"></span><span><input type="text" data-bind="value: speedStat"></span>
-<!-- ko if: selectedClass.roleStatName() !== null -->
-<br><span data-bind="text: selectedClass.roleStatName"></span><span><input type="text" data-bind="value: roleStat"></span>
-<!-- /ko -->
-<br>
-<br><span>100 Potency Hit Damage: </span><span data-bind="value: damage"></span>
+<table>
+    <tr>
+        <th>Weapon Damage</th>
+        <td><input type="text" data-bind="value: weaponDamage"></td>
+    </tr>
+    <tr>
+        <th data-bind="text: selectedClass.mainStatName"></th>
+        <td><input type="text" data-bind="value: mainStat"></td>
+    </tr>
+    <tr>
+        <th>Critical Hit</th>
+        <td><input type="text" data-bind="value: criticalHit"></td>
+    </tr>
+    <tr>
+        <th>Direct Hit</th>
+        <td><input type="text" data-bind="value: directHit"></td>
+    </tr>
+    <tr>
+        <th>Determination</th>
+        <td><input type="text" data-bind="value: determination"></td>
+    </tr>
+    <tr>
+        <th data-bind="text: selectedClass.speedStatName"></th>
+        <td><input type="text" data-bind="value: speedStat"></td>
+    </tr>
+    <!-- ko if: selectedClass.roleStatName() !== "" -->
+    <tr>
+        <th data-bind="text: selectedClass.roleStatName"></th>
+        <td><input type="text" data-bind="value: roleStat"></td>
+    </tr>
+    <!-- /ko -->
+    <tr>
+        <th>100 Potency Hit Damage: </th>
+        <td data-bind="value: damage"></td>
+    </tr>
+</table>
 </body>
 <script type="text/javascript" src="ff14gearcompare-viewmodel.js"></script>
 </html>
