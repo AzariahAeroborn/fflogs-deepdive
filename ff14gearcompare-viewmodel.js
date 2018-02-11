@@ -93,7 +93,7 @@ var parserViewModel = function() {
     model.roleStat = ko.observable(364);
 
     function effectiveWeaponDamage(weaponDamage,weaponDamageMod) {
-        return Number(weaponDamage + Math.floor(292 * weaponDamageMod / 1000);
+        return Number(weaponDamage) + Math.floor(292 * weaponDamageMod / 1000);
     }
     function mainStatDamage(mainStat) {
         // include 3% party bonus to main stat
