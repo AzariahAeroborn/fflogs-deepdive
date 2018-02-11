@@ -64,7 +64,7 @@ Choose Class: <select data-bind="options: jobList, optionsText: 'displayName', v
         <td></td>
     </tr>
     <tr style="margin-top: 2em;">
-        <!-- ko if: !roleStatName -->
+        <!-- ko if: roleStatName() === null -->
         <th colspan="9" align="center">Food Effects</th>
         <!-- /ko -->
         <!-- ko if: roleStatName -->
@@ -72,7 +72,7 @@ Choose Class: <select data-bind="options: jobList, optionsText: 'displayName', v
         <!-- /ko -->
     </tr>
     <!-- ko foreach: foodEffects -->
-    <tr>
+    <tr align="right">
         <td data-bind="text: name"></td>
         <td></td>
         <td></td>
