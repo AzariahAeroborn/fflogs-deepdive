@@ -124,10 +124,10 @@ var parserViewModel = function() {
         return 1;
     }
     function hitDamage(weaponDamage, weaponDamageMod, mainStat, criticalHit, directHit, determination, roleStatName, roleStat) {
-        var criticalHitRate = criticalHitRate(criticalHit);
-        var criticalHitDamage = criticalHitDamage(criticalHit);
-        var directHitRate = directHitRate(directHit);
-        var directHitDamage = directHitDamage();
+        var _criticalHitRate = criticalHitRate(criticalHit);
+        var _criticalHitDamage = criticalHitDamage(criticalHit);
+        var _directHitRate = directHitRate(directHit);
+        var _directHitDamage = directHitDamage();
 
         // calculate base damage of a 100 potency attack
         var baseDamage = Math.floor(100 * effectiveWeaponDamage(weaponDamage,weaponDamageMod) * mainStatDamage(mainStat));
@@ -135,20 +135,20 @@ var parserViewModel = function() {
         baseDamage = Math.floor(baseDamage * roleStatDamage(roleStatName,roleStat) / 100);
         var damage =
             // Normal hit rate * base damage
-            ( 1 - criticalHitRate - directHitRate + criticalHitRate * directHitRate ) * baseDamage +
+            ( 1 - _criticalHitRate - _directHitRate + _criticalHitRate * _directHitRate ) * baseDamage +
             // Critical hit rate * critical damage (exclude critical + direct hits)
-            ( criticalHitRate * ( 1 - directHitRate ) ) * baseDamage * criticalHitDamage +
+            ( _criticalHitRate * ( 1 - _directHitRate ) ) * baseDamage * _criticalHitDamage +
             // Direct hit rate * direct hit damage (exclude critical + direct hits)
-            ( directHitRate * ( 1 - criticalHitRate ) ) * baseDamage * directHitDamage +
+            ( _directHitRate * ( 1 - _criticalHitRate ) ) * baseDamage * _directHitDamage +
             // Critical+Direct Hit rate * critical damage * direct hit damage
-            ( criticalHitRate * directHitRate ) * baseDamage * criticalHitDamage * directHitDamage;
+            ( _criticalHitRate * _directHitRate ) * baseDamage * _criticalHitDamage * _directHitDamage;
         return Math.floor(10*damage)/10;
     }
     function dotDamage(weaponDamage, weaponDamageMod, mainStat, criticalHit, directHit, determination, speedStat, roleStatName, roleStat) {
-        var criticalHitRate = criticalHitRate(criticalHit);
-        var criticalHitDamage = criticalHitDamage(criticalHit);
-        var directHitRate = directHitRate(directHit);
-        var directHitDamage = directHitDamage();
+        var _criticalHitRate = criticalHitRate(criticalHit);
+        var _criticalHitDamage = criticalHitDamage(criticalHit);
+        var _directHitRate = directHitRate(directHit);
+        var _directHitDamage = directHitDamage();
 
         // calculate base damage of a 100 potency attack
         var baseDamage = Math.floor(100 * effectiveWeaponDamage(weaponDamage,weaponDamageMod) * mainStatDamage(mainStat));
@@ -156,13 +156,13 @@ var parserViewModel = function() {
         baseDamage = Math.floor(baseDamage * roleStatDamage(roleStatName,roleStat) / 100);
         var damage =
             // Normal hit rate * base damage
-            ( 1 - criticalHitRate - directHitRate + criticalHitRate * directHitRate ) * baseDamage +
+            ( 1 - _criticalHitRate - _directHitRate + _criticalHitRate * _directHitRate ) * baseDamage +
             // Critical hit rate * critical damage (exclude critical + direct hits)
-            ( criticalHitRate * ( 1 - directHitRate ) ) * baseDamage * criticalHitDamage +
+            ( _criticalHitRate * ( 1 - _directHitRate ) ) * baseDamage * _criticalHitDamage +
             // Direct hit rate * direct hit damage (exclude critical + direct hits)
-            ( directHitRate * ( 1 - criticalHitRate ) ) * baseDamage * directHitDamage +
+            ( _directHitRate * ( 1 - _criticalHitRate ) ) * baseDamage * _directHitDamage +
             // Critical+Direct Hit rate * critical damage * direct hit damage
-            ( criticalHitRate * directHitRate ) * baseDamage * criticalHitDamage * directHitDamage;
+            ( _criticalHitRate * _directHitRate ) * baseDamage * _criticalHitDamage * _directHitDamage;
         return Math.floor(10*damage)/10;
     }
 
