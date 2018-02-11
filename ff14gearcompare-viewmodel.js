@@ -37,7 +37,7 @@ var parserViewModel = function() {
     model.selectedClass = ko.observable();
     model.selectedClass.mainStatName = ko.computed(function() {
         // early return if no class selected yet
-        if ( model.selectedClass() === null ) { return "" }
+        if ( model.selectedClass() === null || model.selectedClass() === undefined ) { return "" }
 
         var mainStat = ko.utils.arrayFilter(model.statNames(), function(stat){
             return stat.stat === model.selectedClass().mainStat;
@@ -46,7 +46,7 @@ var parserViewModel = function() {
     });
     model.selectedClass.roleStatName = ko.computed(function() {
         // early return if no class selected yet, or if class does not have a specified roleStat
-        if ( model.selectedClass() === null ) { return "" }
+        if ( model.selectedClass() === null || model.selectedClass() === undefined ) { return "" }
         if ( model.selectedClass().roleStat === null ) { return "" }
 
         var roleStat = ko.utils.arrayFilter(model.statNames(), function(stat){
