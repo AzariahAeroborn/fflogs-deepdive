@@ -21,6 +21,19 @@ var parserViewModel = function() {
         ,{class: "SMN", displayName: "Summoner", offHand: false, mainStat: "intelligence", speedStat: "spellspeed", roleStat: null, weaponDamageMod: 115 }
         ,{class: "RDM", displayName: "Red Mage", offHand: false, mainStat: "intelligence", speedStat: "spellspeed", roleStat: null, weaponDamageMod: 115 }
     ]);
+    model.statNames = ko.observableArray([
+        {stat: "strength", name: "Strength", type: "mainStat"}
+        ,{stat: "mind", name: "Mind", type: "mainStat"}
+        ,{stat: "dexterity", name: "Dexterity", type: "mainStat"}
+        ,{stat: "intelligence", name: "Intelligence", type: "mainStat"}
+        ,{stat: "criticalhit", name: "Critical Hit", type: "generalStat"}
+        ,{stat: "directhit", name: "Direct Hit", type: "generalStat"}
+        ,{stat: "determination", name: "Determination", type: "generalStat"}
+        ,{stat: "skillspeed", name: "Skill Speed", type: "speedStat"}
+        ,{stat: "spellspeed", name: "Spell Speed", type: "speedStat"}
+        ,{stat: "tenacity", name: "Tenacity", type: "roleStat"}
+        ,{stat: "piety", name: "Piety", type: "roleStat"}
+    ]);
     model.selectedClass = ko.observable();
     model.selectedClass.mainStatName = ko.computed(function() {
         var mainStat = ko.utils.arrayFilter(model.statNames(), function(stat){
@@ -39,19 +52,6 @@ var parserViewModel = function() {
             return roleStat.name;
         }
     });
-    model.statNames = ko.observableArray([
-        {stat: "strength", name: "Strength", type: "mainStat"}
-        ,{stat: "mind", name: "Mind", type: "mainStat"}
-        ,{stat: "dexterity", name: "Dexterity", type: "mainStat"}
-        ,{stat: "intelligence", name: "Intelligence", type: "mainStat"}
-        ,{stat: "criticalhit", name: "Critical Hit", type: "generalStat"}
-        ,{stat: "directhit", name: "Direct Hit", type: "generalStat"}
-        ,{stat: "determination", name: "Determination", type: "generalStat"}
-        ,{stat: "skillspeed", name: "Skill Speed", type: "speedStat"}
-        ,{stat: "spellspeed", name: "Spell Speed", type: "speedStat"}
-        ,{stat: "tenacity", name: "Tenacity", type: "roleStat"}
-        ,{stat: "piety", name: "Piety", type: "roleStat"}
-    ]);
 
     model.weaponDamage = ko.observable(0);
     model.mainStat = ko.observable(0);

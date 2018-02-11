@@ -7,17 +7,17 @@
 <body>
 Choose Class: <select data-bind="options: classList, value: selectedClass"></select>
 <br>
-<br><div>Weapon Damage</div><div><input type="text" data-bind="value: weaponDamage"></div>
-<br><div data-bind="text: selectedClass.mainStatName"></div><div><input type="text" data-bind="value: mainStat"></div>
-<br><div>Critical Hit</div><div><input type="text" data-bind="value: criticalHit"></div>
-<br><div>Direct Hit</div><div><input type="text" data-bind="value: directHit"></div>
-<br><div>Determination</div><div><input type="text" data-bind="value: determination"></div>
-<br><div data-bind="text: selectedClass.speedStatName"></div><div><input type="text" data-bind="value: speedStat"></div>
+<br><span>Weapon Damage</span><span><input type="text" data-bind="value: weaponDamage"></span>
+<br><span data-bind="text: selectedClass.mainStatName"></span><span><input type="text" data-bind="value: mainStat"></span>
+<br><span>Critical Hit</span><span><input type="text" data-bind="value: criticalHit"></span>
+<br><span>Direct Hit</span><span><input type="text" data-bind="value: directHit"></span>
+<br><span>Determination</span><span><input type="text" data-bind="value: determination"></span>
+<br><span data-bind="text: selectedClass.speedStatName"></span><span><input type="text" data-bind="value: speedStat"></span>
 <!-- ko if: selectedClass.roleStatName() !== null -->
-<br><div data-bind="text: selectedClass.roleStatName"></div><div><input type="text" data-bind="value: roleStat"></div>
+<br><span data-bind="text: selectedClass.roleStatName"></span><span><input type="text" data-bind="value: roleStat"></span>
 <!-- /ko -->
 <br>
-<br><div>100 Potency Hit Damage: </div><div data-bind="value: damage"></div>
+<br><span>100 Potency Hit Damage: </span><span data-bind="value: damage"></span>
 </body>
 <script type="text/javascript" src="ff14gearcompare-viewmodel.js"></script>
 </html>
