@@ -154,7 +154,7 @@ var parserViewModel = function() {
             ( model.directHitRate() * ( 1 - model.criticalHitRate() ) ) * baseDamage * model.directHitDamage() +
             // Critical+Direct Hit rate * critical damage * direct hit damage
             ( model.criticalHitRate() * model.directHitRate() ) * baseDamage * model.criticalHitDamage() * model.directHitDamage();
-        return damage;
+        return Math.floor(10*damage)/10;
     });
     model.dotDamage = ko.computed(function() {
         // calculate base damage of a 100 potency attack
@@ -170,7 +170,7 @@ var parserViewModel = function() {
             ( model.directHitRate() * ( 1 - model.criticalHitRate() ) ) * baseDamage * model.directHitDamage() +
             // Critical+Direct Hit rate * critical damage * direct hit damage
             ( model.criticalHitRate() * model.directHitRate() ) * baseDamage * model.criticalHitDamage() * model.directHitDamage();
-        return damage;
+        return Math.floor(10*damage)/10;
     });
 
     model.GearOptions = ko.observableArray([

@@ -8,21 +8,21 @@
 Choose Class: <select data-bind="options: jobList, optionsText: 'displayName', value: selectedJob"></select>
 <table>
     <tr>
-        <th></th>
-        <th>Weapon Damage</th>
-        <th data-bind="text: mainStatName"></th>
-        <th>Critical Hit</th>
-        <th>Direct Hit</th>
-        <th>Determination</th>
-        <th data-bind="text: speedStatName"></th>
+        <td></td>
+        <td style="width: 125px">Weapon Damage</td>
+        <td style="width: 125px" style="width: 125px" data-bind="text: mainStatName"></td>
+        <td style="width: 125px">Critical Hit</td>
+        <td style="width: 125px">Direct Hit</td>
+        <td style="width: 125px">Determination</td>
+        <td style="width: 125px" data-bind="text: speedStatName"></td>
         <!-- ko if: roleStatName -->
-        <th data-bind="text: roleStatName"></th>
+        <td style="width: 125px" data-bind="text: roleStatName"></td>
         <!-- /ko -->
-        <th>Hit Damage</th>
-        <th>Dot Damage</th>
+        <td style="width: 125px">Hit Damage</td>
+        <td style="width: 125px">Dot Damage</td>
     </tr>
-    <tr>
-        <td>Your Stats:</td>
+    <tr align="center">
+        <th align="left">Your Stats:</th>
         <td><input type="text" size="5" data-bind="value: weaponDamage"></td>
         <td><input type="text" size="5" data-bind="value: mainStat"></td>
         <td><input type="text" size="5" data-bind="value: criticalHit"></td>
@@ -39,8 +39,8 @@ Choose Class: <select data-bind="options: jobList, optionsText: 'displayName', v
         <td>Crit/Direct Rates</td>
         <td></td>
         <td></td>
-        <td data-bind="text: criticalHitRateDisplay"></td>
-        <td data-bind="text: directHitRateDisplay"></td>
+        <td align="right" data-bind="text: criticalHitRateDisplay"></td>
+        <td align="right" data-bind="text: directHitRateDisplay"></td>
         <td></td>
         <td></td>
         <!-- ko if: roleStatName -->
@@ -53,10 +53,10 @@ Choose Class: <select data-bind="options: jobList, optionsText: 'displayName', v
         <td>Damage Modifier</td>
         <td></td>
         <td></td>
-        <td data-bind="text: criticalHitDamageDisplay"></td>
-        <td data-bind="text: directHitDamageDisplay"></td>
-        <td data-bind="text: determinationDamageDisplay"></td>
-        <td data-bind="text: speedDamageDisplay"></td>
+        <td align="right" data-bind="text: criticalHitDamageDisplay"></td>
+        <td align="right" data-bind="text: directHitDamageDisplay"></td>
+        <td align="right" data-bind="text: determinationDamageDisplay"></td>
+        <td align="right" data-bind="text: speedDamageDisplay"></td>
         <!-- ko if: roleStatName -->
         <td></td>
         <!-- /ko -->
