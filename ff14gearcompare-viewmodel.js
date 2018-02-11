@@ -12,7 +12,7 @@ var parserViewModel = function() {
         this.speedStat = speedStat;
         this.roleStat = roleStat;
         this.weaponDamageMod = weaponDamageMod;
-    }
+    };
 
     model.jobList = ko.observableArray([
         new job("PLD","Paladin",true,"strength","skillspeed","tenacity",100)
