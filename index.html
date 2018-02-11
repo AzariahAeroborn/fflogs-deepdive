@@ -2,33 +2,22 @@
 <head>
     <title>FF14 Stat Comparisons - Based on Theoryjerks Spreadsheet</title>
     <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.4.2.js"></script>
-    <script type="text/css" src="ff14gearcompare.css"></script>
+    <link rel="stylesheet" href="ff14gearcompare.css">
 </head>
 <body>
 Choose Class: <select data-bind="options: classList, value: selectedClass"></select>
-<br><br>
-<div data-bind="text: selectedClass"></div>
-<br><br>
-<table data-bind="foreach: selectedClassGear">
-    <thead>
-        <tr>
-            <th>Item Name</th>
-            <th>Item Level</th>
-            <!-- ko foreach: stats -->
-            <th data-bind="text: $data"></th>
-            <!-- /ko -->
-        </tr>
-    </thead>
-    <tbody data-bind="foreach: weapon">
-        <tr data-bind="css: { selected: selected() }">
-            <td data-bind="text: name"></td>
-            <td data-bind="text: level"></td>
-            <!-- ko foreach: stats -->
-            <td data-bind="text: value"></td>
-            <!-- /ko -->
-        </tr>
-    </tbody>
-</table>
+<br>
+<br><div>Weapon Damage</div><div><input type="text" data-bind="value: weaponDamage"></div>
+<br><div data-bind="text: selectedClass.mainStatName"></div><div><input type="text" data-bind="value: mainStat"></div>
+<br><div>Critical Hit</div><div><input type="text" data-bind="value: criticalHit"></div>
+<br><div>Direct Hit</div><div><input type="text" data-bind="value: directHit"></div>
+<br><div>Determination</div><div><input type="text" data-bind="value: determination"></div>
+<br><div data-bind="text: selectedClass.speedStatName"></div><div><input type="text" data-bind="value: speedStat"></div>
+<!-- ko if: selectedClass.roleStatName() !== null -->
+<br><div data-bind="text: selectedClass.roleStatName"></div><div><input type="text" data-bind="value: roleStat"></div>
+<!-- /ko -->
+<br>
+<br><div>100 Potency Hit Damage: </div><div data-bind="value: damage"></div>
 </body>
 <script type="text/javascript" src="ff14gearcompare-viewmodel.js"></script>
 </html>
