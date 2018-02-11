@@ -95,17 +95,17 @@ var parserViewModel = function() {
         return ( 100 + Math.floor( (mainStat - 292) * 1000 / 2336 ) ) / 100;
     });
     model.criticalHitRate = ko.computed(function() {
-       return Math.floor( 1000 + Math.floor(200 * (model.criticalHit() - 364) / 2170 + 50) ) / 1000;
+       return Math.floor(200 * (model.criticalHit() - 364) / 2170 + 50) / 1000;
     });
     model.criticalHitDamage = ko.computed(function() {
-       return Math.floor( 1000 + Math.floor(200 * (model.criticalHit() - 364) / 2170 + 400 ) ) / 1000;
+       return ( 1000 + Math.floor(200 * (model.criticalHit() - 364) / 2170 + 400 ) ) / 1000;
     });
     model.directHitRate = ko.computed(function() {
-       return Math.floor( 1000 + Math.floor(550 * (model.directHit() - 364) / 2170) ) / 1000;
+       return Math.floor(550 * (model.directHit() - 364) / 2170) / 1000;
     });
     model.directHitDamage = ko.observable(1.25);
     model.determinationDamage = ko.computed(function() {
-       return Math.floor( 1000 + Math.floor(130 * (model.determination() - 292) / 2170) ) / 1000;
+       return ( 1000 + Math.floor(130 * (model.determination() - 292) / 2170) ) / 1000;
     });
     model.roleStatDamage = ko.computed(function() {
         // Default multiplier of 1 - for either when no class is selected, or classes that don't get tenacity damage modifier
