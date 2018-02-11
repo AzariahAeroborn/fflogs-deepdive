@@ -89,11 +89,14 @@ var parserViewModel = function() {
        return Math.floor( 1000 + Math.floor(130 * (model.determination() - 292) / 2170) ) / 1000;
     });
     model.roleStatDamage = ko.computed(function() {
-       if ( model.selectedClass().roleStat === "tenacity" ) {
-           return Math.floor(1000 + Math.floor(100 * (model.roleStat() - 364) / 2170)) / 1000;
-       } else {
-           return 1;
-       }
+        // Default multiplier of 1 - for either when no class is selected, or classes that don't get tenacity damage modifier
+        var roleStatDamage = 1;
+        if ( model.selectedClass() ) {
+            if ( model.selectedClass().roleStat === "tenacity" ) {
+                roleStatDamage = Math.floor(1000 + Math.floor(100 * (model.roleStat() - 364) / 2170)) / 1000;
+            }
+        }
+        return roleStatDamage;
     });
 
     model.damage = ko.computed(function() {
