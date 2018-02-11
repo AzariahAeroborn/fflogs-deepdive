@@ -52,7 +52,7 @@ var parserViewModel = function() {
         var mainStat = ko.utils.arrayFilter(model.statNames(), function(stat){
             return stat.stat === model.selectedJob().mainStat;
         });
-        return mainStat.name;
+        return mainStat[0].name;
     });
     model.speedStatName = ko.computed(function() {
         // early return if no class selected yet
@@ -61,7 +61,7 @@ var parserViewModel = function() {
         var speedStat = ko.utils.arrayFilter(model.statNames(), function(stat){
             return stat.stat === model.selectedJob().speedStat;
         });
-        return speedStat.name;
+        return speedStat[0].name;
     });
     model.roleStatName = ko.computed(function() {
         // early return if no class selected yet, or if class does not have a specified roleStat
@@ -71,7 +71,7 @@ var parserViewModel = function() {
         var roleStat = ko.utils.arrayFilter(model.statNames(), function(stat){
             return stat.stat === model.selectedJob().roleStat;
         });
-        return roleStat.name;
+        return roleStat[0].name;
     });
 
     model.weaponDamage = ko.observable(0);
@@ -87,7 +87,7 @@ var parserViewModel = function() {
         var weaponDamageMod = 100;
         if ( model.selectedJob() ) { weaponDamageMod = model.selectedJob().weaponDamageMod }
 
-        return model.weaponDamage() + Math.floor(292 + weaponDamageMod / 1000);
+        return Number(model.weaponDamage()) + Math.floor(292 + weaponDamageMod / 1000);
     });
     model.mainStatDamage = ko.computed(function() {
         // include 3% party bonus to main stat
