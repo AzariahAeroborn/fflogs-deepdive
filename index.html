@@ -7,21 +7,21 @@
 <body>
 Choose Class: <select data-bind="options: jobList, optionsText: 'displayName', value: selectedJob"></select>
 <table>
-    <tr>
-        <td></td>
-        <td style="width: 125px">Weapon Damage</td>
-        <td style="width: 125px" style="width: 125px" data-bind="text: mainStatName"></td>
-        <td style="width: 125px">Critical Hit</td>
-        <td style="width: 125px">Direct Hit</td>
-        <td style="width: 125px">Determination</td>
-        <td style="width: 125px" data-bind="text: speedStatName"></td>
-        <!-- ko if: roleStatName -->
-        <td style="width: 125px" data-bind="text: roleStatName"></td>
-        <!-- /ko -->
-        <td style="width: 125px">Hit Damage</td>
-        <td style="width: 125px">Dot Damage</td>
-    </tr>
     <tr align="center">
+        <td></td>
+        <td style="width: 95px">Weapon Dmg</td>
+        <td style="width: 95px" data-bind="text: mainStatName"></td>
+        <td style="width: 95px">Critical Hit</td>
+        <td style="width: 95px">Direct Hit</td>
+        <td style="width: 95px">Determination</td>
+        <td style="width: 95px" data-bind="text: speedStatName"></td>
+        <!-- ko if: roleStatName -->
+        <td style="width: 95px" data-bind="text: roleStatName"></td>
+        <!-- /ko -->
+        <td style="width: 95px">Hit Damage</td>
+        <td style="width: 95px">Dot Damage</td>
+    </tr>
+    <tr align="right">
         <th align="left">Your Stats:</th>
         <td><input type="text" size="5" data-bind="value: weaponDamage"></td>
         <td><input type="text" size="5" data-bind="value: mainStat"></td>
@@ -59,6 +59,28 @@ Choose Class: <select data-bind="options: jobList, optionsText: 'displayName', v
         <td align="right" data-bind="text: speedDamageDisplay"></td>
         <!-- ko if: roleStatName -->
         <td></td>
+        <!-- /ko -->
+        <td></td>
+        <td></td>
+    </tr>
+    <tr style="margin-top: 2em;">
+        <!-- ko if: !roleStatName -->
+        <th colspan="9" align="center">Food Effects</th>
+        <!-- /ko -->
+        <!-- ko if: roleStatName -->
+        <th colspan="10" align="center">Food Effects</th>
+        <!-- /ko -->
+    </tr>
+    <tr data-bind="foreach: foodEffects">
+        <td data-bind="text: name"></td>
+        <td></td>
+        <td></td>
+        <td data-bind="text: criticalHitEffect"></td>
+        <td data-bind="text: directHitEffect"></td>
+        <td data-bind="text: determinationEffect"></td>
+        <td data-bind="text: speedEffect"></td>
+        <!-- ko if: roleStatName -->
+        <td data-bind="text: roleEffect"></td>
         <!-- /ko -->
         <td></td>
         <td></td>

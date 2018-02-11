@@ -39,39 +39,49 @@ var parserViewModel = function() {
         ,{stat: "criticalhit", name: "Critical Hit", type: "generalStat"}
         ,{stat: "directhit", name: "Direct Hit", type: "generalStat"}
         ,{stat: "determination", name: "Determination", type: "generalStat"}
+        ,{stat: "vitality", name: "Vitality", type: "generalStat"}
         ,{stat: "skillspeed", name: "Skill Speed", type: "speedStat"}
         ,{stat: "spellspeed", name: "Spell Speed", type: "speedStat"}
         ,{stat: "tenacity", name: "Tenacity", type: "roleStat"}
         ,{stat: "piety", name: "Piety", type: "roleStat"}
+    ]);
+    model.foodList = ko.observableArray([
+        {name: "Crimson Cider", stats: [{stat: "criticalhit", increase: 0.05, max: 88},{stat: "directhit", increase: 0.03, max: 46},{stat: "vitality", increase: 0.05, max: 98}] }
+       ,{name: "Dzo Steak", stats: [{stat: "tenacity", increase: 0.05, max: 88},{stat: "determination", increase: 0.03, max: 45},{stat: "vitality", increase: 0.05, max: 98}] }
+       ,{name: "Futo-maki Roll", stats: [{stat: "directhit", increase: 0.05, max: 88},{stat: "determination", increase: 0.03, max: 45},{stat: "vitality", increase: 0.05, max: 98}] }
+       ,{name: "Oden", stats: [{stat: "spellspeed", increase: 0.05, max: 88},{stat: "determination", increase: 0.03, max: 45},{stat: "vitality", increase: 0.05, max: 98}] }
+       ,{name: "Sauteed Green Leeks", stats: [{stat: "skillspeed", increase: 0.05, max: 88},{stat: "determination", increase: 0.03, max: 45},{stat: "vitality", increase: 0.05, max: 98}] }
+       ,{name: "Tako-yaki", stats: [{stat: "determination", increase: 0.05, max: 85},{stat: "criticalhit", increase: 0.03, max: 46},{stat: "vitality", increase: 0.05, max: 98}] }
+       ,{name: "Tofu Pancakes", stats: [{stat: "piety", increase: 0.05, max: 85},{stat: "determination", increase: 0.03, max: 45},{stat: "vitality", increase: 0.05, max: 98}] }
     ]);
     model.selectedJob = ko.observable();
     model.mainStatName = ko.computed(function() {
         // early return if no class selected yet
         if ( model.selectedJob() === null || model.selectedJob() === undefined ) { return "" }
 
-        var mainStat = ko.utils.arrayFilter(model.statNames(), function(stat){
+        var mainStat = ko.utils.arrayFirst(model.statNames(), function(stat){
             return stat.stat === model.selectedJob().mainStat;
         });
-        return mainStat[0].name;
+        return mainStat.name;
     });
     model.speedStatName = ko.computed(function() {
         // early return if no class selected yet
         if ( model.selectedJob() === null || model.selectedJob() === undefined ) { return "" }
 
-        var speedStat = ko.utils.arrayFilter(model.statNames(), function(stat){
+        var speedStat = ko.utils.arrayFirst(model.statNames(), function(stat){
             return stat.stat === model.selectedJob().speedStat;
         });
-        return speedStat[0].name;
+        return speedStat.name;
     });
     model.roleStatName = ko.computed(function() {
         // early return if no class selected yet, or if class does not have a specified roleStat
         if ( model.selectedJob() === null || model.selectedJob() === undefined ) { return null }
         if ( model.selectedJob().roleStat === null ) { return null }
 
-        var roleStat = ko.utils.arrayFilter(model.statNames(), function(stat){
+        var roleStat = ko.utils.arrayFirst(model.statNames(), function(stat){
             return stat.stat === model.selectedJob().roleStat;
         });
-        return roleStat[0].name;
+        return roleStat.name;
     });
 
     model.weaponDamage = ko.observable(0);
@@ -128,7 +138,6 @@ var parserViewModel = function() {
     model.speedDamageDisplay = ko.computed(function() {
         return "+" + Math.floor((model.speedDamage() - 1)*1000)/10 + "%";
     });
-
     model.roleStatDamage = ko.computed(function() {
         // Default multiplier of 1 - for either when no class is selected, or classes that don't get tenacity damage modifier
         var roleStatDamage = 1;
@@ -138,6 +147,16 @@ var parserViewModel = function() {
             }
         }
         return roleStatDamage;
+    });
+    model.roleStatDamageDisplay = ko.computed(function() {
+        if ( model.selectedJob() ) {
+            if ( model.selectedJob().roleStat === "tenacity" ) {
+                return "+" + Math.floor((model.roleStatDamage() - 1)*1000)/10 + "%";
+            }
+        }
+        // Return an empty string if no selected job, or if the selected job doesn't have Tenacity as its role skill
+        // No role stat damage effect except for Tenacity
+        return "";
     });
 
     model.hitDamage = ko.computed(function() {
@@ -171,6 +190,76 @@ var parserViewModel = function() {
             // Critical+Direct Hit rate * critical damage * direct hit damage
             ( model.criticalHitRate() * model.directHitRate() ) * baseDamage * model.criticalHitDamage() * model.directHitDamage();
         return Math.floor(10*damage)/10;
+    });
+    model.foodEffects = ko.computed(function() {
+        // early return if no class selected yet
+        if ( model.selectedJob() === null || model.selectedJob() === undefined ) { return null }
+
+        // filter to only food that is effective for class (remove tenacity/piety except for classes that use that role stat, remove food with "wrong" speed stat)
+        var food = ko.utils.arrayFilter(model.foodList(), function(food){
+           var returnVal = true;
+           ko.utils.arrayForEach(food.stats, function(foodstat){
+               var statDetails = ko.utils.arrayFirst(model.statNames(), function(statinfo){
+                   return statinfo.stat === foodstat.stat;
+               });
+               switch ( statDetails.type ) {
+                   case "speedStat":
+                       // eliminate this food if it's for the wrong speed stat
+                       if ( model.selectedJob().speedStat !== foodstat.stat ) { returnVal = false }
+                       break;
+                   case "roleStat":
+                       // eliminate this food if it's for a role stat the selected class does not use
+                       if ( model.selectedJob().roleStat !== foodstat.stat ) { returnVal = false }
+                       break;
+                   case "generalStat":
+                   default:
+                       // do nothing - continue with current returnVal flag
+                       break;
+               }
+           });
+           return returnVal;
+        });
+
+        ko.utils.arrayForEach(food, function(curFood){
+            curFood.criticalHitEffect = ko.computed(function(){
+               var foodEffect = ko.utils.arrayFirst(curFood.stats, function(stat){
+                   return stat.stat === "criticalhit";
+               });
+               return Math.min(Math.floor(model.criticalHit() * foodEffect.increase),foodEffect.max);
+            });
+            curFood.directHitEffect = ko.computed(function(){
+                var foodEffect = ko.utils.arrayFirst(curFood.stats, function(stat){
+                    return stat.stat === "directhit";
+                });
+                return Math.min(Math.floor(model.directHit() * foodEffect.increase),foodEffect.max);
+            });
+            curFood.determinationEffect = ko.computed(function(){
+                var foodEffect = ko.utils.arrayFirst(curFood.stats, function(stat){
+                    return stat.stat === "determination";
+                });
+                return Math.min(Math.floor(model.determination() * foodEffect.increase),foodEffect.max);
+            });
+            curFood.speedEffect = ko.computed(function(){
+                // early return if no class selected yet
+                if ( model.selectedJob() === null || model.selectedJob() === undefined ) { return null }
+
+                var foodEffect = ko.utils.arrayFirst(curFood.stats, function(stat){
+                    return stat.stat === model.selectedJob().speedStat;
+                });
+                return Math.min(Math.floor(model.speedStat() * foodEffect.increase),foodEffect.max);
+            });
+            curFood.roleEffect = ko.computed(function(){
+                // early return if no class selected yet
+                if ( model.selectedJob() === null || model.selectedJob() === undefined ) { return null }
+
+                var foodEffect = ko.utils.arrayFirst(curFood.stats, function(stat){
+                    return stat.stat === model.selectedJob().roleStat;
+                });
+                return Math.min(Math.floor(model.roleStat() * foodEffect.increase),foodEffect.max);
+            });
+        })
+
+        return food;
     });
 
     model.GearOptions = ko.observableArray([
