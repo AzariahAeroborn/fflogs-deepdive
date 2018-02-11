@@ -4,22 +4,32 @@
 var parserViewModel = function() {
     var model = this;
 
-    model.classList = ko.observableArray([
-        {class: "PLD", displayName: "Paladin", offHand: true, mainStat: "strength", speedStat: "skillspeed", roleStat: "tenacity", weaponDamageMod: 100 }
-        ,{class: "WAR", displayName: "Warrior", offHand: false, mainStat: "strength", speedStat: "skillspeed", roleStat: "tenacity", weaponDamageMod: 105 }
-        ,{class: "DRK", displayName: "Dark Knight", offHand: false, mainStat: "strength", speedStat: "skillspeed", roleStat: "tenacity", weaponDamageMod: 105 }
-        ,{class: "WHM", displayName: "White Mage", offHand: false, mainStat: "mind", speedStat: "spellspeed", roleStat: "piety", weaponDamageMod: 115 }
-        ,{class: "SCH", displayName: "Scholar", offHand: false, mainStat: "mind", speedStat: "spellspeed", roleStat: "piety", weaponDamageMod: 115 }
-        ,{class: "AST", displayName: "Astrologian", offHand: false, mainStat: "mind", speedStat: "spellspeed", roleStat: "piety", weaponDamageMod: 115 }
-        ,{class: "BRD", displayName: "Bard", offHand: false, mainStat: "dexterity", speedStat: "skillspeed", roleStat: null, weaponDamageMod: 115 }
-        ,{class: "MCH", displayName: "Machinist", offHand: false, mainStat: "dexterity", speedStat: "skillspeed", roleStat: null, weaponDamageMod: 115 }
-        ,{class: "NIN", displayName: "Ninja", offHand: false, mainStat: "dexterity", speedStat: "skillspeed", roleStat: null, weaponDamageMod: 110 }
-        ,{class: "MNK", displayName: "Monk", offHand: false, mainStat: "strength", speedStat: "skillspeed", roleStat: null, weaponDamageMod: 110 }
-        ,{class: "SAM", displayName: "Samurai", offHand: false, mainStat: "strength", speedStat: "skillspeed", roleStat: null, weaponDamageMod: 112 }
-        ,{class: "DRG", displayName: "Dragoon", offHand: false, mainStat: "strength", speedStat: "skillspeed", roleStat: null, weaponDamageMod: 115 }
-        ,{class: "BLM", displayName: "Black Mage", offHand: false, mainStat: "intelligence", speedStat: "spellspeed", roleStat: null, weaponDamageMod: 115 }
-        ,{class: "SMN", displayName: "Summoner", offHand: false, mainStat: "intelligence", speedStat: "spellspeed", roleStat: null, weaponDamageMod: 115 }
-        ,{class: "RDM", displayName: "Red Mage", offHand: false, mainStat: "intelligence", speedStat: "spellspeed", roleStat: null, weaponDamageMod: 115 }
+    var job = function(job, displayName, offHand, mainStat, speedStat, roleStat, weaponDamageMod) {
+        this.job = job;
+        this.displayName = displayName;
+        this.offHand = offHand;
+        this.mainStat = mainStat;
+        this.speedStat = speedStat;
+        this.roleStat = roleStat;
+        this.weaponDamageMod = weaponDamageMod;
+    }
+
+    model.jobList = ko.observableArray([
+        new job("PLD","Paladin",true,"strength","skillspeed","tenacity",100)
+        ,new job("WAR","Warrior",false,"strength","skillspeed","tenacity",105)
+        ,new job("DRK","Dark Knight",false,"strength","skillspeed","tenacity",105)
+        ,new job("WHM","White Mage",false,"mind","spellspeed","piety",115)
+        ,new job("SCH","Scholar",false,"mind","spellspeed","piety",115)
+        ,new job("AST","Astrologian",false,"mind","spellspeed","piety",115)
+        ,new job("BRD","Bard",false,"dexterity","skillspeed",null,115)
+        ,new job("MCH","Machinist",false,"dexterity","skillspeed",null,115)
+        ,new job("NIN","Ninja",false,"dexterity","skillspeed",null,110)
+        ,new job("MNK","Monk",false,"strength","skillspeed",null,110)
+        ,new job("SAM","Samurai",false,"strength","skillspeed",null,112)
+        ,new job("DRG","Dragoon",false,"strength","skillspeed",null,115)
+        ,new job("BLM","Black Mage",false,"intelligence","spellspeed",null,115)
+        ,new job("SMN","Summoner",false,"intelligence","spellspeed",null,115)
+        ,new job("RDM","Red Mage",false,"intelligence","spellspeed",null,115)
     ]);
     model.statNames = ko.observableArray([
         {stat: "strength", name: "Strength", type: "mainStat"}
@@ -34,32 +44,32 @@ var parserViewModel = function() {
         ,{stat: "tenacity", name: "Tenacity", type: "roleStat"}
         ,{stat: "piety", name: "Piety", type: "roleStat"}
     ]);
-    model.selectedClass = ko.observable();
+    model.selectedJob = ko.observable();
     model.mainStatName = ko.computed(function() {
         // early return if no class selected yet
-        if ( model.selectedClass() === null || model.selectedClass() === undefined ) { return "" }
+        if ( model.selectedJob() === null || model.selectedJob() === undefined ) { return "" }
 
         var mainStat = ko.utils.arrayFilter(model.statNames(), function(stat){
-            return stat.stat === model.selectedClass().mainStat;
+            return stat.stat === model.selectedJob().mainStat;
         });
         return mainStat.name;
     });
     model.speedStatName = ko.computed(function() {
         // early return if no class selected yet
-        if ( model.selectedClass() === null || model.selectedClass() === undefined ) { return "" }
+        if ( model.selectedJob() === null || model.selectedJob() === undefined ) { return "" }
 
         var speedStat = ko.utils.arrayFilter(model.statNames(), function(stat){
-            return stat.stat === model.selectedClass().speedStat;
+            return stat.stat === model.selectedJob().speedStat;
         });
         return speedStat.name;
     });
     model.roleStatName = ko.computed(function() {
         // early return if no class selected yet, or if class does not have a specified roleStat
-        if ( model.selectedClass() === null || model.selectedClass() === undefined ) { return "" }
-        if ( model.selectedClass().roleStat === null ) { return "" }
+        if ( model.selectedJob() === null || model.selectedJob() === undefined ) { return "" }
+        if ( model.selectedJob().roleStat === null ) { return "" }
 
         var roleStat = ko.utils.arrayFilter(model.statNames(), function(stat){
-            return stat.stat === model.selectedClass().roleStat;
+            return stat.stat === model.selectedJob().roleStat;
         });
         return roleStat.name;
     });
@@ -75,7 +85,7 @@ var parserViewModel = function() {
     model.effectiveWeaponDamage = ko.computed(function() {
         // Default to 100 for weaponDamageMod if no class is selected (safety for initialization)
         var weaponDamageMod = 100;
-        if ( model.selectedClass() ) { weaponDamageMod = model.selectedClass().weaponDamageMod }
+        if ( model.selectedJob() ) { weaponDamageMod = model.selectedJob().weaponDamageMod }
 
         return model.weaponDamage() + Math.floor(292 + weaponDamageMod / 1000);
     });
@@ -100,8 +110,8 @@ var parserViewModel = function() {
     model.roleStatDamage = ko.computed(function() {
         // Default multiplier of 1 - for either when no class is selected, or classes that don't get tenacity damage modifier
         var roleStatDamage = 1;
-        if ( model.selectedClass() ) {
-            if ( model.selectedClass().roleStat === "tenacity" ) {
+        if ( model.selectedJob() ) {
+            if ( model.selectedJob().roleStat === "tenacity" ) {
                 roleStatDamage = Math.floor(1000 + Math.floor(100 * (model.roleStat() - 364) / 2170)) / 1000;
             }
         }
@@ -204,7 +214,7 @@ var parserViewModel = function() {
     ]);
     model.selectedClassGear = ko.computed(function() {
         return ko.utils.arrayFilter(model.GearOptions(), function(item){
-            return item.class === model.selectedClass();
+            return item.class === model.selectedJob();
         });
     });
 
