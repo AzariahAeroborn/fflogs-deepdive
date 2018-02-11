@@ -5,14 +5,14 @@
     <link rel="stylesheet" href="ff14gearcompare.css">
 </head>
 <body>
-Choose Class: <select data-bind="options: classList, value: selectedClass"></select>
+Choose Class: <select data-bind="options: classList, optionsText: displayName, value: selectedClass"></select>
 <table>
     <tr>
         <th>Weapon Damage</th>
         <td><input type="text" data-bind="value: weaponDamage"></td>
     </tr>
     <tr>
-        <th data-bind="text: selectedClass.mainStatName"></th>
+        <th data-bind="text: mainStatName"></th>
         <td><input type="text" data-bind="value: mainStat"></td>
     </tr>
     <tr>
@@ -28,12 +28,12 @@ Choose Class: <select data-bind="options: classList, value: selectedClass"></sel
         <td><input type="text" data-bind="value: determination"></td>
     </tr>
     <tr>
-        <th data-bind="text: selectedClass.speedStatName"></th>
+        <th data-bind="text: speedStatName"></th>
         <td><input type="text" data-bind="value: speedStat"></td>
     </tr>
-    <!-- ko if: selectedClass.roleStatName() !== "" -->
+    <!-- ko if: roleStatName !== "" -->
     <tr>
-        <th data-bind="text: selectedClass.roleStatName"></th>
+        <th data-bind="text: roleStatName"></th>
         <td><input type="text" data-bind="value: roleStat"></td>
     </tr>
     <!-- /ko -->

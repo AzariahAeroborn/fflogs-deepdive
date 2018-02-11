@@ -35,7 +35,7 @@ var parserViewModel = function() {
         ,{stat: "piety", name: "Piety", type: "roleStat"}
     ]);
     model.selectedClass = ko.observable();
-    model.selectedClass.mainStatName = ko.computed(function() {
+    model.mainStatName = ko.computed(function() {
         // early return if no class selected yet
         if ( model.selectedClass() === null || model.selectedClass() === undefined ) { return "" }
 
@@ -44,7 +44,16 @@ var parserViewModel = function() {
         });
         return mainStat.name;
     });
-    model.selectedClass.roleStatName = ko.computed(function() {
+    model.speedStatName = ko.computed(function() {
+        // early return if no class selected yet
+        if ( model.selectedClass() === null || model.selectedClass() === undefined ) { return "" }
+
+        var speedStat = ko.utils.arrayFilter(model.statNames(), function(stat){
+            return stat.stat === model.selectedClass().speedStat;
+        });
+        return speedStat.name;
+    });
+    model.roleStatName = ko.computed(function() {
         // early return if no class selected yet, or if class does not have a specified roleStat
         if ( model.selectedClass() === null || model.selectedClass() === undefined ) { return "" }
         if ( model.selectedClass().roleStat === null ) { return "" }
