@@ -332,17 +332,17 @@ var parserViewModel = function() {
                     model.weaponDamage(),
                     weaponDamageMod,
                     model.mainStat(),
-                    model.criticalHit() + curFood.criticalHitEffect(),
-                    model.directHit() + curFood.directHitEffect(),
-                    model.determination() + curFood.determinationEffect(),
+                    Number(model.criticalHit()) + Number(curFood.criticalHitEffect()),
+                    Number(model.directHit()) + Number(curFood.directHitEffect()),
+                    Number(model.determination()) + Number(curFood.determinationEffect()),
                     roleStatName,
-                    model.roleStat() + curFood.roleEffect()
+                    Number(model.roleStat()) + Number(curFood.roleEffect())
                 );
             });
             curFood.hitDamageEffect = ko.computed(function() {
                 var change = curFood.hitDamage() / model.hitDamage() - 1;
                 change = Math.floor(change * 1000) / 10;
-                if ( change < 0 ) { return "-" + change + "%" }
+                if ( change < 0 ) { return change + "%" }
                 else { return "+" + change + "%" }
             });
             curFood.dotDamage = ko.computed(function() {
@@ -357,18 +357,18 @@ var parserViewModel = function() {
                     model.weaponDamage(),
                     weaponDamageMod,
                     model.mainStat(),
-                    model.criticalHit() + curFood.criticalHitEffect(),
-                    model.directHit() + curFood.directHitEffect(),
-                    model.determination() + curFood.determinationEffect(),
-                    model.speedStat() + curFood.speedEffect(),
+                    Number(model.criticalHit()) + Number(curFood.criticalHitEffect()),
+                    Number(model.directHit()) + Number(curFood.directHitEffect()),
+                    Number(model.determination()) + Number(curFood.determinationEffect()),
+                    Number(model.speedStat()) + Number(curFood.speedEffect()),
                     roleStatName,
-                    model.roleStat() + curFood.roleEffect()
+                    Number(model.roleStat()) + Number(curFood.roleEffect())
                 );
             });
             curFood.dotDamageEffect = ko.computed(function() {
                 var change = curFood.dotDamage() / model.dotDamage() - 1;
                 change = Math.floor(change * 1000) / 10;
-                if ( change < 0 ) { return "-" + change + "%" }
+                if ( change < 0 ) { return change + "%" }
                 else { return "+" + change + "%" }
             });
         });
