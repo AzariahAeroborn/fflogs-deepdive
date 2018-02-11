@@ -75,12 +75,12 @@ var parserViewModel = function() {
     });
 
     model.weaponDamage = ko.observable(0);
-    model.mainStat = ko.observable(0);
-    model.criticalHit = ko.observable(0);
-    model.directHit = ko.observable(0);
-    model.determination = ko.observable(0);
-    model.speedStat = ko.observable(0);
-    model.roleStat = ko.observable(0);
+    model.mainStat = ko.observable(292);
+    model.criticalHit = ko.observable(364);
+    model.directHit = ko.observable(364);
+    model.determination = ko.observable(292);
+    model.speedStat = ko.observable(364);
+    model.roleStat = ko.observable(364);
 
     model.effectiveWeaponDamage = ko.computed(function() {
         // Default to 100 for weaponDamageMod if no class is selected (safety for initialization)
@@ -97,18 +97,36 @@ var parserViewModel = function() {
     model.criticalHitRate = ko.computed(function() {
        return Math.floor(200 * (model.criticalHit() - 364) / 2170 + 50) / 1000;
     });
+    model.criticalHitRateDisplay = ko.computed(function() {
+        return Math.floor(model.criticalHitRate()*1000)/10 + "%";
+    });
     model.criticalHitDamage = ko.computed(function() {
        return ( 1000 + Math.floor(200 * (model.criticalHit() - 364) / 2170 + 400 ) ) / 1000;
+    });
+    model.criticalHitDamageDisplay = ko.computed(function() {
+        return "+" + Math.floor((model.criticalHitDamage() - 1)*1000)/10 + "%";
     });
     model.directHitRate = ko.computed(function() {
        return Math.floor(550 * (model.directHit() - 364) / 2170) / 1000;
     });
+    model.directHitRateDisplay = ko.computed(function() {
+        return Math.floor(model.directHitRate()*1000)/10 + "%";
+    });
     model.directHitDamage = ko.observable(1.25);
+    model.directHitDamageDisplay = ko.computed(function() {
+        return "+" + Math.floor((model.directHitDamage() - 1)*1000)/10 + "%";
+    });
     model.determinationDamage = ko.computed(function() {
        return ( 1000 + Math.floor(130 * (model.determination() - 292) / 2170) ) / 1000;
     });
+    model.determinationDamageDisplay = ko.computed(function() {
+        return "+" + Math.floor((model.determinationDamage() - 1)*1000)/10 + "%";
+    });
     model.speedDamage = ko.computed(function() {
        return 1000 / ( 1000 - Math.floor(130 * (model.speedStat() - 364) / 2170) );
+    });
+    model.speedDamageDisplay = ko.computed(function() {
+        return "+" + Math.floor((model.speedDamage() - 1)*1000)/10 + "%";
     });
 
     model.roleStatDamage = ko.computed(function() {
@@ -124,9 +142,9 @@ var parserViewModel = function() {
 
     model.hitDamage = ko.computed(function() {
         // calculate base damage of a 100 potency attack
-        var baseDamage = Math.floor(model.effectiveWeaponDamage() * model.mainStatDamage());
+        var baseDamage = Math.floor(100 * model.effectiveWeaponDamage() * model.mainStatDamage());
         baseDamage = Math.floor(baseDamage * model.determinationDamage());
-        baseDamage = Math.floor(baseDamage * model.roleStatDamage());
+        baseDamage = Math.floor(baseDamage * model.roleStatDamage() / 100);
         var damage =
             // Normal hit rate * base damage
             ( 1 - model.criticalHitRate() - model.directHitRate() + model.criticalHitRate() * model.directHitRate() ) * baseDamage +
@@ -140,9 +158,9 @@ var parserViewModel = function() {
     });
     model.dotDamage = ko.computed(function() {
         // calculate base damage of a 100 potency attack
-        var baseDamage = Math.floor(model.effectiveWeaponDamage() * model.mainStatDamage());
+        var baseDamage = Math.floor(100 * model.effectiveWeaponDamage() * model.mainStatDamage());
         baseDamage = Math.floor(baseDamage * model.determinationDamage() * model.speedDamage() );
-        baseDamage = Math.floor(baseDamage * model.roleStatDamage());
+        baseDamage = Math.floor(baseDamage * model.roleStatDamage() / 100);
         var damage =
             // Normal hit rate * base damage
             ( 1 - model.criticalHitRate() - model.directHitRate() + model.criticalHitRate() * model.directHitRate() ) * baseDamage +
