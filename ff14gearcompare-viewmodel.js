@@ -340,9 +340,9 @@ var parserViewModel = function() {
                 );
             });
             curFood.hitDamageEffect = ko.computed(function() {
-                var change = curFood.hitDamage() / model.hitDamage();
-                if ( change < 0 ) { return "-" + Math.Floor(change*1000)/10 + "%" }
-                else { return "+" + Math.Floor(change*1000)/10 + "%" }
+                var change = Math.Floor(curFood.hitDamage() / model.hitDamage()*1000)/10;
+                if ( change < 0 ) { return "-" + change + "%" }
+                else { return "+" + change + "%" }
             });
             curFood.dotDamage = ko.computed(function() {
                 // Default to 100 for weaponDamageMod if no job is selected (safety for initialization)
@@ -365,9 +365,9 @@ var parserViewModel = function() {
                 );
             });
             curFood.dotDamageEffect = ko.computed(function() {
-                var change = curFood.dotDamage() / model.dotDamage();
-                if ( change < 0 ) { return "-" + Math.Floor(change*1000)/10 + "%" }
-                else { return "+" + Math.Floor(change*1000)/10 + "%" }
+                var change = Math.Floor(curFood.dotDamage() / model.dotDamage()*1000)/10;
+                if ( change < 0 ) { return "-" + change + "%" }
+                else { return "+" + change + "%" }
             });
         });
 
