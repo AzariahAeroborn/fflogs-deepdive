@@ -92,66 +92,102 @@ var parserViewModel = function() {
     model.speedStat = ko.observable(364);
     model.roleStat = ko.observable(364);
 
-    model.effectiveWeaponDamage = ko.computed(function() {
-        // Default to 100 for weaponDamageMod if no class is selected (safety for initialization)
-        var weaponDamageMod = 100;
-        if ( model.selectedJob() ) { weaponDamageMod = model.selectedJob().weaponDamageMod }
-
-        return Number(model.weaponDamage()) + Math.floor(292 * weaponDamageMod / 1000);
-    });
-    model.mainStatDamage = ko.computed(function() {
+    function effectiveWeaponDamage(weaponDamage,weaponDamageMod) {
+        return Number(weaponDamage + Math.floor(292 * weaponDamageMod / 1000);
+    }
+    function mainStatDamage(mainStat) {
         // include 3% party bonus to main stat
-        var mainStat = Math.floor(model.mainStat() * 1.03);
+        mainStat = Math.floor(mainStat * 1.03);
         return ( 100 + Math.floor( (mainStat - 292) * 1000 / 2336 ) ) / 100;
-    });
-    model.criticalHitRate = ko.computed(function() {
-       return Math.floor(200 * (model.criticalHit() - 364) / 2170 + 50) / 1000;
-    });
+    }
+    function criticalHitRate(criticalHit) {
+       return Math.floor(200 * (criticalHit - 364) / 2170 + 50) / 1000;
+    }
+    function criticalHitDamage(criticalHit) {
+        return ( 1000 + Math.floor(200 * (criticalHit - 364) / 2170 + 400 ) ) / 1000;
+    }
+    function directHitRate(directHit) {
+        return Math.floor(550 * (directHit - 364) / 2170) / 1000;
+    }
+    function directHitDamage() { return 1.25 }
+    function determinationDamage(determination) {
+        return ( 1000 + Math.floor(130 * (determination - 292) / 2170) ) / 1000;
+    }
+    function speedDamage(speedStat) {
+        return 1000 / ( 1000 - Math.floor(130 * (speedStat - 364) / 2170) );
+    }
+    function roleStatDamage(roleStatName,roleStat) {
+        if ( roleStatName === "tenacity" ) {
+            return Math.floor(1000 + Math.floor(100 * (roleStat - 364) / 2170)) / 1000;
+        }
+        // Default multiplier of 1 - for either when no class is selected, or classes that don't get tenacity damage modifier
+        return 1;
+    }
+    function hitDamage(weaponDamage, weaponDamageMod, mainStat, criticalHit, directHit, determination, roleStatName, roleStat) {
+        var criticalHitRate = criticalHitRate(criticalHit);
+        var criticalHitDamage = criticalHitDamage(criticalHit);
+        var directHitRate = directHitRate(directHit);
+        var directHitDamage = directHitDamage();
+
+        // calculate base damage of a 100 potency attack
+        var baseDamage = Math.floor(100 * effectiveWeaponDamage(weaponDamage,weaponDamageMod) * mainStatDamage(mainStat));
+        baseDamage = Math.floor(baseDamage * determinationDamage(determination));
+        baseDamage = Math.floor(baseDamage * roleStatDamage(roleStatName,roleStat) / 100);
+        var damage =
+            // Normal hit rate * base damage
+            ( 1 - criticalHitRate - directHitRate + criticalHitRate * directHitRate ) * baseDamage +
+            // Critical hit rate * critical damage (exclude critical + direct hits)
+            ( criticalHitRate * ( 1 - directHitRate ) ) * baseDamage * criticalHitDamage +
+            // Direct hit rate * direct hit damage (exclude critical + direct hits)
+            ( directHitRate * ( 1 - criticalHitRate ) ) * baseDamage * directHitDamage +
+            // Critical+Direct Hit rate * critical damage * direct hit damage
+            ( criticalHitRate * directHitRate ) * baseDamage * criticalHitDamage * directHitDamage;
+        return Math.floor(10*damage)/10;
+    }
+    function dotDamage(weaponDamage, weaponDamageMod, mainStat, criticalHit, directHit, determination, speedStat, roleStatName, roleStat) {
+        var criticalHitRate = criticalHitRate(criticalHit);
+        var criticalHitDamage = criticalHitDamage(criticalHit);
+        var directHitRate = directHitRate(directHit);
+        var directHitDamage = directHitDamage();
+
+        // calculate base damage of a 100 potency attack
+        var baseDamage = Math.floor(100 * effectiveWeaponDamage(weaponDamage,weaponDamageMod) * mainStatDamage(mainStat));
+        baseDamage = Math.floor(baseDamage * determinationDamage(determination) * speedDamage(speedStat) );
+        baseDamage = Math.floor(baseDamage * roleStatDamage(roleStatName,roleStat) / 100);
+        var damage =
+            // Normal hit rate * base damage
+            ( 1 - criticalHitRate - directHitRate + criticalHitRate * directHitRate ) * baseDamage +
+            // Critical hit rate * critical damage (exclude critical + direct hits)
+            ( criticalHitRate * ( 1 - directHitRate ) ) * baseDamage * criticalHitDamage +
+            // Direct hit rate * direct hit damage (exclude critical + direct hits)
+            ( directHitRate * ( 1 - criticalHitRate ) ) * baseDamage * directHitDamage +
+            // Critical+Direct Hit rate * critical damage * direct hit damage
+            ( criticalHitRate * directHitRate ) * baseDamage * criticalHitDamage * directHitDamage;
+        return Math.floor(10*damage)/10;
+    }
+
     model.criticalHitRateDisplay = ko.computed(function() {
-        return Math.floor(model.criticalHitRate()*1000)/10 + "%";
-    });
-    model.criticalHitDamage = ko.computed(function() {
-       return ( 1000 + Math.floor(200 * (model.criticalHit() - 364) / 2170 + 400 ) ) / 1000;
+        return Math.floor(criticalHitRate(model.criticalHit())*1000)/10 + "%";
     });
     model.criticalHitDamageDisplay = ko.computed(function() {
-        return "+" + Math.floor((model.criticalHitDamage() - 1)*1000)/10 + "%";
-    });
-    model.directHitRate = ko.computed(function() {
-       return Math.floor(550 * (model.directHit() - 364) / 2170) / 1000;
+        return "+" + Math.floor( (criticalHitDamage(model.criticalHit()) - 1)*1000)/10 + "%";
     });
     model.directHitRateDisplay = ko.computed(function() {
-        return Math.floor(model.directHitRate()*1000)/10 + "%";
+        return Math.floor( directHitRate(model.directHit())*1000)/10 + "%";
     });
-    model.directHitDamage = ko.observable(1.25);
     model.directHitDamageDisplay = ko.computed(function() {
-        return "+" + Math.floor((model.directHitDamage() - 1)*1000)/10 + "%";
-    });
-    model.determinationDamage = ko.computed(function() {
-       return ( 1000 + Math.floor(130 * (model.determination() - 292) / 2170) ) / 1000;
+        return "+" + Math.floor( (directHitDamage() - 1)*1000)/10 + "%";
     });
     model.determinationDamageDisplay = ko.computed(function() {
-        return "+" + Math.floor((model.determinationDamage() - 1)*1000)/10 + "%";
-    });
-    model.speedDamage = ko.computed(function() {
-       return 1000 / ( 1000 - Math.floor(130 * (model.speedStat() - 364) / 2170) );
+        return "+" + Math.floor( (determinationDamage(model.determination()) - 1)*1000)/10 + "%";
     });
     model.speedDamageDisplay = ko.computed(function() {
-        return "+" + Math.floor((model.speedDamage() - 1)*1000)/10 + "%";
-    });
-    model.roleStatDamage = ko.computed(function() {
-        // Default multiplier of 1 - for either when no class is selected, or classes that don't get tenacity damage modifier
-        var roleStatDamage = 1;
-        if ( model.selectedJob() ) {
-            if ( model.selectedJob().roleStat === "tenacity" ) {
-                roleStatDamage = Math.floor(1000 + Math.floor(100 * (model.roleStat() - 364) / 2170)) / 1000;
-            }
-        }
-        return roleStatDamage;
+        return "+" + Math.floor( (speedDamage(model.speedStat()) - 1)*1000)/10 + "%";
     });
     model.roleStatDamageDisplay = ko.computed(function() {
         if ( model.selectedJob() ) {
             if ( model.selectedJob().roleStat === "tenacity" ) {
-                return "+" + Math.floor((model.roleStatDamage() - 1)*1000)/10 + "%";
+                return "+" + Math.floor( (roleStatDamage("tenacity",model.roleStat()) - 1)*1000)/10 + "%";
             }
         }
         // Return an empty string if no selected job, or if the selected job doesn't have Tenacity as its role skill
@@ -160,36 +196,43 @@ var parserViewModel = function() {
     });
 
     model.hitDamage = ko.computed(function() {
-        // calculate base damage of a 100 potency attack
-        var baseDamage = Math.floor(100 * model.effectiveWeaponDamage() * model.mainStatDamage());
-        baseDamage = Math.floor(baseDamage * model.determinationDamage());
-        baseDamage = Math.floor(baseDamage * model.roleStatDamage() / 100);
-        var damage =
-            // Normal hit rate * base damage
-            ( 1 - model.criticalHitRate() - model.directHitRate() + model.criticalHitRate() * model.directHitRate() ) * baseDamage +
-            // Critical hit rate * critical damage (exclude critical + direct hits)
-            ( model.criticalHitRate() * ( 1 - model.directHitRate() ) ) * baseDamage * model.criticalHitDamage() +
-            // Direct hit rate * direct hit damage (exclude critical + direct hits)
-            ( model.directHitRate() * ( 1 - model.criticalHitRate() ) ) * baseDamage * model.directHitDamage() +
-            // Critical+Direct Hit rate * critical damage * direct hit damage
-            ( model.criticalHitRate() * model.directHitRate() ) * baseDamage * model.criticalHitDamage() * model.directHitDamage();
-        return Math.floor(10*damage)/10;
+        // Default to 100 for weaponDamageMod if no job is selected (safety for initialization)
+        var weaponDamageMod = 100;
+        if ( model.selectedJob() ) { weaponDamageMod = model.selectedJob().weaponDamageMod }
+        // Default to empty string for roleStatName if no job is selected (safety for initialization)
+        var roleStatName = "";
+        if ( model.selectedJob() ) { roleStatName = model.selectedJob().roleStat }
+
+        return hitDamage(
+            model.weaponDamage(),
+            weaponDamageMod,
+            model.mainStat(),
+            model.criticalHit(),
+            model.directHit(),
+            model.determination(),
+            roleStatName,
+            model.roleStat()
+        );
     });
     model.dotDamage = ko.computed(function() {
-        // calculate base damage of a 100 potency attack
-        var baseDamage = Math.floor(100 * model.effectiveWeaponDamage() * model.mainStatDamage());
-        baseDamage = Math.floor(baseDamage * model.determinationDamage() * model.speedDamage() );
-        baseDamage = Math.floor(baseDamage * model.roleStatDamage() / 100);
-        var damage =
-            // Normal hit rate * base damage
-            ( 1 - model.criticalHitRate() - model.directHitRate() + model.criticalHitRate() * model.directHitRate() ) * baseDamage +
-            // Critical hit rate * critical damage (exclude critical + direct hits)
-            ( model.criticalHitRate() * ( 1 - model.directHitRate() ) ) * baseDamage * model.criticalHitDamage() +
-            // Direct hit rate * direct hit damage (exclude critical + direct hits)
-            ( model.directHitRate() * ( 1 - model.criticalHitRate() ) ) * baseDamage * model.directHitDamage() +
-            // Critical+Direct Hit rate * critical damage * direct hit damage
-            ( model.criticalHitRate() * model.directHitRate() ) * baseDamage * model.criticalHitDamage() * model.directHitDamage();
-        return Math.floor(10*damage)/10;
+        // Default to 100 for weaponDamageMod if no job is selected (safety for initialization)
+        var weaponDamageMod = 100;
+        if ( model.selectedJob() ) { weaponDamageMod = model.selectedJob().weaponDamageMod }
+        // Default to empty string for roleStatName if no job is selected (safety for initialization)
+        var roleStatName = "";
+        if ( model.selectedJob() ) { roleStatName = model.selectedJob().roleStat }
+
+        return dotDamage(
+            model.weaponDamage(),
+            weaponDamageMod,
+            model.mainStat(),
+            model.criticalHit(),
+            model.directHit(),
+            model.determination(),
+            model.speedStat(),
+            roleStatName,
+            model.roleStat()
+        );
     });
     model.foodEffects = ko.computed(function() {
         // early return if no class selected yet
@@ -277,7 +320,56 @@ var parserViewModel = function() {
                     return "";
                 }
             });
-        })
+            curFood.hitDamage = ko.computed(function() {
+                // Default to 100 for weaponDamageMod if no job is selected (safety for initialization)
+                var weaponDamageMod = 100;
+                if ( model.selectedJob() ) { weaponDamageMod = model.selectedJob().weaponDamageMod }
+                // Default to empty string for roleStatName if no job is selected (safety for initialization)
+                var roleStatName = "";
+                if ( model.selectedJob() ) { roleStatName = model.selectedJob().roleStat }
+
+                return hitDamage(
+                    model.weaponDamage(),
+                    weaponDamageMod,
+                    model.mainStat(),
+                    model.criticalHit() + this.criticalHitEffect(),
+                    model.directHit() + this.directHitEffect(),
+                    model.determination() + this.determinationEffect(),
+                    roleStatName,
+                    model.roleStat() + this.roleEffect()
+                );
+            });
+            curFood.hitDamageEffect = ko.computed(function() {
+                var change = this.hitDamage() / model.hitDamage();
+                if ( change < 0 ) { return "-" + Math.Floor(change*1000)/10 + "%" }
+                else { return "+" + Math.Floor(change*1000)/10 + "%" }
+            });
+            curFood.dotDamage = ko.computed(function() {
+                // Default to 100 for weaponDamageMod if no job is selected (safety for initialization)
+                var weaponDamageMod = 100;
+                if ( model.selectedJob() ) { weaponDamageMod = model.selectedJob().weaponDamageMod }
+                // Default to empty string for roleStatName if no job is selected (safety for initialization)
+                var roleStatName = "";
+                if ( model.selectedJob() ) { roleStatName = model.selectedJob().roleStat }
+
+                return dotDamage(
+                    model.weaponDamage(),
+                    weaponDamageMod,
+                    model.mainStat(),
+                    model.criticalHit() + this.criticalHitEffect(),
+                    model.directHit() + this.directHitEffect(),
+                    model.determination() + this.determinationEffect(),
+                    model.speedStat() + this.speedEffect(),
+                    roleStatName,
+                    model.roleStat() + this.roleEffect()
+                );
+            });
+            curFood.dotDamageEffect = ko.computed(function() {
+                var change = this.dotDamage() / model.dotDamage();
+                if ( change < 0 ) { return "-" + Math.Floor(change*1000)/10 + "%" }
+                else { return "+" + Math.Floor(change*1000)/10 + "%" }
+            });
+        });
 
         return food;
     });
