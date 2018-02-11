@@ -8,38 +8,60 @@
 Choose Class: <select data-bind="options: jobList, optionsText: 'displayName', value: selectedJob"></select>
 <table>
     <tr>
+        <th></th>
         <th>Weapon Damage</th>
-        <td><input type="text" data-bind="value: weaponDamage"></td>
-    </tr>
-    <tr>
         <th data-bind="text: mainStatName"></th>
-        <td><input type="text" data-bind="value: mainStat"></td>
-    </tr>
-    <tr>
         <th>Critical Hit</th>
-        <td><input type="text" data-bind="value: criticalHit"></td>
-    </tr>
-    <tr>
         <th>Direct Hit</th>
-        <td><input type="text" data-bind="value: directHit"></td>
-    </tr>
-    <tr>
         <th>Determination</th>
-        <td><input type="text" data-bind="value: determination"></td>
-    </tr>
-    <tr>
         <th data-bind="text: speedStatName"></th>
-        <td><input type="text" data-bind="value: speedStat"></td>
-    </tr>
-    <!-- ko if: roleStatName -->
-    <tr>
+        <!-- ko if: roleStatName -->
         <th data-bind="text: roleStatName"></th>
-        <td><input type="text" data-bind="value: roleStat"></td>
+        <!-- /ko -->
+        <th>Hit Damage</th>
+        <th>Dot Damage</th>
     </tr>
-    <!-- /ko -->
     <tr>
-        <th>100 Potency Hit Damage: </th>
-        <td data-bind="text: damage"></td>
+        <td>Your Stats:</td>
+        <td><input type="text" data-bind="value: weaponDamage"></td>
+        <td><input type="text" data-bind="value: mainStat"></td>
+        <td><input type="text" data-bind="value: criticalHit"></td>
+        <td><input type="text" data-bind="value: directHit"></td>
+        <td><input type="text" data-bind="value: determination"></td>
+        <td><input type="text" data-bind="value: speedStat"></td>
+        <!-- ko if: roleStatName -->
+        <td><input type="text" data-bind="value: roleStat"></td>
+        <!-- /ko -->
+        <td data-bind="text: hitDamage"></td>
+        <td data-bind="text: dotDamage"></td>
+    </tr>
+    <tr>
+        <td>Crit/Direct Rates</td>
+        <td></td>
+        <td></td>
+        <td data-bind="text: criticalHitRate"></td>
+        <td data-bind="text: directHitRate"></td>
+        <td></td>
+        <td></td>
+        <!-- ko if: roleStatName -->
+        <td></td>
+        <!-- /ko -->
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Damage Modifier</td>
+        <td></td>
+        <td></td>
+        <td data-bind="text: criticalHitDamage"></td>
+        <td data-bind="text: directHitDamage"></td>
+        <td data-bind="text: determinationDamage"></td>
+        <td data-bind="text: speedDamage"></td>
+        <!-- ko if: roleStatName -->
+        <td></td>
+        <!-- /ko -->
+        <td></td>
+        <td></td>
     </tr>
 </table>
 </body>

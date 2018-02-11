@@ -107,6 +107,10 @@ var parserViewModel = function() {
     model.determinationDamage = ko.computed(function() {
        return ( 1000 + Math.floor(130 * (model.determination() - 292) / 2170) ) / 1000;
     });
+    model.speedDamage = ko.computed(function() {
+       return 1000 / ( 1000 - Math.floor(130 * (model.speedStat() - 364) / 2170) );
+    });
+
     model.roleStatDamage = ko.computed(function() {
         // Default multiplier of 1 - for either when no class is selected, or classes that don't get tenacity damage modifier
         var roleStatDamage = 1;
@@ -118,10 +122,26 @@ var parserViewModel = function() {
         return roleStatDamage;
     });
 
-    model.damage = ko.computed(function() {
+    model.hitDamage = ko.computed(function() {
         // calculate base damage of a 100 potency attack
         var baseDamage = Math.floor(model.effectiveWeaponDamage() * model.mainStatDamage());
         baseDamage = Math.floor(baseDamage * model.determinationDamage());
+        baseDamage = Math.floor(baseDamage * model.roleStatDamage());
+        var damage =
+            // Normal hit rate * base damage
+            ( 1 - model.criticalHitRate() - model.directHitRate() + model.criticalHitRate() * model.directHitRate() ) * baseDamage +
+            // Critical hit rate * critical damage (exclude critical + direct hits)
+            ( model.criticalHitRate() * ( 1 - model.directHitRate() ) ) * baseDamage * model.criticalHitDamage() +
+            // Direct hit rate * direct hit damage (exclude critical + direct hits)
+            ( model.directHitRate() * ( 1 - model.criticalHitRate() ) ) * baseDamage * model.directHitDamage() +
+            // Critical+Direct Hit rate * critical damage * direct hit damage
+            ( model.criticalHitRate() * model.directHitRate() ) * baseDamage * model.criticalHitDamage() * model.directHitDamage();
+        return damage;
+    });
+    model.dotDamage = ko.computed(function() {
+        // calculate base damage of a 100 potency attack
+        var baseDamage = Math.floor(model.effectiveWeaponDamage() * model.mainStatDamage());
+        baseDamage = Math.floor(baseDamage * model.determinationDamage() * model.speedDamage() );
         baseDamage = Math.floor(baseDamage * model.roleStatDamage());
         var damage =
             // Normal hit rate * base damage
