@@ -23,7 +23,7 @@ var parserViewModel = function(){
                     };
                     boss.specs.forEach(function(spec){
                         spec.data.forEach(function(clear){
-                            var clearMinutes = Math.Floor(clear.duration / 60000);
+                            var clearMinutes = Math.floor(clear.duration / 60000);
                             var clearSeconds = ((clear.duration % 60000) / 1000).toFixed(0);
                             var clearDate = new Date(clear.startTime);
 
