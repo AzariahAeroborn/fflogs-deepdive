@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.4.2.js"></script>
+    <link rel="stylesheet" href="lib/deepdive.css">
+    <title>FFLogs Deepdive - Analyze your logs</title>
+</head>
+<body>
+API Key: <input type="text" data-bind="value: apiKey">
+<br>Character Name: <input type="text" data-bind="value: characterName"> - World: <select data-bind="options: worlds, optionsText: 'world', selectedValue: selectedWorld"></select>
+<br><input type="button" data-bind="onClick: characterSearch">
+<br><br>
+API Response: <textarea rows="20" cols="80" data-bind="value: apiResponse" readonly></textarea>
+</body>
+<script type="text/javascript" src="lib/viewmodel.js"></script>
+</html>
