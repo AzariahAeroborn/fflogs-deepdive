@@ -43,7 +43,7 @@ var parserViewModel = function(){
                             bossData.clears.push(clearData);
                         });
                     });
-
+                    model.fights.empty();
                     model.fights.push(bossData);
                 });
             }
