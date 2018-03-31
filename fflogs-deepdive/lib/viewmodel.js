@@ -4,7 +4,7 @@ var parserViewModel = function(){
     model.apiKey = ko.observable();
     model.characterName = ko.observable();
     model.selectedWorld = ko.observable();
-    model.apiResponse = ko.observable();
+    model.fights = ko.observableArray();
 
     model.characterSearch = function(){
         var baseURL = "https://www.fflogs.com/v1/parses/character/";
@@ -14,8 +14,38 @@ var parserViewModel = function(){
 
         var xhr = new XMLHttpRequest;
         xhr.onreadystatechange = function() {
-            if ( this.readyState == 4 && this.status == 200 ) {
-                model.apiResponse(this.responseText);
+            if ( this.readyState === 4 && this.status === 200 ) {
+                var apiResponse = JSON.parse(this.responseText);
+                apiResponse.forEach(function(boss){
+                    var bossData = {
+                        boss: boss.name,
+                        clears: []
+                    };
+                    boss.specs.forEach(function(spec){
+                        spec.data.forEach(function(clear){
+                            var clearMinutes = Math.Floor(clear.duration / 60000);
+                            var clearSeconds = ((clear.duration % 60000) / 1000).toFixed(0);
+                            var clearDate = new Date(clear.startTime);
+
+                            var clearData = {
+                                characterid: clear.character_id,
+                                class: spec.spec,
+                                date: clearDate.toLocaleDateString('en-US',{month: 'short', day: 'numeric', year: 'numeric'}),
+                                dps: clear.persecondamount,
+                                patch: clear.ilvl,
+                                duration: clearMinutes + ":" + (clearSeconds < 10 ? "0" : "") + seconds,
+                                guild: clear.guild,
+                                percentile: clear.percent,
+                                historyPercentile: clear.historical_percent,
+                                reportid: clear.report_code,
+                                fight: clear.report_fight
+                            };
+                            bossData.clears.push(clearData);
+                        });
+                    });
+
+                    model.fights.push(bossData);
+                });
             }
         };
         xhr.open("GET", baseURL + character + "/" + world.world + "/" + world.region + "?api_key=" + apiKey, true);
