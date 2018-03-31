@@ -33,7 +33,7 @@ var parserViewModel = function(){
                                 date: clearDate.toLocaleDateString('en-US',{month: 'short', day: 'numeric', year: 'numeric'}),
                                 dps: clear.persecondamount,
                                 patch: clear.ilvl,
-                                duration: clearMinutes + ":" + (clearSeconds < 10 ? "0" : "") + seconds,
+                                duration: clearMinutes + ":" + (clearSeconds < 10 ? "0" : "") + clearSeconds,
                                 guild: clear.guild,
                                 percentile: clear.percent,
                                 historyPercentile: clear.historical_percent,
