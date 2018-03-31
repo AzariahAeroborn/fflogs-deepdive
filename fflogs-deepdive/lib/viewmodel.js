@@ -91,3 +91,5 @@ var parserViewModel = function(){
         ,{world: "Titan", region: "JP"}
     ]);
 };
+
+ko.applyBindings(new parserViewModel());

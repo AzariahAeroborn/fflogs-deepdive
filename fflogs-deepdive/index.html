@@ -9,9 +9,10 @@
 <body>
 API Key: <input type="text" data-bind="value: apiKey">
 <br>Character Name: <input type="text" data-bind="value: characterName"> - World: <select data-bind="options: worlds, optionsText: 'world', selectedValue: selectedWorld"></select>
-<br><input type="button" data-bind="onClick: characterSearch">
+<br><input type="button" data-bind="onClick: characterSearch" value="Character Search">
 <br><br>
-API Response: <textarea rows="20" cols="80" data-bind="value: apiResponse" readonly></textarea>
+API Response:
+<br><textarea rows="20" cols="80" data-bind="value: apiResponse" readonly></textarea>
 </body>
 <script type="text/javascript" src="lib/viewmodel.js"></script>
 </html>
