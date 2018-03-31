@@ -15,7 +15,7 @@ var parserViewModel = function(){
         var xhr = new XMLHttpRequest;
         xhr.onreadystatechange = function() {
             if ( this.readyState == 4 && this.status == 200 ) {
-                model.apiResponse = this.responseText;
+                model.apiResponse(this.responseText);
             }
         };
         xhr.open("GET", baseURL + character + "/" + world.world + "/" + world.region + "?api_key=" + apiKey, true);
