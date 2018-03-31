@@ -15,6 +15,9 @@ var parserViewModel = function(){
         var xhr = new XMLHttpRequest;
         xhr.onreadystatechange = function() {
             if ( this.readyState === 4 && this.status === 200 ) {
+                // clear fights array - prevent adding fights over and over on re-search
+                model.fights.removeAll();
+
                 var apiResponse = JSON.parse(this.responseText);
                 apiResponse.forEach(function(boss){
                     var bossData = {
@@ -43,7 +46,6 @@ var parserViewModel = function(){
                             bossData.clears.push(clearData);
                         });
                     });
-                    model.fights.removeAll();
                     model.fights.push(bossData);
                 });
             }
