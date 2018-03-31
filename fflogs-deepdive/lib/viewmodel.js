@@ -19,6 +19,7 @@ var parserViewModel = function(){
             }
         };
         xhr.open("GET", baseURL + character + "/" + world.world + "/" + world.region + "?api_key=" + apiKey, true);
+        xhr.send();
     };
 
     model.worlds = ko.observableArray([
