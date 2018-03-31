@@ -25,7 +25,7 @@ var parserViewModel = function(){
                         spec.data.forEach(function(clear){
                             var clearMinutes = Math.floor(clear.duration / 60000);
                             var clearSeconds = ((clear.duration % 60000) / 1000).toFixed(0);
-                            var clearDate = new Date(clear.startTime);
+                            var clearDate = new Date(clear.start_time);
 
                             var clearData = {
                                 characterid: clear.character_id,
@@ -35,8 +35,8 @@ var parserViewModel = function(){
                                 patch: clear.ilvl,
                                 duration: clearMinutes + ":" + (clearSeconds < 10 ? "0" : "") + clearSeconds,
                                 guild: clear.guild,
-                                percentile: clear.percent,
-                                historyPercentile: clear.historical_percent,
+                                percentile: Math.floor(clear.percent * 10) / 10,
+                                historyPercentile: Math.floor(clear.historical_percent * 10) / 10,
                                 reportid: clear.report_code,
                                 fight: clear.report_fight
                             };
