@@ -55,7 +55,7 @@ var parserViewModel = function(){
         xhr.send();
     };
 
-    model.openClear = function(clear) {
+    model.getFight = function(clear) {
         // Get report information
         var baseURL = "https://www.fflogs.com/v1/report/fights/";
         var reportid = clear.reportid;
@@ -69,7 +69,7 @@ var parserViewModel = function(){
                 var f = apiResponse.fights.filter(function(obj){
                     return obj.id === fight;
                 });
-                var fightdata = {};
+                var fightdata = { start: f[0].start_time };
                 fightdata.friendlies = apiResponse.friendlies.filter(function(obj){
                    var isfound = obj.fights.filter(function(o){
                        return o.id === fight;
@@ -88,13 +88,13 @@ var parserViewModel = function(){
                     });
                     return isfound.length > 0;
                 });
-                model.clearEvents(reportid,f[0].start_time,f[0].end_time,fightdata);
+                model.getFightEvents(reportid,f[0].start_time,f[0].end_time,fightdata);
             }
         };
         xhr.open("GET", baseURL + reportid + "?api_key=" + apiKey, true);
         xhr.send();
     };
-    model.clearEvents = function(reportid, starttime, endtime, fightdata) {
+    model.getFightEvents = function(reportid, starttime, endtime, fightdata) {
         var baseURL = "https://www.fflogs.com/v1/report/events/";
         var apiKey = model.apiKey();
         fightdata.events = [];
@@ -111,20 +111,30 @@ var parserViewModel = function(){
                     xhr.open("GET", baseURL + reportid + "?api_key=" + apiKey + "&start=" + starttime + "&end=" + endtime, true);
                     xhr.send();
                 } else {
-                    model.parseEvents(fightdata);
+                    model.parseFight(fightdata);
                 }
             }
         };
         xhr.open("GET", baseURL + reportid + "?api_key=" + apiKey + "&start=" + starttime + "&end=" + endtime, true);
         xhr.send();
     };
-    model.parseEvents = function(fightdata) {
-        var i,id;
+    model.parseFight = function(fightdata) {
+        var i,id,events,skills;
         for ( i = 0 ; i < fightdata.friendlies.length ; i++ ) {
             id = fightdata.friendlies[i].id;
-            fightdata.friendlies[i].events = fightdata.events.filter(function(obj){
+            events = fightdata.events.filter(function(obj){
                return obj.sourceID === id;
-           });
+            });
+            skills = {};
+            events.forEach(function(event){
+                var ability = event.ability.name;
+                if ( typeof(events[ability]) === undefined ) {
+                    skills.ability = [event];
+                } else {
+                    skills.ability.push(event);
+                }
+            });
+            fightdata.friendlies[i].skills = skills;
         }
         for ( i = 0 ; i < fightdata.friendlyPets.length ; i++ ) {
             id = fightdata.friendlyPets[i].id;
