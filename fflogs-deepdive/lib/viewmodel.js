@@ -88,7 +88,7 @@ var parserViewModel = function(){
                 var apiResponse = JSON.parse(this.responseText);
                 console.log(apiResponse);
 
-                while ( apiResponse.nextPageTimestamp < endtime ) {
+                if ( apiResponse.nextPageTimestamp < endtime ) {
                     starttime = apiResponse.nextPageTimestamp;
                     xhr.open("GET", baseURL + reportid + "?api_key=" + apiKey + "&start=" + starttime + "&end=" + endtime, true);
                     xhr.send();
