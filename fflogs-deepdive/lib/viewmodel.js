@@ -5,6 +5,10 @@ var parserViewModel = function(){
     model.characterName = ko.observable();
     model.selectedWorld = ko.observable();
     model.fights = ko.observableArray();
+    model.fightEvents = ko.observableArray();
+    model.fightEvents.subscribe(function(newValue){
+        console.log(newValue.length + " events now stored in the fightEvents cache.")
+    });
 
     model.characterSearch = function(){
         var baseURL = "https://www.fflogs.com/v1/parses/character/";
@@ -83,6 +87,14 @@ var parserViewModel = function(){
             if (this.readyState === 4 && this.status === 200) {
                 var apiResponse = JSON.parse(this.responseText);
                 console.log(apiResponse);
+
+                while ( apiResponse.nextPageTimestamp < endtime ) {
+                    starttime = apiResponse.nextPageTimestamp;
+                    xhr.open("GET", baseURL + reportid + "?api_key=" + apiKey + "&start=" + starttime + "&end=" + endtime, true);
+                    xhr.send();
+                }
+
+                model.fightEvents(model.fightEvents().concat(apiResponse.events));
             }
         };
         xhr.open("GET", baseURL + reportid + "?api_key=" + apiKey + "&start=" + starttime + "&end=" + endtime, true);
