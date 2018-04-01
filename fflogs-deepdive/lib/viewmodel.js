@@ -150,12 +150,11 @@ var parserViewModel = function(){
         });
         fightdata.selectedFriendly = ko.observable();
         fightdata.selectedFriendlySkills = ko.computed(function(){
-           var selectedFriendly = fightdata.friendlies.filter(function(f){
-               var selected = selectedFriendly();
-               return f.id === selected;
+           var selected = fightdata.friendlies.filter(function(f){
+               return f.id === fightdata.selectedFriendly();
            });
-           console.log(selectedFriendly[0].skills);
-           return selectedFriendly[0].name;
+           console.log(selected[0].skills);
+           return selected[0].name;
         });
         model.fights.push(fightdata);
     };
