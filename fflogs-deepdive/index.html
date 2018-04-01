@@ -27,7 +27,7 @@ Fights:
             <th>Today %</th>
         </tr>
     </thead>
-    <tbody data-bind="foreach: clears, click: openClear">
+    <tbody data-bind="foreach: clears, click: $parent.openClear">
         <tr>
             <td data-bind="text: historyPercentile"></td>
             <td data-bind="text: dps"></td>
