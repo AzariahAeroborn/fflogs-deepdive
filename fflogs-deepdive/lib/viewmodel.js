@@ -131,9 +131,9 @@ var parserViewModel = function(){
                     if (event.ability.hasOwnProperty("name")) {
                         var ability = event.ability.name;
                         if (typeof(skills[ability]) === "undefined") {
-                            skills.ability = [event];
+                            skills[ability] = [event];
                         } else {
-                            skills.ability.push(event);
+                            skills[ability].push(event);
                         }
                     }
                 }
