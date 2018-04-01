@@ -119,6 +119,25 @@ var parserViewModel = function(){
         xhr.send();
     };
     model.parseEvents = function(fightdata) {
+        var i,id;
+        for ( i = 0 ; i < fightdata.friendlies.length ; i++ ) {
+            id = fightdata.friendlies[i].id;
+            fightdata.friendlies[i].events = fightdata.events.filter(function(obj){
+               return obj.sourceID === id;
+           });
+        }
+        for ( i = 0 ; i < fightdata.friendlyPets.length ; i++ ) {
+            id = fightdata.friendlyPets[i].id;
+            fightdata.friendlyPets[i].events = fightdata.events.filter(function(obj){
+                return obj.sourceID === id;
+            });
+        }
+        for ( i = 0 ; i < fightdata.enemies.length ; i++ ) {
+            id = fightdata.enemies[i].id;
+            fightdata.enemies[i].events = fightdata.events.filter(function(obj){
+                return obj.sourceID === id;
+            });
+        }
         console.log(fightdata);
     };
 
