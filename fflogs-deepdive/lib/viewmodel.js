@@ -4,11 +4,8 @@ var parserViewModel = function(){
     model.apiKey = ko.observable();
     model.characterName = ko.observable();
     model.selectedWorld = ko.observable();
+    model.fightlist = ko.observableArray();
     model.fights = ko.observableArray();
-    model.fightEvents = ko.observableArray();
-    model.fightEvents.subscribe(function(newValue){
-        console.log(newValue.length + " events now stored in the fightEvents cache.")
-    });
 
     model.characterSearch = function(){
         var baseURL = "https://www.fflogs.com/v1/parses/character/";
@@ -20,7 +17,7 @@ var parserViewModel = function(){
         xhr.onreadystatechange = function() {
             if ( this.readyState === 4 && this.status === 200 ) {
                 // clear fights array - prevent adding fights over and over on re-search
-                model.fights.removeAll();
+                model.fightlist.removeAll();
 
                 var apiResponse = JSON.parse(this.responseText);
                 apiResponse.forEach(function(boss){
@@ -50,7 +47,7 @@ var parserViewModel = function(){
                             bossData.clears.push(clearData);
                         });
                     });
-                    model.fights.push(bossData);
+                    model.fightlist.push(bossData);
                 });
             }
         };
@@ -72,34 +69,59 @@ var parserViewModel = function(){
                 var f = apiResponse.fights.filter(function(obj){
                     return obj.id === fight;
                 });
-                model.clearEvents(reportid,f[0].start_time,f[0].end_time);
+                var fightdata = {};
+                fightdata.friendlies = apiResponse.friendlies.filter(function(obj){
+                   var isfound = obj.fights.filter(function(o){
+                       return o.id === fight;
+                   });
+                   return isfound.length > 0;
+                });
+                fightdata.friendlyPets = apiResponse.friendlyPets.filter(function(obj){
+                    var isfound = obj.fights.filter(function(o){
+                        return o.id === fight;
+                    });
+                    return isfound.length > 0;
+                });
+                fightdata.enemies = apiResponse.enemies.filter(function(obj){
+                    var isfound = obj.fights.filter(function(o){
+                        return o.id === fight;
+                    });
+                    return isfound.length > 0;
+                });
+                model.clearEvents(reportid,f[0].start_time,f[0].end_time,fightdata);
             }
         };
         xhr.open("GET", baseURL + reportid + "?api_key=" + apiKey, true);
         xhr.send();
     };
-    model.clearEvents = function(reportid, starttime, endtime) {
+    model.clearEvents = function(reportid, starttime, endtime, fightdata) {
         var baseURL = "https://www.fflogs.com/v1/report/events/";
         var apiKey = model.apiKey();
+        fightdata.events = [];
 
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
             if (this.readyState === 4 && this.status === 200) {
                 var apiResponse = JSON.parse(this.responseText);
                 console.log(apiResponse);
+                fightdata.events.concat(apiResponse.events);
 
                 if ( apiResponse.nextPageTimestamp < endtime ) {
                     starttime = apiResponse.nextPageTimestamp;
                     xhr.open("GET", baseURL + reportid + "?api_key=" + apiKey + "&start=" + starttime + "&end=" + endtime, true);
                     xhr.send();
+                } else {
+                    model.parseEvents(fightdata);
                 }
-
-                model.fightEvents(model.fightEvents().concat(apiResponse.events));
             }
         };
         xhr.open("GET", baseURL + reportid + "?api_key=" + apiKey + "&start=" + starttime + "&end=" + endtime, true);
         xhr.send();
     };
+    model.parseEvents = function(fightdata) {
+        console.log(fightdata);
+    };
+
 
     model.worlds = ko.observableArray([
         {world: "Adamantoise", region: "NA"}

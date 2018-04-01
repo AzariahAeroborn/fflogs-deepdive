@@ -13,8 +13,8 @@ API Key: <input type="text" data-bind="value: apiKey">
 <br><br>
 Fights:
 <br>
-<!-- ko foreach: fights -->
-<div data-bind="text: boss" style="font-weight: 700; font-size: x-large"></div>
+<!-- ko foreach: fightlist -->
+<div data-bind="data: boss" style="font-weight: 700; font-size: x-large"></div>
 <table>
     <thead>
         <tr>
