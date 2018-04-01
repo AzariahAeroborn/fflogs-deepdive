@@ -79,7 +79,8 @@ var parserViewModel = function(){
                 var clearDate = new Date(apiResponse.start);
 
                 var fightdata = {
-                    fightlink: "fight-" + reportid,
+                    fightlink: "#fight-" + reportid,
+                    fightid: "fight-" + reportid,
                     date: clearDate.toLocaleDateString('en-US',{month: 'short', day: 'numeric'})
                 };
 
