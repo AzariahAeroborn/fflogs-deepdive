@@ -127,11 +127,15 @@ var parserViewModel = function(){
             });
             skills = {};
             events.forEach(function(event){
-                var ability = event.ability.name;
-                if ( typeof(skills[ability]) === "undefined" ) {
-                    skills.ability = [event];
-                } else {
-                    skills.ability.push(event);
+                if ( event.hasOwnProperty("ability") ) {
+                    if (event.ability.hasOwnProperty("name")) {
+                        var ability = event.ability.name;
+                        if (typeof(skills[ability]) === "undefined") {
+                            skills.ability = [event];
+                        } else {
+                            skills.ability.push(event);
+                        }
+                    }
                 }
             });
             fightdata.friendlies[i].skills = skills;
