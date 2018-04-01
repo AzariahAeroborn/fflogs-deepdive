@@ -20,9 +20,12 @@ var parserViewModel = function(){
                 model.fightlist.removeAll();
 
                 var apiResponse = JSON.parse(this.responseText);
+                var searchResults = {};
+                searchResults.character = character;
+                searchResults.bossList = [];
                 apiResponse.forEach(function(boss){
                     var bossData = {
-                        boss: boss.name,
+                        name: boss.name,
                         clears: []
                     };
                     boss.specs.forEach(function(spec){
@@ -47,8 +50,9 @@ var parserViewModel = function(){
                             bossData.clears.push(clearData);
                         });
                     });
-                    model.fightlist.push(bossData);
+                    searchResults.bossList.push(bossData);
                 });
+                model.fightlist.push(searchResults);
             }
         };
         xhr.open("GET", baseURL + character + "/" + world.world + "/" + world.region + "?api_key=" + apiKey, true);
@@ -66,10 +70,21 @@ var parserViewModel = function(){
         xhr.onreadystatechange = function() {
             if ( this.readyState === 4 && this.status === 200 ) {
                 var apiResponse = JSON.parse(this.responseText);
+                var clearDate = new Date(clear.start_time);
+
+                var fightdata = {
+                    fightlink: "fight-" + reportid,
+                    date: clearDate.toLocaleDateString('en-US',{month: 'short', day: 'numeric'})
+                };
+
+                fightdata.displayname = fightdata.name + " - " + fightdata.date;
+
                 var f = apiResponse.fights.filter(function(obj){
                     return obj.id === fight;
                 });
-                var fightdata = { start: f[0].start_time };
+
+                fightdata.start = f[0].start_time;
+                fightdata.name = f[0].name;
                 fightdata.friendlies = apiResponse.friendlies.filter(function(obj){
                    var isfound = obj.fights.filter(function(o){
                        return o.id === fight;
@@ -103,7 +118,6 @@ var parserViewModel = function(){
         xhr.onreadystatechange = function() {
             if (this.readyState === 4 && this.status === 200) {
                 var apiResponse = JSON.parse(this.responseText);
-                console.log(apiResponse);
                 fightdata.events = fightdata.events.concat(apiResponse.events);
 
                 if ( apiResponse.nextPageTimestamp < endtime ) {
@@ -119,16 +133,25 @@ var parserViewModel = function(){
         xhr.send();
     };
     model.parseFight = function(fightdata) {
-        fightdata.friendlies.forEach(function(){
-            parseActorEvents(this,fightdata);
+        fightdata.friendlies.forEach(function(actor){
+            parseActorEvents(actor,fightdata);
         });
-        fightdata.friendlyPets.forEach(function(){
-            parseActorEvents(this,fightdata);
+        fightdata.friendlyPets.forEach(function(actor){
+            parseActorEvents(actor,fightdata);
         });
-        fightdata.enemies.forEach(function(){
-            parseActorEvents(this,fightdata);
+        fightdata.enemies.forEach(function(actor){
+            parseActorEvents(actor,fightdata);
         });
-        console.log(fightdata);
+        fightdata.selectedFriendly = ko.observable();
+        fightdata.selectedFriendlySkills = ko.computed(function(){
+           var selectedFriendly = fightdata.friendlies.filter(function(f){
+               var selected = selectedFriendly();
+               return f.id === selected;
+           });
+           console.log(selectedFriendly[0].skills);
+           return selectedFriendly[0].name;
+        });
+        model.fights.push(fightdata);
     };
     var parseActorEvents = function(actor,fightdata){
         var id = actor.id;
