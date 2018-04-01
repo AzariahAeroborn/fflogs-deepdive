@@ -19,7 +19,7 @@ API Key: <input type="text" data-bind="value: apiKey">
         <li><a href="#tabs-fightlist">Fight summaries for <span data-bind="text: character"></span></a></li>
         <!-- /ko -->
         <!-- ko foreach: fights -->
-        <li><a data-bind="href: fightlink, text: displayname"></a></li>
+        <li><a data-bind="attr: { href: fightlink }, text: displayname"></a></li>
         <!-- /ko -->
     </ul>
     <!-- ko foreach: fightlist -->
@@ -54,7 +54,7 @@ API Key: <input type="text" data-bind="value: apiKey">
     </div>
     <!-- /ko -->
     <!-- ko foreach: fights -->
-    <div data-bind="id: fightlink">
+    <div data-bind="attr: { id: fightlink }">
         Friendlies: <select data-bind="options: friendlies, optionsText: 'name', optionsValue: 'id', value: selectedFriendly"></select>
         <div data-bind="text: selectedFriendlySkills"></div>
     </div>

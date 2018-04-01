@@ -76,14 +76,12 @@ var parserViewModel = function(){
         xhr.onreadystatechange = function() {
             if ( this.readyState === 4 && this.status === 200 ) {
                 var apiResponse = JSON.parse(this.responseText);
-                var clearDate = new Date(clear.start_time);
+                var clearDate = new Date(apiResponse.start);
 
                 var fightdata = {
                     fightlink: "fight-" + reportid,
                     date: clearDate.toLocaleDateString('en-US',{month: 'short', day: 'numeric'})
                 };
-
-                fightdata.displayname = fightdata.name + " - " + fightdata.date;
 
                 var f = apiResponse.fights.filter(function(obj){
                     return obj.id === fight;
@@ -91,6 +89,9 @@ var parserViewModel = function(){
 
                 fightdata.start = f[0].start_time;
                 fightdata.name = f[0].name;
+
+                fightdata.displayname = fightdata.name + " - " + fightdata.date;
+
                 fightdata.friendlies = apiResponse.friendlies.filter(function(obj){
                    var isfound = obj.fights.filter(function(o){
                        return o.id === fight;
