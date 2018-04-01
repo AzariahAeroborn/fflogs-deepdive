@@ -128,7 +128,7 @@ var parserViewModel = function(){
             skills = {};
             events.forEach(function(event){
                 var ability = event.ability.name;
-                if ( typeof(skills[ability]) === undefined ) {
+                if ( typeof(skills[ability]) === "undefined" ) {
                     skills.ability = [event];
                 } else {
                     skills.ability.push(event);
