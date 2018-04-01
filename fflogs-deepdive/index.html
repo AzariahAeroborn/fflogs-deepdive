@@ -24,7 +24,7 @@ API Key: <input type="text" data-bind="value: apiKey">
     </ul>
     <!-- ko foreach: fightlist -->
     <div id="tabs-fightlist">
-        <!-- ko foreach: bossData -->
+        <!-- ko foreach: bossList -->
         <div data-bind="data: name" style="font-weight: 700; font-size: large"></div>
         <table>
             <thead>
@@ -63,4 +63,9 @@ API Key: <input type="text" data-bind="value: apiKey">
 
 </body>
 <script type="text/javascript" src="lib/viewmodel.js"></script>
+<script type="text/javascript">
+   $( function() {
+       $( "#tabs" ).tabs();
+   });
+</script>
 </html>

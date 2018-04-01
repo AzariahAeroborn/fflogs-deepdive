@@ -5,7 +5,13 @@ var parserViewModel = function(){
     model.characterName = ko.observable();
     model.selectedWorld = ko.observable();
     model.fightlist = ko.observableArray();
+    model.fightlist.subscribe(function() {
+        $("#tabs").tabs();
+    });
     model.fights = ko.observableArray();
+    model.fights.subscribe(function() {
+        $("#tabs").tabs();
+    });
 
     model.characterSearch = function(){
         var baseURL = "https://www.fflogs.com/v1/parses/character/";
