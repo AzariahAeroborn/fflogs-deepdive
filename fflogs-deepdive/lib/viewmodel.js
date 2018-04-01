@@ -54,6 +54,40 @@ var parserViewModel = function(){
         xhr.send();
     };
 
+    model.openClear = function(clear) {
+        // Get report information
+        var baseURL = "https://www.fflogs.com/v1/report/fights/";
+        var reportid = clear.reportid;
+        var fight = clear.fight;
+        var apiKey = model.apiKey();
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if ( this.readyState === 4 && this.status === 200 ) {
+                var apiResponse = JSON.parse(this.responseText);
+                var f = apiResponse.fights.filter(function(obj){
+                    return obj.id === fight;
+                });
+                model.clearEvents(reportid,f.start_time,f.end_time);
+            }
+        };
+        xhr.open("GET", baseURL + reportid + "?api_key=" + apiKey, true);
+        xhr.send();
+    };
+    model.clearEvents = function(reportid, starttime, endtime) {
+        var baseURL = "https://www.fflogs.com/v1/report/events/";
+        var apiKey = model.apiKey();
+
+        xhr.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+                var apiResponse = JSON.parse(this.responseText);
+                console.log(apiResponse);
+            }
+        };
+        xhr.open("GET", baseURL + reportid + "?api_key=" + apiKey + "&start=" + starttime + "&end=" + endtime, true);
+        xhr.send();
+    };
+
     model.worlds = ko.observableArray([
         {world: "Adamantoise", region: "NA"}
         ,{world: "Balmung", region: "NA"}
