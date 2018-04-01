@@ -19,7 +19,7 @@ API Key: <input type="text" data-bind="value: apiKey">
         <li><a href="#tabs-fightlist">Fight summaries for <span data-bind="text: character"></span></a></li>
         <!-- /ko -->
         <!-- ko foreach: fights -->
-        <li><a data-bind="attr: { href: fightlink }, text: displayname"></a></li>
+        <li><a data-bind="attr: { href: fightlink }, text: displayname"></a> <span class="ui-icon ui-icon-close" role="presentation" data-bind="click: removeFight">Remove</span></li>
         <!-- /ko -->
     </ul>
     <!-- ko foreach: fightlist -->

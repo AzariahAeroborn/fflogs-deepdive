@@ -162,6 +162,9 @@ var parserViewModel = function(){
                return "";
            }
         });
+        fightdata.removeFight = function(fight){
+            model.fights.remove(fight);
+        };
 
         var defaultFriendly = fightdata.friendlies.filter(function(obj){
             return obj.name === model.characterName();
