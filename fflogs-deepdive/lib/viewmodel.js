@@ -78,6 +78,7 @@ var parserViewModel = function(){
         var baseURL = "https://www.fflogs.com/v1/report/events/";
         var apiKey = model.apiKey();
 
+        var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
             if (this.readyState === 4 && this.status === 200) {
                 var apiResponse = JSON.parse(this.responseText);
