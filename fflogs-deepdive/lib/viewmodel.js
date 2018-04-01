@@ -162,6 +162,14 @@ var parserViewModel = function(){
                return "";
            }
         });
+
+        var defaultFriendly = fightdata.friendlies.filter(function(obj){
+            return obj.name === model.characterName();
+        });
+        if ( defaultFriendly.length > 0 ) {
+            selectedFriendly(defaultFriendly[0].id);
+        }
+
         model.fights.push(fightdata);
     };
     var parseActorEvents = function(actor,fightdata){
