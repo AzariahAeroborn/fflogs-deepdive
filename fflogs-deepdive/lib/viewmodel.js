@@ -104,7 +104,7 @@ var parserViewModel = function(){
             if (this.readyState === 4 && this.status === 200) {
                 var apiResponse = JSON.parse(this.responseText);
                 console.log(apiResponse);
-                fightdata.events.concat(apiResponse.events);
+                fightdata.events = fightdata.events.concat(apiResponse.events);
 
                 if ( apiResponse.nextPageTimestamp < endtime ) {
                     starttime = apiResponse.nextPageTimestamp;
