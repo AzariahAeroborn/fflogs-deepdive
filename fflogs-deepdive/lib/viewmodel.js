@@ -119,42 +119,39 @@ var parserViewModel = function(){
         xhr.send();
     };
     model.parseFight = function(fightdata) {
-        var i,id,events,skills;
-        for ( i = 0 ; i < fightdata.friendlies.length ; i++ ) {
-            id = fightdata.friendlies[i].id;
-            events = fightdata.events.filter(function(obj){
-               return obj.sourceID === id;
-            });
-            skills = {};
-            events.forEach(function(event){
-                if ( event.hasOwnProperty("ability") ) {
-                    if (event.ability.hasOwnProperty("name")) {
-                        var ability = event.ability.name;
-                        if (typeof(skills[ability]) === "undefined") {
-                            skills[ability] = [event];
-                        } else {
-                            skills[ability].push(event);
-                        }
-                    }
-                }
-            });
-            fightdata.friendlies[i].skills = skills;
-        }
-        for ( i = 0 ; i < fightdata.friendlyPets.length ; i++ ) {
-            id = fightdata.friendlyPets[i].id;
-            fightdata.friendlyPets[i].events = fightdata.events.filter(function(obj){
-                return obj.sourceID === id;
-            });
-        }
-        for ( i = 0 ; i < fightdata.enemies.length ; i++ ) {
-            id = fightdata.enemies[i].id;
-            fightdata.enemies[i].events = fightdata.events.filter(function(obj){
-                return obj.sourceID === id;
-            });
-        }
+        fightdata.friendlies.forEach(function(){
+            parseActorEvents(this,fightdata);
+        });
+        fightdata.friendlyPets.forEach(function(){
+            parseActorEvents(this,fightdata);
+        });
+        fightdata.enemies.forEach(function(){
+            parseActorEvents(this,fightdata);
+        });
         console.log(fightdata);
     };
+    var parseActorEvents = function(actor,fightdata){
+        var id = actor.id;
+        var events = fightdata.events.filter(function(obj){
+            return obj.sourceID === id;
+        });
+        var skills = {};
+        events.forEach(function(event){
+            if ( event.hasOwnProperty("ability") ) {
+                if (event.ability.hasOwnProperty("name")) {
+                    var ability = event.ability.name;
+                    if (typeof(skills[ability]) === "undefined") {
+                        skills[ability] = [event];
+                    } else {
+                        skills[ability].push(event);
+                    }
+                }
+            }
+        });
 
+        actor.skills = skills;
+        actor.events = events;
+    };
 
     model.worlds = ko.observableArray([
         {world: "Adamantoise", region: "NA"}
