@@ -6,11 +6,11 @@ var parserViewModel = function(){
     model.selectedWorld = ko.observable();
     model.fightlist = ko.observableArray();
     model.fightlist.subscribe(function() {
-        $("#tabs").tabs("refresh");
+        setTimeout(function() { $("#tabs").tabs("refresh"); }, 0);
     });
     model.fights = ko.observableArray();
     model.fights.subscribe(function() {
-        $("#tabs").tabs("refresh");
+        setTimeout(function() { $("#tabs").tabs("refresh"); }, 0);
     });
 
     model.characterSearch = function(){
