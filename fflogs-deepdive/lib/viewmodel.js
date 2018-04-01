@@ -68,7 +68,7 @@ var parserViewModel = function(){
                 var f = apiResponse.fights.filter(function(obj){
                     return obj.id === fight;
                 });
-                model.clearEvents(reportid,f.start_time,f.end_time);
+                model.clearEvents(reportid,f[0].start_time,f[0].end_time);
             }
         };
         xhr.open("GET", baseURL + reportid + "?api_key=" + apiKey, true);
