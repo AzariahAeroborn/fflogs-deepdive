@@ -167,7 +167,7 @@ var parserViewModel = function(){
             return obj.name === model.characterName();
         });
         if ( defaultFriendly.length > 0 ) {
-            selectedFriendly(defaultFriendly[0].id);
+            fightdata.selectedFriendly(defaultFriendly[0].id);
         }
 
         model.fights.push(fightdata);
