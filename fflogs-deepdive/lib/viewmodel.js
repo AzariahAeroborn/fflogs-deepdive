@@ -153,8 +153,12 @@ var parserViewModel = function(){
            var selected = fightdata.friendlies.filter(function(f){
                return f.id === fightdata.selectedFriendly();
            });
-           console.log(selected[0].skills);
-           return selected[0].name;
+           if ( selected.length > 0 ) {
+               console.log(selected[0].skills);
+               return selected[0].name;
+           } else {
+               return "";
+           }
         });
         model.fights.push(fightdata);
     };
