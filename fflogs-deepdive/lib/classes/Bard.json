@@ -50,7 +50,8 @@
       "incorrect": {
         "logic": "or",
         "skills": [
-          { "name": "Straight Shot", "quantity": 0, "comparison": ">" }
+          { "name": "Straight Shot", "quantity": 1, "comparison": ">=" },
+          { "name": "Heavy Shot", "quantity": 1, "comparison": ">=" }
         ]
       }
     },

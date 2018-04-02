@@ -163,18 +163,25 @@ var parserViewModel = function(){
             if ( selected.length > 0 ) {
                 var currentClass = "";
                 if ( fightdata.selectedClassParser().hasOwnProperty("type") ) { currentClass = fightdata.selectedClassParser().type; }
-                if ( selected[0].type !== currentClass ) {
-                    getClassParser(selected[0].type);
-                }
+
+                if ( selected[0].type === currentClass ) { fightdata.selectedClassParser.notifySubscribers(); }
+                else { getClassParser(selected[0].type); }
             }
         });
         fightdata.selectedFriendlySkills = ko.computed(function(){
+           var classParser = fightdata.selectedClassParser();
            var selected = fightdata.friendlies.filter(function(f){
                return f.id === fightdata.selectedFriendly();
            });
            if ( selected.length > 0 ) {
-               console.log(selected[0].skills);
-               return selected[0].name;
+               if ( classParser.class === selected[0].type ) {
+                   // Loaded parser matches the class of the selected friendly
+                   console.log(classParser);
+                   console.log(selected[0].skills);
+                   return selected[0].name;
+               } else {
+                   return "Loading class information..."
+               }
            } else {
                return "";
            }
@@ -220,7 +227,7 @@ var parserViewModel = function(){
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
             if (this.readyState === 4 && this.status === 200) {
-                console.log(JSON.parse(this.responseText));
+                fightdata.selectedClassParser(JSON.parse(this.responseText));
             }
         };
         xhr.open("GET", classURL, true);
