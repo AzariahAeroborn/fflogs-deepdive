@@ -7,15 +7,13 @@ var parserViewModel = function(){
     model.fightlist = ko.observableArray();
     model.fightlist.subscribe(function() {
         setTimeout(function() {
-            $("#tabs").tabs("refresh");
-            $("#tabs").tabs("option", "active", 0);
+            $("#tabs").tabs("refresh").tabs("option", "active", 0);
         }, 0);
     });
     model.fights = ko.observableArray();
     model.fights.subscribe(function() {
         setTimeout(function() {
-            $("#tabs").tabs("refresh");
-            $("#tabs").tabs("option", "active", -1);
+            $("#tabs").tabs("refresh").tabs("option", "active", -1);
         }, 0);
     });
 
@@ -54,8 +52,8 @@ var parserViewModel = function(){
                                 patch: clear.ilvl,
                                 duration: clearMinutes + ":" + (clearSeconds < 10 ? "0" : "") + clearSeconds,
                                 guild: clear.guild,
-                                percentile: Math.floor(clear.percent * 10) / 10,
-                                historyPercentile: Math.floor(clear.historical_percent * 10) / 10,
+                                percentile: (Math.floor(clear.percent * 10) / 10).toFixed(1),
+                                historyPercentile: (Math.floor(clear.historical_percent * 10) / 10).toFixed(1),
                                 reportid: clear.report_code,
                                 fight: clear.report_fight
                             };
@@ -157,6 +155,17 @@ var parserViewModel = function(){
             parseActorEvents(actor,fightdata);
         });
         fightdata.selectedFriendly = ko.observable();
+        fightdata.selectedClassParser = ko.observable();
+        fightdata.selectedFriendly.subscribe(function(newValue){
+            var selected = fightdata.friendlies.filter(function(f){
+                return f.id === newValue;
+            });
+            if ( selected.length > 0 ) {
+                if ( selected.type !== fightdata.selectedClassParser() ) {
+                    getClassParser(selected.type);
+                }
+            }
+        });
         fightdata.selectedFriendlySkills = ko.computed(function(){
            var selected = fightdata.friendlies.filter(function(f){
                return f.id === fightdata.selectedFriendly();
@@ -202,6 +211,18 @@ var parserViewModel = function(){
 
         actor.skills = skills;
         actor.events = events;
+    };
+    var getClassParser = function(className){
+        var classURL = "lib/classes/" + className + ".json";
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+                console.log(JSON.parse(this.responseText));
+            }
+        };
+        xhr.open("GET", classURL, true);
+        xhr.send();
     };
 
     model.worlds = ko.observableArray([
