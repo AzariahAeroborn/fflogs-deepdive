@@ -155,14 +155,16 @@ var parserViewModel = function(){
             parseActorEvents(actor,fightdata);
         });
         fightdata.selectedFriendly = ko.observable();
-        fightdata.selectedClassParser = ko.observable();
+        fightdata.selectedClassParser = ko.observable({});
         fightdata.selectedFriendly.subscribe(function(newValue){
             var selected = fightdata.friendlies.filter(function(f){
                 return f.id === newValue;
             });
             if ( selected.length > 0 ) {
-                if ( selected.type !== fightdata.selectedClassParser() ) {
-                    getClassParser(selected.type);
+                var currentClass = "";
+                if ( fightdata.selectedClassParser().hasOwnProperty("type") ) { currentClass = fightdata.selectedClassParser().type; }
+                if ( selected[0].type !== currentClass ) {
+                    getClassParser(selected[0].type);
                 }
             }
         });
