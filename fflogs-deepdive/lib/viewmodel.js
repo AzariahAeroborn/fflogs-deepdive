@@ -165,7 +165,7 @@ var parserViewModel = function(){
                 if ( fightdata.selectedClassParser().hasOwnProperty("type") ) { currentClass = fightdata.selectedClassParser().type; }
 
                 if ( selected[0].type === currentClass ) { fightdata.selectedClassParser.notifySubscribers(); }
-                else { getClassParser(selected[0].type); }
+                else { getClassParser(selected[0].type,fightdata); }
             }
         });
         fightdata.selectedFriendlySkills = ko.computed(function(){
@@ -221,7 +221,7 @@ var parserViewModel = function(){
         actor.skills = skills;
         actor.events = events;
     };
-    var getClassParser = function(className){
+    var getClassParser = function(className,fightdata){
         var classURL = "lib/classes/" + className + ".json";
 
         var xhr = new XMLHttpRequest();
