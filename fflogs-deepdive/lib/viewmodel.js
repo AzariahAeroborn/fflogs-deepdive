@@ -304,7 +304,7 @@ var parserViewModel = function(){
                     if (!processingAction.hasOwnProperty("debuffs")) {
                         console.log("removedebuff event occurred outside of a cast event");
                     } else {
-                        debuffed = curUsage.debuffs.filter(function (obj) {
+                        debuffed = processingAction.debuffs.filter(function (obj) {
                             return obj.targetID === e.targetID;
                         });
                         if (debuffed.length > 0) {
@@ -352,7 +352,7 @@ var parserViewModel = function(){
                     // TODO: implement handling for refreshdebuff
                     break;
                 default:
-                    console.log("unhandled event of type " + curEvent.type);
+                    console.log("unhandled event of type " + e.type);
                     break;
             }
         }
@@ -418,7 +418,7 @@ var parserViewModel = function(){
         this.endcast = ( e.type === "begincast" ) ? null : e.timestamp;
         this.type = null;
     };
-    
+
     model.worlds = ko.observableArray([
         {world: "Adamantoise", region: "NA"}
         ,{world: "Balmung", region: "NA"}
