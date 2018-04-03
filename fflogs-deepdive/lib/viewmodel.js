@@ -371,10 +371,18 @@ var parserViewModel = function(){
                                });
                            }
                        });
+                       curSkill.critPct = (Math.floor(curSkill.criticalhits / curSkill.hits * 10000) / 100).toFixed(2) + "%";
+                       curSkill.dhitPct = (Math.floor(curSkill.directhits / curSkill.hits * 10000) / 100).toFixed(2) + "%";
+                       curSkill.critdhitPct = (Math.floor(curSkill.criticaldirecthits / curSkill.hits * 10000) / 100).toFixed(2) + "%";
                    });
                    console.log(classParser);
                    console.log(selectedFriendly.skills);
-                   return selectedFriendly.name;
+                   return {
+                       damage: {
+                           gcd: selectedFriendly.skills.filter(function(obj){ return obj.isGCD && obj.damage > 0 }).sort(function(a,b){return b.damage - a.damage}),
+                           ogcd: selectedFriendly.skills.filter(function(obj){ return !obj.isGCD && obj.damage > 0 }).sort(function(a,b){return b.damage - a.damage})
+                       }
+                   }
                } else {
                    return "Loading class information..."
                }

@@ -56,7 +56,60 @@ API Key: <input type="text" data-bind="value: apiKey">
     <!-- ko foreach: fights -->
     <div data-bind="attr: { id: fightid }">
         Friendlies: <select data-bind="options: friendlies, optionsText: 'name', optionsValue: 'id', value: selectedFriendly"></select>
-        <div data-bind="text: selectedFriendlySkills"></div>
+        <div data-bind="with: damage">
+            <p>Damage Done --
+                <br> GCD:
+            </p>
+            <table>
+                <thead>
+                <tr>
+                    <th>Skill Name</th>
+                    <th>Total Damage</th>
+                    <th>Casts</th>
+                    <th>Hits</th>
+                    <th>Crit %</th>
+                    <th>DHit %</th>
+                    <th>CritDHit %</th>
+                </tr>
+                </thead>
+                <tbody data-bind="foreach: gcd">
+                <tr>
+                    <td data-bind="text: name"></td>
+                    <td data-bind="text: damage"></td>
+                    <td data-bind="text: casts"></td>
+                    <td data-bind="text: hits"></td>
+                    <td data-bind="text: critPct"></td>
+                    <td data-bind="text: dhitPct"></td>
+                    <td data-bind="text: critdhitPct"></td>
+                </tr>
+                </tbody>
+            </table>
+            <br> OGCD:
+            <table>
+                <thead>
+                <tr>
+                    <th>Skill Name</th>
+                    <th>Total Damage</th>
+                    <th>Casts</th>
+                    <th>Hits</th>
+                    <th>Crit %</th>
+                    <th>DHit %</th>
+                    <th>CritDHit %</th>
+                </tr>
+                </thead>
+                <tbody data-bind="foreach: ogcd">
+                <tr>
+                    <td data-bind="text: name"></td>
+                    <td data-bind="text: damage"></td>
+                    <td data-bind="text: casts"></td>
+                    <td data-bind="text: hits"></td>
+                    <td data-bind="text: critPct"></td>
+                    <td data-bind="text: dhitPct"></td>
+                    <td data-bind="text: critdhitPct"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
     <!-- /ko -->
 </div>
