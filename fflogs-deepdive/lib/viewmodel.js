@@ -226,6 +226,22 @@ var parserViewModel = function(){
                                            }
                                        }
                                        break;
+                                   case "heal":
+                                       if ( usage.hasOwnProperty("tick") ) {
+                                           // damage of type "tick" is simulated DOT damage
+                                       } else {
+                                           // direct damage from use of a skill
+                                           curUsage.damage = {
+                                               amount: usage.amount,
+                                               absorbed: usage.absorbed,
+                                               debugMultiplier: usage.debugMultiplier,
+                                               hitType: usage.hitType,
+                                               sourceResources: usage.sourceResources,
+                                               targetResources: usage.targetResources,
+                                               timestamp: usage.timestamp
+                                           }
+                                       }
+                                       break;
                                    case "applydebuff":
                                        if ( !curUsage.hasOwnProperty("debuffs") ) {
                                            curUsage.debuffs = [];
@@ -289,6 +305,9 @@ var parserViewModel = function(){
                                        }
                                        break;
                                    case "refreshdebuff":
+                                       // TODO: implement handling for refreshdebuff
+                                       break;
+                                   case "refreshbuff":
                                        // TODO: implement handling for refreshdebuff
                                        break;
                                    default:
