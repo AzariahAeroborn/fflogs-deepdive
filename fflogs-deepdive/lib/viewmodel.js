@@ -200,20 +200,16 @@ var parserViewModel = function(){
 
         actor.classParser = getClassParser(this.type);
         actor.events = events;
-        actor.parsedActions = parseClassActions(classParser, events);
+        actor.parsedActions = parseClassActions(actor.classParser, events);
     };
     var getClassParser = function(className){
         var classURL = "lib/classes/" + className + ".json";
 
         var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function() {
-            if (this.readyState === 4 ) {
-                if ( this.status === 200 ) { return JSON.parse(this.responseText); }
-                else { return {}; }
-            }
-        };
         xhr.open("GET", classURL, false);
         xhr.send();
+        if ( xhr.status === 200 ) { return JSON.parse(xhr.responseText); }
+        else { return {}; }
     };
     var parseClassActions = function(classParser,events){
         // Loaded parser matches the class of the selected friendly
