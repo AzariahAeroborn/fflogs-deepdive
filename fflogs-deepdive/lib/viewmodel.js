@@ -379,8 +379,8 @@ var parserViewModel = function(){
                    console.log(selectedFriendly.skills);
                    return {
                        damage: {
-                           gcd: selectedFriendly.skills.filter(function(obj){ return obj.isGCD && obj.damage > 0 }).sort(function(a,b){return b.damage - a.damage}),
-                           ogcd: selectedFriendly.skills.filter(function(obj){ return !obj.isGCD && obj.damage > 0 }).sort(function(a,b){return b.damage - a.damage})
+                           gcd: classParser.skills.filter(function(obj){ return obj.isGCD && obj.damage > 0 }).sort(function(a,b){return b.damage - a.damage}),
+                           ogcd: classParser.skills.filter(function(obj){ return !obj.isGCD && obj.damage > 0 }).sort(function(a,b){return b.damage - a.damage})
                        }
                    }
                } else {
