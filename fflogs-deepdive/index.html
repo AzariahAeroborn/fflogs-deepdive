@@ -56,7 +56,8 @@ API Key: <input type="text" data-bind="value: apiKey">
     <!-- ko foreach: fights -->
     <div data-bind="attr: { id: fightid }">
         Friendlies: <select data-bind="options: friendlies, optionsText: 'name', optionsValue: 'id', value: selectedFriendly"></select>
-        <div data-bind="with: damage">
+        <div data-bind="text: display"></div>
+        <div data-bind="foreach: damage">
             <p>Damage Done --
                 <br> GCD:
             </p>

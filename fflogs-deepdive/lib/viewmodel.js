@@ -180,16 +180,23 @@ var parserViewModel = function(){
                    console.log(classParser);
                    console.log(selectedFriendly.skills);
                    return {
-                       damage: {
+                       display: null,
+                       damage: [{
                            gcd: classParser.skills.filter(function(obj){ return obj.isGCD && obj.damage > 0 }).sort(function(a,b){return b.damage - a.damage}),
                            ogcd: classParser.skills.filter(function(obj){ return !obj.isGCD && obj.damage > 0 }).sort(function(a,b){return b.damage - a.damage})
-                       }
+                       }]
                    }
                } else {
-                   return "Loading class information..."
+                   return {
+                       display: "Loading class information...",
+                       damage: []
+                   }
                }
            } else {
-               return "";
+               return {
+                   display: "",
+                   damage: []
+               };
            }
         }).extend({ rateLimit: 100 });
         fightdata.removeFight = function(fight){
