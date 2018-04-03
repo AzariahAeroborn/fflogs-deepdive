@@ -405,7 +405,20 @@ var parserViewModel = function(){
         curSkill.critdhitPct = (Math.floor(curSkill.criticaldirecthits / curSkill.hits * 10000) / 100).toFixed(2) + "%";
         */
     };
-
+    var fightAction = function(e){
+        this.ability = e.ability;
+        this.sourceID = e.sourceID;
+        this.sourceIsFriendly = e.sourceIsFriendly;
+        this.targetID = e.targetID;
+        this.targetIsFriendly = e.targetIsFriendly;
+        if ( e.targetIsFriendly === false ) {
+            this.targetInstance = [e.targetInstance];
+        }
+        this.begincast = e.timestamp;
+        this.endcast = ( e.type === "begincast" ) ? null : e.timestamp;
+        this.type = null;
+    };
+    
     model.worlds = ko.observableArray([
         {world: "Adamantoise", region: "NA"}
         ,{world: "Balmung", region: "NA"}
