@@ -180,6 +180,10 @@ var parserViewModel = function(){
                    classParser.skills.forEach(function(curSkill){
                        curSkill.usages = [];
                        var usageList = selectedFriendly.skills[curSkill];
+
+                       // Exit loop without further processing if no array found for skill name
+                       if ( usageList.constructor !== Array ) { return; }
+
                        var curUsage = null;
                        while ( usage = usageList.shift() ) {
                            if ( usage.type === "cast" ) {
@@ -302,7 +306,7 @@ var parserViewModel = function(){
            } else {
                return "";
            }
-        });
+        }).extend({ rateLimit: 100 });
         fightdata.removeFight = function(fight){
             model.fights.remove(fight);
         };
