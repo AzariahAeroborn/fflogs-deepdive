@@ -228,13 +228,12 @@ var parserViewModel = function(){
                                        break;
                                    case "heal":
                                        if ( usage.hasOwnProperty("tick") ) {
-                                           // damage of type "tick" is simulated DOT damage
+                                           // damage of type "tick" is simulated heal over time
                                        } else {
-                                           // direct damage from use of a skill
-                                           curUsage.damage = {
+                                           // direct heal from use of a skill
+                                           curUsage.heal = {
                                                amount: usage.amount,
-                                               absorbed: usage.absorbed,
-                                               debugMultiplier: usage.debugMultiplier,
+                                               overheal: usage.overheal,
                                                hitType: usage.hitType,
                                                sourceResources: usage.sourceResources,
                                                targetResources: usage.targetResources,
@@ -309,6 +308,9 @@ var parserViewModel = function(){
                                        break;
                                    case "refreshbuff":
                                        // TODO: implement handling for refreshdebuff
+                                       break;
+                                   case "begincast":
+                                       // TODO: implement handling for begincast (channeled skills)
                                        break;
                                    default:
                                        console.log("unhandled event of type " + usage.type);
