@@ -223,8 +223,9 @@ var parserViewModel = function(){
                                            curUsage.damage.push({
                                                amount: usage.amount,
                                                absorbed: usage.absorbed,
+                                               criticalhit: ( usage.hitType === 2 ),
+                                               directhit: ( usage.multistrike === true ),
                                                debugMultiplier: usage.debugMultiplier,
-                                               hitType: usage.hitType,
                                                sourceResources: usage.sourceResources,
                                                targetResources: usage.targetResources,
                                                timestamp: usage.timestamp
@@ -244,7 +245,7 @@ var parserViewModel = function(){
                                            curUsage.heal.push({
                                                amount: usage.amount,
                                                overheal: usage.overheal,
-                                               hitType: usage.hitType,
+                                               criticalhit: ( usage.hitType === 2 ),
                                                sourceResources: usage.sourceResources,
                                                targetResources: usage.targetResources,
                                                timestamp: usage.timestamp
@@ -334,6 +335,9 @@ var parserViewModel = function(){
                        // Aggregate information about usages
                        curSkill.count = curSkill.usages.length;
                        curSkill.hits = 0;
+                       curSkill.criticalhits = 0;
+                       curSkill.directhits = 0;
+                       curSkill.criticaldirecthits = 0;
                        curSkill.damage = 0;
                        curSkill.heal = 0;
                        curSkill.overheal = 0;
@@ -342,6 +346,17 @@ var parserViewModel = function(){
                                curSkill.hits += curUsage.damage.length;
                                curUsage.damage.forEach(function(curHit){
                                    curSkill.damage += curHit.amount;
+                                   if ( curHit.criticalhit && curHit.directhit ) {
+                                       curSkill.criticaldirecthits++;
+                                   }
+                                   else {
+                                       if ( curHit.criticalhit ) {
+                                           curSkill.criticalhits++;
+                                       }
+                                       if ( curHit.directhit ) {
+                                           curSkill.directhits++;
+                                       }
+                                   }
                                });
                            }
 
@@ -350,6 +365,9 @@ var parserViewModel = function(){
                                curUsage.heal.forEach(function(curHit){
                                    curSkill.heal += curHit.amount;
                                    curSkill.overheal += curHit.overheal;
+                                   if ( curHit.criticalhit ) {
+                                       curSkill.criticalhits++;
+                                   }
                                });
                            }
                        });
