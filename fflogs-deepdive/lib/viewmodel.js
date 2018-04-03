@@ -179,7 +179,7 @@ var parserViewModel = function(){
                    // Loaded parser matches the class of the selected friendly
                    classParser.skills.forEach(function(curSkill){
                        curSkill.usages = [];
-                       var usageList = selectedFriendly.skills[curSkill];
+                       var usageList = selectedFriendly.skills[curSkill.name];
 
                        // Exit loop without further processing if no array found for skill name
                        if ( usageList === undefined ) { return; }
@@ -297,6 +297,8 @@ var parserViewModel = function(){
                                }
                            }
                        }
+                       // After processing all events in log, add current usage information to stack (if any)
+                       if ( curUsage !== null ) { curSkill.usages.push(curUsage); }
                    });
                    console.log(classParser);
                    console.log(selectedFriendly.skills);
