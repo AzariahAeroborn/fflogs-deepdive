@@ -182,6 +182,7 @@ var parserViewModel = function(){
                        var usageList = selectedFriendly.skills[curSkill];
 
                        // Exit loop without further processing if no array found for skill name
+                       if ( usageList === undefined ) { return; }
                        if ( usageList.constructor !== Array ) { return; }
 
                        var curUsage = null;
