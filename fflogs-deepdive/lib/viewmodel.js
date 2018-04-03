@@ -215,7 +215,12 @@ var parserViewModel = function(){
                                            // damage of type "tick" is simulated DOT damage
                                        } else {
                                            // direct damage from use of a skill
-                                           curUsage.damage = {
+
+                                           // create array if no previous damage events for this cast (allow for multiple hits per cast - multitarget or effects like Barrage)
+                                           if ( !curUsage.hasOwnProperty("damage") ) { curUsage.damage = []; }
+
+                                           // push this damage event onto array
+                                           curUsage.damage.push({
                                                amount: usage.amount,
                                                absorbed: usage.absorbed,
                                                debugMultiplier: usage.debugMultiplier,
@@ -223,7 +228,7 @@ var parserViewModel = function(){
                                                sourceResources: usage.sourceResources,
                                                targetResources: usage.targetResources,
                                                timestamp: usage.timestamp
-                                           }
+                                           });
                                        }
                                        break;
                                    case "heal":
@@ -231,14 +236,19 @@ var parserViewModel = function(){
                                            // damage of type "tick" is simulated heal over time
                                        } else {
                                            // direct heal from use of a skill
-                                           curUsage.heal = {
+
+                                           // create array if no previous heal events for this cast (allow for multiple hits per cast - multitarget)
+                                           if ( !curUsage.hasOwnProperty("heal") ) { curUsage.heal = []; }
+
+                                           // push this heal event onto array
+                                           curUsage.heal.push({
                                                amount: usage.amount,
                                                overheal: usage.overheal,
                                                hitType: usage.hitType,
                                                sourceResources: usage.sourceResources,
                                                targetResources: usage.targetResources,
                                                timestamp: usage.timestamp
-                                           }
+                                           });
                                        }
                                        break;
                                    case "applydebuff":
@@ -320,6 +330,29 @@ var parserViewModel = function(){
                        }
                        // After processing all events in log, add current usage information to stack (if any)
                        if ( curUsage !== null ) { curSkill.usages.push(curUsage); }
+
+                       // Aggregate information about usages
+                       curSkill.count = curSkill.usages.length;
+                       curSkill.hits = 0;
+                       curSkill.damage = 0;
+                       curSkill.heal = 0;
+                       curSkill.overheal = 0;
+                       curSkill.usages.forEach(function(curUsage){
+                           if ( curUsage.hasOwnProperty("damage") ) {
+                               curSkill.hits += curUsage.damage.length;
+                               curUsage.damage.forEach(function(curHit){
+                                   curSkill.damage += curHit.amount;
+                               });
+                           }
+
+                           if ( curUsage.hasOwnProperty("heal") ) {
+                               curSkill.hits += curUsage.heal.length;
+                               curUsage.heal.forEach(function(curHit){
+                                   curSkill.heal += curHit.amount;
+                                   curSkill.overheal += curHit.overheal;
+                               });
+                           }
+                       });
                    });
                    console.log(classParser);
                    console.log(selectedFriendly.skills);
