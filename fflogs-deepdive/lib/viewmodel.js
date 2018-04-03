@@ -245,7 +245,7 @@ var parserViewModel = function(){
             curSkill.usages = [];
 
             // make a copy of the skills used by the specified agent, to allow for re-use on change back to this agent or other methods
-            var agentEvents = $.extend(agent.skills[curSkill.name]);
+            var agentEvents = $.extend(true,[],agent.skills[curSkill.name]);
 
             // Exit loop without further processing if no array found for skill name
             if ( agentEvents === undefined ) { return; }
