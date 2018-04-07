@@ -202,19 +202,12 @@ var parserViewModel = function(){
             return obj.sourceID === id;
         });
 
-        actor.jobParser = getJobParser(actor.type);
+        if ( classParsers.hasOwnProperty(actor.type) ) { actor.jobParser = new classParsers[actor.type]; }
+        else { actor.jobParser = null; }
+
         actor.events = events;
         actor.parsedActions = parseActions($.extend(true,[],events));
-        actor.jobActions = parseJobActions(actor.jobParser,actor.parsedActions);
-    };
-    var getJobParser = function(jobName){
-        var jobURL = "lib/jobs/" + jobName + ".json";
-
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", jobURL, false);
-        xhr.send();
-        if ( xhr.status === 200 ) { return JSON.parse(xhr.responseText); }
-        else { return {}; }
+        //actor.jobActions = parseJobActions(actor.jobParser,actor.parsedActions);
     };
     var parseActions = function(events){
         var parsedActions = [],
