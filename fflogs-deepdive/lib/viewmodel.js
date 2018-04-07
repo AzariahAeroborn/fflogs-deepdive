@@ -209,7 +209,7 @@ let parserViewModel = function(){
         actor.events = events;
         actor.parsedActions = actor.jobParser.parseActions($.extend(true, [], events));
         actor.jobActions = actor.jobParser.aggregateActions(actor.parsedActions);
-        if ( actor.jobActions.hasOwnProperty("skills") ) { actor.gcdSummary = actor.jobParser.aggregateGCD(actor.jobActions.skills); }
+        if ( actor.jobActions.hasOwnProperty("skills") ) { actor.gcdSummary = actor.jobParser.aggregateGCD(actor.parsedActions); }
     };
 
     model.worlds = ko.observableArray([
