@@ -81,9 +81,9 @@ classParsers.defParser = class defParser {
                     }
                 });
 
-                curSkill.critPct = (Math.floor(curSkill.crits / curSkill.hits) * 10000 / 100).toFixed(2) + "%";
-                curSkill.dhitPct = (Math.floor(curSkill.dhits / curSkill.hits) * 10000 / 100).toFixed(2) + "%";
-                curSkill.critdhitPct = (Math.floor(curSkill.critdhits / curSkill.hits) * 10000 / 100).toFixed(2) + "%";
+                curSkill.critPct = (Math.floor(curSkill.crits / curSkill.hits * 10000) / 100).toFixed(2) + "%";
+                curSkill.dhitPct = (Math.floor(curSkill.dhits / curSkill.hits * 10000) / 100).toFixed(2) + "%";
+                curSkill.critdhitPct = (Math.floor(curSkill.critdhits / curSkill.hits * 10000) / 100).toFixed(2) + "%";
 
                 aggActions.skills.push(curSkill);
             });
