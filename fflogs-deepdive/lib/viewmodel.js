@@ -446,7 +446,12 @@ var parserViewModel = function(){
                         casttime: jobActions.gcds[i - 1].endcast - jobActions.gcds[i - 1].begincast
                     });
                 }
-                var minGCD = jobActions.intervals.reduce(function (prev, curr) {
+                var minGCD = jobActions.intervals.reduce(function (prev, curr, currentIndex) {
+                    // First check will be currentIndex = 1, check second value of array against first
+                    // We want to always take the 2nd interval value in this case, to disregard the initial cast to keep
+                    //    pre-pull timing issues from artificially deflating the minGCD guess
+                    if ( currentIndex === 1 ) { return curr }
+
                     return prev.interval < curr.interval ? prev : curr;
                 });
                 jobActions.minGCD = minGCD.interval;
