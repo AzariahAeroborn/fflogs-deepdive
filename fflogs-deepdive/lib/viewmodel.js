@@ -442,7 +442,7 @@ var parserViewModel = function(){
             for ( i = 1 ; i < jobActions.gcds.length ; i++ ) {
                 jobActions.intervals.push({
                     interval : jobActions.gcds[i].begincast - jobActions.gcds[i-1].begincast,
-                    casttime : jobActions.gcds[i-1].endcast - jobActions.gcds[i-1].endcast
+                    casttime : jobActions.gcds[i-1].endcast - jobActions.gcds[i-1].begincast
                 });
             }
             var minGCD = jobActions.intervals.reduce(function(prev, curr) {
