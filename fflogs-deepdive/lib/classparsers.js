@@ -52,7 +52,7 @@ classParsers.defParser = class defParser {
                     overheal: 0,
                     absorb: 0
                 }, skill);
-                usages = actions.filter(function (obj) {
+                let usages = actions.filter(function (obj) {
                     return obj.ability.name === skill.name;
                 });
 
