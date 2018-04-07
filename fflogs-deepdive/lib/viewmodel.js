@@ -163,6 +163,7 @@ var parserViewModel = function(){
             if ( selected.length > 0 ) {
                 console.log(selected[0].parsedActions);
                 console.log(selected[0].jobParser);
+                console.log(selected[0].jobActions);
             }
         });
         fightdata.selectedFriendlySkills = ko.computed(function(){
@@ -204,6 +205,7 @@ var parserViewModel = function(){
         actor.jobParser = getJobParser(actor.type);
         actor.events = events;
         actor.parsedActions = parseActions(events);
+        actor.jobActions = parseJobActions(actor.jobParser,actor.parsedActions);
     };
     var getJobParser = function(jobName){
         var jobURL = "lib/jobs/" + jobName + ".json";
@@ -362,7 +364,68 @@ var parserViewModel = function(){
         if ( processingAction !== null ) { parsedActions.push(processingAction); }
 
         return parsedActions;
+    };
+    var parseJobActions = function(jobParser,parsedActions) {
+        // return an empty array without property if jobParser or parsedActions are empty - nothing to do
+        if ( !jobParser.hasOwnProperty("class") ) { return [] }
+        if ( parsedActions.length === 0 ) { return [] }
 
+        var jobActions = {};
+        // collect aggregations for job skills
+        if ( jobParser.hasOwnProperty("skills") ) {
+            jobActions.skills = [];
+            var curSkill;
+
+            jobParser.skills.forEach(function(skill){
+                curSkill = {
+                    count: 0,
+                    hits: 0,
+                    crits: 0,
+                    dhits: 0,
+                    critdhits: 0,
+                    damage: 0,
+                    heal: 0,
+                    overheal: 0,
+                    absorb: 0
+                };
+                usages = parsedActions.filter(function(obj){
+                    return obj.ability.name === skill.name;
+                });
+
+                curSkill.count = usages.length;
+                usages.forEach(function(u){
+                    if ( u.hasOwnProperty("damage") ) {
+                        curSkill.hits += u.damage.length;
+                        u.damage.forEach(function (hit) {
+                            if (hit.criticalhit) {
+                                if (hit.directhit) curSkill.critdhits++;
+                                else curSkill.crits++;
+                            } else {
+                                if (hit.directhit) curSkill.dhits++;
+                            }
+                        });
+                    }
+
+                    if ( u.hasOwnProperty("heal") ) {
+                        curSkill.hits += u.heal.length;
+                        u.heal.forEach(function (hit) {
+                            curSkill.heal += hit.amount;
+                            curSkill.absorb += hit.absorbed;
+                            curSkill.overheal += hit.overheal;
+                            if (hit.criticalhit) curSkill.crits++;
+                        });
+                    }
+                });
+
+                curSkill.critPct = (Math.floor(curSkill.crits / curSkill.hits) * 10000 / 100).toFixed(2) + "%";
+                curSkill.dhitPct = (Math.floor(curSkill.dhits / curSkill.hits) * 10000 / 100).toFixed(2) + "%";
+                curSkill.critdhitPct = (Math.floor(curSkill.critdhits / curSkill.hits) * 10000 / 100).toFixed(2) + "%";
+
+                jobActions.skills.push(curSkill);
+            });
+        }
+
+        return jobActions;
     };
     var fightAction = function(e){
         this.ability = e.ability;
