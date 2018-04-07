@@ -374,8 +374,10 @@ var parserViewModel = function(){
         // collect aggregations for job skills
         if ( jobParser.hasOwnProperty("skills") ) {
             jobActions.skills = [];
+            jobActions.gcds = [];
             var curSkill;
 
+            // Aggregate skill usage information per skill
             jobParser.skills.forEach(function(skill){
                 curSkill = $.extend(true, {
                     count: 0,
@@ -422,6 +424,18 @@ var parserViewModel = function(){
                 curSkill.critdhitPct = (Math.floor(curSkill.critdhits / curSkill.hits) * 10000 / 100).toFixed(2) + "%";
 
                 jobActions.skills.push(curSkill);
+
+                // Build GCD usage timeline
+                parsedActions.forEach(function(action){
+                    // determine if current action is a GCD skill
+                    var skill = jobParser.skills.filter(function(obj){
+                        return obj.isGCD === true && obj.name === action.ability.name;
+                    });
+                    // No matching GCD skills found, continue to next action
+                    if (skill.length === 0) return;
+
+                    jobActions.gcds.push({begincast: action.begincast, endcast: action.endcast, name: action.ability.name});
+                })
             });
         }
 
