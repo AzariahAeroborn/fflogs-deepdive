@@ -377,7 +377,7 @@ var parserViewModel = function(){
             var curSkill;
 
             jobParser.skills.forEach(function(skill){
-                curSkill = {
+                curSkill = $.extend(true, {
                     count: 0,
                     hits: 0,
                     crits: 0,
@@ -387,7 +387,7 @@ var parserViewModel = function(){
                     heal: 0,
                     overheal: 0,
                     absorb: 0
-                };
+                }, skill);
                 usages = parsedActions.filter(function(obj){
                     return obj.ability.name === skill.name;
                 });
