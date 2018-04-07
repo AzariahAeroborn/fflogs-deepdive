@@ -486,7 +486,7 @@ classParsers.Bard = class Bard extends classParsers.defParser {
                             return obj.name === e.ability.name;
                         });
 
-                        stanceActivation = stance[0].active.pop();
+                        let stanceActivation = stance[0].active.pop();
                         stanceActivation.endtime = e.timestamp;
                         stance[0].active.push(stanceActivation);
                     }
