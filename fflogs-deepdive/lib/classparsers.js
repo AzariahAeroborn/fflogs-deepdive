@@ -2,7 +2,7 @@ var classParsers = classParsers || {};
 
 classParsers.defParser = class defParser {
     constructor() {
-        this.eventParsers = new eventParsers();
+        this.eventParsers = class e extends eventParsers{};
     }
 
     parseActions(events) {
