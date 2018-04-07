@@ -2,158 +2,151 @@ var classParsers = classParsers || {};
 
 classParsers.defParser = class defParser {
     constructor() {
-
+        this.eventParsers = {};
+        this.eventParsers.begincast = function(event,curAction,actions){
+            actions.push(curAction);
+            curAction = new fightAction(event);
+        };
+        this.eventParsers.cast = function(event,curAction,actions){
+            if ( curAction.begincast > 0 && curAction.endcast == null ) {
+                // Cast event for a channeled skill that is currently being processed
+                curAction.endcast = event.timestamp;
+            } else {
+                actions.push(curAction);
+                curAction = new fightAction(event);
+            }
+        };
+        this.eventParsers.damage = function(event,curAction,actions){
+            if (event.hasOwnProperty("tick")) {
+                // damage of type "tick" is simulated DOT damage
+            } else {
+                // direct damage from use of a skill
+                if (!curAction.hasOwnProperty("damage")) {
+                    curAction.damage = [];
+                }
+                // push this damage event onto array
+                curAction.damage.push({
+                    amount: event.amount,
+                    absorbed: event.absorbed,
+                    criticalhit: (event.hitType === 2),
+                    directhit: (event.multistrike === true),
+                    debugMultiplier: event.debugMultiplier,
+                    sourceResources: event.sourceResources,
+                    targetResources: event.targetResources,
+                    timestamp: event.timestamp
+                });
+            }
+        };
+        this.eventParsers.heal = function(event,curAction,actions){
+            if (event.hasOwnProperty("tick")) {
+                // damage of type "tick" is simulated heal over time
+            } else {
+                // direct heal from use of a skill
+                if (!curAction.hasOwnProperty("heal")) {
+                    curAction.heal = [];
+                }
+                // push this heal event onto array
+                curAction.heal.push({
+                    amount: event.amount,
+                    overheal: event.overheal,
+                    criticalhit: (event.hitType === 2),
+                    sourceResources: event.sourceResources,
+                    targetResources: event.targetResources,
+                    timestamp: event.timestamp
+                });
+            }
+        };
+        this.eventParsers.applydebuff = function(event,curAction,actions){
+            if (!curAction.hasOwnProperty("debuffs")) {
+                curAction.debuffs = [];
+            }
+            let debuffed = curAction.debuffs.filter(function (obj) {
+                return obj.targetID === event.targetID;
+            });
+            if (debuffed.length > 0) {
+                debuffed[0].targetInstances.push(event.targetInstance);
+            } else {
+                curAction.debuffs.push({
+                    targetID: event.targetID,
+                    targetInstances: [event.targetInstance],
+                    starttime: event.timestamp
+                });
+            }
+        };
+        this.eventParsers.removedebuff = function(event,curAction,actions){
+            if (!curAction.hasOwnProperty("debuffs")) {
+                console.log("removedebuff event occurred outside of a cast event");
+            } else {
+                let debuffed = curAction.debuffs.filter(function (obj) {
+                    return obj.targetID === event.targetID;
+                });
+                if (debuffed.length > 0) {
+                    debuffed[0].endtime = event.timestamp;
+                } else {
+                    console.log("removedebuff event occurred without a matching target for the debuff")
+                }
+            }
+        };
+        this.eventParsers.applybuff = function(event,curAction,actions){
+            if (!curAction.hasOwnProperty("buffs")) {
+                curAction.buffs = [];
+            }
+            let buffed = curAction.buffs.filter(function (obj) {
+                return obj.targetID === event.targetID;
+            });
+            if (buffed.length > 0) {
+                buffed[0].targetInstances.push(event.targetInstance);
+            } else {
+                curAction.buffs.push({
+                    targetID: event.targetID,
+                    targetInstances: [event.targetInstance],
+                    starttime: event.timestamp
+                })
+            }
+        };
+        this.eventParsers.removebuff = function(event,curAction,actions){
+            if (!curAction.hasOwnProperty("buffs")) {
+                console.log("removebuff event occurred outside of a cast event");
+            } else {
+                let buffed = curAction.buffs.filter(function (obj) {
+                    return obj.targetID === event.targetID;
+                });
+                if (buffed.length > 0) {
+                    buffed[0].endtime = event.timestamp;
+                } else {
+                    console.log("removebuff event occurred without a matching target for the buff")
+                }
+            }
+        };
+        this.eventParsers.refreshdebuff = function(event,curAction,actions){
+            // TODO: implement handling for refreshdebuff
+        };
+        this.eventParsers.refreshbuff = function(event,curAction,actions){
+            // TODO: implement handling for refreshbuff
+        };
     }
 
     parseActions(events) {
-        let parsedActions = [],
-            processingAction = null,
+        let actions = [],
+            curAction = null,
             e;
 
         // Pull the first event off the stack - will always create a new fight event for this
         while ( e = events.shift() ) {
-            if (processingAction === null) {
-                processingAction = new fightAction(e);
+            if (curAction === null) {
+                curAction = new fightAction(e);
                 // Skip further processing if this first event is a begincast or cast event - avoid pushing a duplicate first action onto the parsedAction stack
                 if (e.type === "begincast" || e.type === "cast") {
                     continue;
                 }
             }
-            switch (e.type) {
-                case "begincast":
-                    // Begincast type events indicate start of a new actionwith a cast time
-                    // Push previous action onto the stack of actions and create a new action
-                    parsedActions.push(processingAction);
-                    processingAction = new fightAction(e);
-                    break;
-                case "cast":
-                    // Cast type events may indicate start of a new skill, unless preceeded by a begincast event
-                    // Push previous skill onto the stack of skills (processingEvent will be null for the first occurrence of a skill, nothing to push onto stack)
-                    if (processingAction.begincast > 0 && processingAction.endcast == null) {
-                        // Cast event for a channeled skill that is currently being processed
-                        processingAction.endcast = e.timestamp;
-                    } else {
-                        parsedActions.push(processingAction);
-                        processingAction = new fightAction(e);
-                    }
-                    break;
-                case "damage":
-                    if (e.hasOwnProperty("tick")) {
-                        // damage of type "tick" is simulated DOT damage
-                    } else {
-                        // direct damage from use of a skill
-                        if (!processingAction.hasOwnProperty("damage")) {
-                            processingAction.damage = [];
-                        }
-                        // push this damage event onto array
-                        processingAction.damage.push({
-                            amount: e.amount,
-                            absorbed: e.absorbed,
-                            criticalhit: (e.hitType === 2),
-                            directhit: (e.multistrike === true),
-                            debugMultiplier: e.debugMultiplier,
-                            sourceResources: e.sourceResources,
-                            targetResources: e.targetResources,
-                            timestamp: e.timestamp
-                        });
-                    }
-                    break;
-                case "heal":
-                    if (e.hasOwnProperty("tick")) {
-                        // damage of type "tick" is simulated heal over time
-                    } else {
-                        // direct heal from use of a skill
-                        if (!processingAction.hasOwnProperty("heal")) {
-                            processingAction.heal = [];
-                        }
-                        // push this heal event onto array
-                        processingAction.heal.push({
-                            amount: e.amount,
-                            overheal: e.overheal,
-                            criticalhit: (e.hitType === 2),
-                            sourceResources: e.sourceResources,
-                            targetResources: e.targetResources,
-                            timestamp: e.timestamp
-                        });
-                    }
-                    break;
-                case "applydebuff":
-                    if (!processingAction.hasOwnProperty("debuffs")) {
-                        processingAction.debuffs = [];
-                    }
-                    let debuffed = processingAction.debuffs.filter(function (obj) {
-                        return obj.targetID === e.targetID;
-                    });
-                    if (debuffed.length > 0) {
-                        debuffed[0].targetInstances.push(e.targetInstance);
-                    } else {
-                        processingAction.debuffs.push({
-                            targetID: e.targetID,
-                            targetInstances: [e.targetInstance],
-                            starttime: e.timestamp
-                        })
-                    }
-                    break;
-                case "removedebuff":
-                    if (!processingAction.hasOwnProperty("debuffs")) {
-                        console.log("removedebuff event occurred outside of a cast event");
-                    } else {
-                        let debuffed = processingAction.debuffs.filter(function (obj) {
-                            return obj.targetID === e.targetID;
-                        });
-                        if (debuffed.length > 0) {
-                            debuffed[0].endtime = e.timestamp;
-                        } else {
-                            console.log("removedebuff event occurred without a matching target for the debuff")
-                        }
-                    }
-                    break;
-                case "applybuff":
-                    if (!processingAction.hasOwnProperty("buffs")) {
-                        processingAction.buffs = [];
-                    }
-                    let buffed = processingAction.buffs.filter(function (obj) {
-                        return obj.targetID === e.targetID;
-                    });
-                    if (buffed.length > 0) {
-                        buffed[0].targetInstances.push(e.targetInstance);
-                    } else {
-                        processingAction.buffs.push({
-                            targetID: e.targetID,
-                            targetInstances: [e.targetInstance],
-                            starttime: e.timestamp
-                        })
-                    }
-                    break;
-                case "removebuff":
-                    if (!processingAction.hasOwnProperty("buffs")) {
-                        console.log("removebuff event occurred outside of a cast event");
-                    } else {
-                        let buffed = processingAction.buffs.filter(function (obj) {
-                            return obj.targetID === e.targetID;
-                        });
-                        if (buffed.length > 0) {
-                            buffed[0].endtime = e.timestamp;
-                        } else {
-                            console.log("removebuff event occurred without a matching target for the buff")
-                        }
-                    }
-                    break;
-                case "refreshdebuff":
-                    // TODO: implement handling for refreshdebuff
-                    break;
-                case "refreshbuff":
-                    // TODO: implement handling for refreshdebuff
-                    break;
-                default:
-                    console.log("unhandled event of type " + e.type);
-                    break;
-            }
+            if ( this.eventParsers.hasOwnProperty(e.type) ) { this.eventParsers[e.type](e,curAction,actions); }
+            else { console.log("Unhandled event of type " + e.type); }
         }
         // After processing all events in log, add current usage information to stack (if any)
-        if ( processingAction !== null ) { parsedActions.push(processingAction); }
+        if ( curAction !== null ) { actions.push(curAction); }
 
-        return parsedActions;
+        return actions;
     }
 };
 
