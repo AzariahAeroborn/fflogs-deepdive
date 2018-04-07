@@ -11,7 +11,7 @@
     { "name": "Quick Nock", "potency": 110, "isGCD": true, "multitarget": true, "cooldown": null, "cast": 0 },
     { "name": "Stormbite", "potency": 120, "isGCD": true, "multitarget": false, "cooldown": null, "cast": 0, "dot": "Stormbite", "dotProcRate": 1 },
     { "name": "Mage's Ballad", "potency": 100, "isGCD": false, "multitarget": false, "cooldown": 80, "cast": 0 },
-    { "name": "Foe Requiem", "potency": 0, "isGCD": false, "multitarget": false, "cooldown": 180, "cast": 1.5, "debuff": "Foe Requiem", "debuffProcRate": 1 },
+    { "name": "Foe Requiem", "potency": 0, "isGCD": true, "multitarget": false, "cooldown": 180, "cast": 1.5, "debuff": "Foe Requiem", "debuffProcRate": 1 },
     { "name": "Barrage", "potency": 0, "isGCD": false, "multitarget": false, "cooldown": 80, "cast": 0, "buff": "Barrage", "buffProcRate": 1 },
     { "name": "Army's Paeon", "potency": 100, "isGCD": false, "multitarget": false, "cooldown": 80, "cast": 0 },
     { "name": "Rain of Death", "potency": 100, "isGCD": false, "multitarget": true, "cooldown": 15, "cast": 0, "sharedCooldown": "Bloodletter" },
