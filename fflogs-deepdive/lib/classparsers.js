@@ -143,8 +143,9 @@ classParsers.Astrologian = class Astrologian extends classParsers.defParser {
 classParsers.Bard = class Bard extends classParsers.defParser {
     constructor() {
         super();
-        this.name = "Bard";
-        this.skills = [
+        let self = this;
+        self.name = "Bard";
+        self.skills = [
             {
                 "name": "Heavy Shot",
                 "potency": 150,
@@ -362,11 +363,11 @@ classParsers.Bard = class Bard extends classParsers.defParser {
                 "buffProcRate": 1
             }
         ];
-        this.dots = [
+        self.dots = [
             {"name": "Caustic Bite", "potency": 45, "duration": 30},
             {"name": "Stormbite", "potency": 55, "duration": 30}
         ];
-        this.buffs = [
+        self.buffs = [
             {
                 "name": "Straighter Shot",
                 "affects": "self",
@@ -449,7 +450,7 @@ classParsers.Bard = class Bard extends classParsers.defParser {
                 "consumed": false
             }
         ];
-        this.debuffs = [
+        self.debuffs = [
             {
                 "name": "Foe's Requiem",
                 "affects": "enemyparty",
@@ -457,7 +458,7 @@ classParsers.Bard = class Bard extends classParsers.defParser {
                 "damage": 1.03
             }
         ];
-        this.stances = [
+        self.stances = [
             {
                 "name": "Mage's Ballad",
                 "active": []
@@ -471,22 +472,22 @@ classParsers.Bard = class Bard extends classParsers.defParser {
                 "active": []
             }
         ];
-        this.currentStance = null;
+        self.currentStance = null;
 
         this.eventParsers = class bardEventParsers extends eventParsers {
             static cast(e, curAction, actions) {
                 curAction = super.cast(e, curAction, actions);
-                let stanceSkill = this.stances.filter(function (obj) {
+                let stanceSkill = self.stances.filter(function (obj) {
                     return obj.name === e.ability.name;
                 });
                 if (stanceSkill.length > 0) {
-                    if (this.currentStance !== null) {
-                        stanceActivation = this.stances[this.currentStance].pop();
+                    if (self.currentStance !== null) {
+                        stanceActivation = self.stances[self.currentStance].pop();
                         stanceActivation.endtime = e.timestamp;
-                        this.stances[this.currentStance].push(stanceActivation);
+                        self.stances[self.currentStance].push(stanceActivation);
                     }
-                    this.currentStance = e.ability.name;
-                    this.stances[e.ability.name].push({begintime: e.timestamp});
+                    self.currentStance = e.ability.name;
+                    self.stances[e.ability.name].push({begintime: e.timestamp});
                 }
                 return curAction;
             }
