@@ -5,7 +5,7 @@ classParsers.defParser = class defParser {
         this.eventParsers = {};
         this.eventParsers.begincast = function(event,curAction,actions){
             actions.push(curAction);
-            curAction = new fightAction(event);
+            return new fightAction(event);
         };
         this.eventParsers.cast = function(event,curAction,actions){
             if ( curAction.begincast > 0 && curAction.endcast == null ) {
@@ -13,7 +13,7 @@ classParsers.defParser = class defParser {
                 curAction.endcast = event.timestamp;
             } else {
                 actions.push(curAction);
-                curAction = new fightAction(event);
+                return new fightAction(event);
             }
         };
         this.eventParsers.damage = function(event,curAction,actions){
@@ -36,6 +36,7 @@ classParsers.defParser = class defParser {
                     timestamp: event.timestamp
                 });
             }
+            return curAction;
         };
         this.eventParsers.heal = function(event,curAction,actions){
             if (event.hasOwnProperty("tick")) {
@@ -55,6 +56,7 @@ classParsers.defParser = class defParser {
                     timestamp: event.timestamp
                 });
             }
+            return curAction;
         };
         this.eventParsers.applydebuff = function(event,curAction,actions){
             if (!curAction.hasOwnProperty("debuffs")) {
@@ -72,6 +74,7 @@ classParsers.defParser = class defParser {
                     starttime: event.timestamp
                 });
             }
+            return curAction;
         };
         this.eventParsers.removedebuff = function(event,curAction,actions){
             if (!curAction.hasOwnProperty("debuffs")) {
@@ -86,6 +89,7 @@ classParsers.defParser = class defParser {
                     console.log("removedebuff event occurred without a matching target for the debuff")
                 }
             }
+            return curAction;
         };
         this.eventParsers.applybuff = function(event,curAction,actions){
             if (!curAction.hasOwnProperty("buffs")) {
@@ -103,6 +107,7 @@ classParsers.defParser = class defParser {
                     starttime: event.timestamp
                 })
             }
+            return curAction;
         };
         this.eventParsers.removebuff = function(event,curAction,actions){
             if (!curAction.hasOwnProperty("buffs")) {
@@ -117,12 +122,15 @@ classParsers.defParser = class defParser {
                     console.log("removebuff event occurred without a matching target for the buff")
                 }
             }
+            return curAction;
         };
         this.eventParsers.refreshdebuff = function(event,curAction,actions){
             // TODO: implement handling for refreshdebuff
+            return curAction;
         };
         this.eventParsers.refreshbuff = function(event,curAction,actions){
             // TODO: implement handling for refreshbuff
+            return curAction;
         };
     }
 
@@ -140,7 +148,7 @@ classParsers.defParser = class defParser {
                     continue;
                 }
             }
-            if ( this.eventParsers.hasOwnProperty(e.type) ) { this.eventParsers[e.type](e,curAction,actions); }
+            if ( this.eventParsers.hasOwnProperty(e.type) ) { curAction = this.eventParsers[e.type](e,curAction,actions); }
             else { console.log("Unhandled event of type " + e.type); }
         }
         // After processing all events in log, add current usage information to stack (if any)
