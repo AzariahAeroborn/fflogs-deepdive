@@ -180,6 +180,7 @@ var parserViewModel = function(){
                };
            }
         }).extend({ rateLimit: 100 });
+
         fightdata.removeFight = function(fight){
             model.fights.remove(fight);
         };
@@ -199,7 +200,7 @@ var parserViewModel = function(){
             return obj.sourceID === id;
         });
 
-        actor.jobParser = getJobParser(this.type);
+        actor.jobParser = getJobParser(actor.type);
         actor.events = events;
         actor.parsedActions = parseActions(events);
     };
