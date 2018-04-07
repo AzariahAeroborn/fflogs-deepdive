@@ -516,7 +516,7 @@ classParsers.Bard = class Bard extends classParsers.defParser {
             let activePaeon = stanceList.filter(function(obj){
                 if ( obj.name === "Army's Paeon" ) {
                     return obj.active.filter(function(obj){
-                        return ( obj.active.begintime < curr.actiontimestamp && curr.actiontimestamp < obj.active.endtime );
+                        return ( obj.begintime < curr.actiontimestamp && curr.actiontimestamp < obj.endtime );
                     }).length > 0
                 }
             });
