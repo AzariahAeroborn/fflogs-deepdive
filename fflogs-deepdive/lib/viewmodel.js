@@ -196,168 +196,21 @@ var parserViewModel = function(){
 
         model.fights.push(fightdata);
     };
-    var parseActorEvents = function(actor,fightdata){
+    var parseActorEvents = function(actor,fightdata) {
         var id = actor.id;
-        var events = fightdata.events.filter(function(obj){
+        var events = fightdata.events.filter(function (obj) {
             return obj.sourceID === id;
         });
 
-        if ( classParsers.hasOwnProperty(actor.type) ) { actor.jobParser = new classParsers[actor.type]; }
-        else { actor.jobParser = null; }
+        if (classParsers.hasOwnProperty(actor.type)) { actor.jobParser = new classParsers[actor.type](); }
+        else { actor.jobParser = new classParsers["default"](); }
 
         actor.events = events;
-        actor.parsedActions = parseActions($.extend(true,[],events));
+        actor.parsedActions = actor.jobParser.parseActions($.extend(true, [], events));
+
         //actor.jobActions = parseJobActions(actor.jobParser,actor.parsedActions);
     };
-    var parseActions = function(events){
-        var parsedActions = [],
-            processingAction = null;
 
-        // Pull the first event off the stack - will always create a new fight event for this
-        while ( e = events.shift() ) {
-            if (processingAction === null) {
-                processingAction = new fightAction(e);
-                // Skip further processing if this first event is a begincast or cast event - avoid pushing a duplicate first action onto the parsedAction stack
-                if (e.type === "begincast" || e.type === "cast") {
-                    continue;
-                }
-            }
-            switch (e.type) {
-                case "begincast":
-                    // Begincast type events indicate start of a new actionwith a cast time
-                    // Push previous action onto the stack of actions and create a new action
-                    parsedActions.push(processingAction);
-                    processingAction = new fightAction(e);
-                    break;
-                case "cast":
-                    // Cast type events may indicate start of a new skill, unless preceeded by a begincast event
-                    // Push previous skill onto the stack of skills (processingEvent will be null for the first occurrence of a skill, nothing to push onto stack)
-                    if (processingAction.begincast > 0 && processingAction.endcast == null) {
-                        // Cast event for a channeled skill that is currently being processed
-                        processingAction.endcast = e.timestamp;
-                    } else {
-                        parsedActions.push(processingAction);
-                        processingAction = new fightAction(e);
-                    }
-                    break;
-                case "damage":
-                    if (e.hasOwnProperty("tick")) {
-                        // damage of type "tick" is simulated DOT damage
-                    } else {
-                        // direct damage from use of a skill
-                        if (!processingAction.hasOwnProperty("damage")) {
-                            processingAction.damage = [];
-                        }
-                        // push this damage event onto array
-                        processingAction.damage.push({
-                            amount: e.amount,
-                            absorbed: e.absorbed,
-                            criticalhit: (e.hitType === 2),
-                            directhit: (e.multistrike === true),
-                            debugMultiplier: e.debugMultiplier,
-                            sourceResources: e.sourceResources,
-                            targetResources: e.targetResources,
-                            timestamp: e.timestamp
-                        });
-                    }
-                    break;
-                case "heal":
-                    if (e.hasOwnProperty("tick")) {
-                        // damage of type "tick" is simulated heal over time
-                    } else {
-                        // direct heal from use of a skill
-                        if (!processingAction.hasOwnProperty("heal")) {
-                            processingAction.heal = [];
-                        }
-                        // push this heal event onto array
-                        processingAction.heal.push({
-                            amount: e.amount,
-                            overheal: e.overheal,
-                            criticalhit: (e.hitType === 2),
-                            sourceResources: e.sourceResources,
-                            targetResources: e.targetResources,
-                            timestamp: e.timestamp
-                        });
-                    }
-                    break;
-                case "applydebuff":
-                    if (!processingAction.hasOwnProperty("debuffs")) {
-                        processingAction.debuffs = [];
-                    }
-                    debuffed = processingAction.debuffs.filter(function (obj) {
-                        return obj.targetID === e.targetID;
-                    });
-                    if (debuffed.length > 0) {
-                        debuffed[0].targetInstances.push(e.targetInstance);
-                    } else {
-                        processingAction.debuffs.push({
-                            targetID: e.targetID,
-                            targetInstances: [e.targetInstance],
-                            starttime: e.timestamp
-                        })
-                    }
-                    break;
-                case "removedebuff":
-                    if (!processingAction.hasOwnProperty("debuffs")) {
-                        console.log("removedebuff event occurred outside of a cast event");
-                    } else {
-                        debuffed = processingAction.debuffs.filter(function (obj) {
-                            return obj.targetID === e.targetID;
-                        });
-                        if (debuffed.length > 0) {
-                            debuffed[0].endtime = e.timestamp;
-                        } else {
-                            console.log("removedebuff event occurred without a matching target for the debuff")
-                        }
-                    }
-                    break;
-                case "applybuff":
-                    if (!processingAction.hasOwnProperty("buffs")) {
-                        processingAction.buffs = [];
-                    }
-                    buffed = processingAction.buffs.filter(function (obj) {
-                        return obj.targetID === e.targetID;
-                    });
-                    if (buffed.length > 0) {
-                        buffed[0].targetInstances.push(e.targetInstance);
-                    } else {
-                        processingAction.buffs.push({
-                            targetID: e.targetID,
-                            targetInstances: [e.targetInstance],
-                            starttime: e.timestamp
-                        })
-                    }
-                    break;
-                case "removebuff":
-                    if (!processingAction.hasOwnProperty("buffs")) {
-                        console.log("removebuff event occurred outside of a cast event");
-                    } else {
-                        var buffed = processingAction.buffs.filter(function (obj) {
-                            return obj.targetID === e.targetID;
-                        });
-                        if (buffed.length > 0) {
-                            buffed[0].endtime = e.timestamp;
-                        } else {
-                            console.log("removebuff event occurred without a matching target for the buff")
-                        }
-                    }
-                    break;
-                case "refreshdebuff":
-                    // TODO: implement handling for refreshdebuff
-                    break;
-                case "refreshbuff":
-                    // TODO: implement handling for refreshdebuff
-                    break;
-                default:
-                    console.log("unhandled event of type " + e.type);
-                    break;
-            }
-        }
-        // After processing all events in log, add current usage information to stack (if any)
-        if ( processingAction !== null ) { parsedActions.push(processingAction); }
-
-        return parsedActions;
-    };
     var parseJobActions = function(jobParser,parsedActions) {
         // return an empty array without property if jobParser or parsedActions are empty - nothing to do
         if ( !jobParser.hasOwnProperty("class") ) { return [] }
