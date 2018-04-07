@@ -503,7 +503,8 @@ classParsers.Bard = class Bard extends classParsers.defParser {
     }
 
     aggregateGCD(skills) {
-        let gcdSummary = super.aggregateGCD(skills);
+        let gcdSummary = super.aggregateGCD(skills),
+            stanceList = this.stances;
 
         // override minGCD calculation to exclude casts under Army's Paeon, which reduces GCD by variable amounts
         let minGCD = gcdSummary.intervals.reduce(function (curr,prev,currentIndex){
@@ -512,7 +513,7 @@ classParsers.Bard = class Bard extends classParsers.defParser {
             //    pre-pull timing issues from artificially deflating the minGCD guess
             if ( currentIndex === 1 ) { return curr }
 
-            let activePaeon = this.stances.filter(function(obj){
+            let activePaeon = stanceList.filter(function(obj){
                 if ( obj.name === "Army's Paeon" ) {
                     return obj.active.filter(function(obj){
                         return ( obj.active.begintime < curr.actiontimestamp && curr.actiontimestamp < obj.active.endtime );
