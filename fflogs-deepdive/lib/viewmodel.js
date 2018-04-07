@@ -427,7 +427,7 @@ var parserViewModel = function(){
 
             // Build GCD usage timeline
             jobActions.gcds = [];
-            jobActions.intervals = {};
+            jobActions.intervals = [];
             parsedActions.forEach(function(action){
                 // determine if current action is a GCD skill
                 var skill = jobParser.skills.filter(function(obj){
