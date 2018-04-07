@@ -1,4 +1,4 @@
-let classParsers = classParsers || {};
+var classParsers = classParsers || {};
 
 classParsers.default = class classParser {
     static parseActions(events) {
