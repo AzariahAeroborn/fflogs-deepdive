@@ -126,6 +126,7 @@ let parserViewModel = function(){
         let baseURL = "https://www.fflogs.com/v1/report/events/";
         let apiKey = model.apiKey();
         fightdata.events = [];
+        let duration = endtime - starttime;
 
         let xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
@@ -135,13 +136,17 @@ let parserViewModel = function(){
 
                 if ( apiResponse.nextPageTimestamp < endtime ) {
                     starttime = apiResponse.nextPageTimestamp;
+                    $("#progressbar").progressbar( "option", "value", Math.floor((1 - (endtime - apiResponse.nextPageTimestamp) / duration) * 100) );
                     xhr.open("GET", baseURL + reportid + "?api_key=" + apiKey + "&start=" + starttime + "&end=" + endtime, true);
                     xhr.send();
                 } else {
+                    $("#progressmodal").dialog( "close" );
                     model.parseFight(fightdata);
                 }
             }
         };
+        $("#progressbar").progressbar( "option", "value", 0 );
+        $("#progressmodal").dialog( "open" );
         xhr.open("GET", baseURL + reportid + "?api_key=" + apiKey + "&start=" + starttime + "&end=" + endtime, true);
         xhr.send();
     };

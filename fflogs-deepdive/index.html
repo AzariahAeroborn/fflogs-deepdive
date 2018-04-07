@@ -119,12 +119,24 @@ API Key: <input type="text" data-bind="value: apiKey">
     </div>
     <!-- /ko -->
 </div>
-
+<div id="progressmodal">
+Downloading fight information from FFLogs...
+<div id="progressbar"></div>
+</div>
 </body>
 <script type="text/javascript" src="lib/viewmodel.js"></script>
 <script type="text/javascript">
    $( function() {
        $( "#tabs" ).tabs();
+       $( "#progressmodal" ).dialog({
+           modal: true,
+           height: 300,
+           width: 500,
+           autoOpen: false
+       });
+       $( "#progressbar" ).progressbar({
+           value: 0
+       });
    });
 </script>
 </html>
