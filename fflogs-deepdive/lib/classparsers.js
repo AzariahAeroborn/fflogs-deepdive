@@ -482,12 +482,19 @@ classParsers.Bard = class Bard extends classParsers.defParser {
                 });
                 if (stanceSkill.length > 0) {
                     if (self.currentStance !== null) {
-                        stanceActivation = self.stances[self.currentStance].pop();
+                        let stance = self.stances.filter(function(obj){
+                            return obj.name === e.ability.name;
+                        });
+
+                        stanceActivation = stance[0].active.pop();
                         stanceActivation.endtime = e.timestamp;
-                        self.stances[self.currentStance].push(stanceActivation);
+                        stance[0].active.push(stanceActivation);
                     }
                     self.currentStance = e.ability.name;
-                    self.stances[e.ability.name].push({begintime: e.timestamp});
+                    let stance = self.stances.filter(function(obj) {
+                        return obj.name === e.ability.name;
+                    });
+                    stance[0].active.push({begintime: e.timestamp});
                 }
                 return curAction;
             }
