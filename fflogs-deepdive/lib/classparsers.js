@@ -501,10 +501,6 @@ classParsers.Bard = class Bard extends classParsers.defParser {
         }
     }
 
-    parseActions(events) {
-        super.parseActions(events);
-    }
-
     aggregateGCD(skills) {
         let gcdSummary = super.gcdSummary(skills);
 
