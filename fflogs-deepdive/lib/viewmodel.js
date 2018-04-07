@@ -439,16 +439,18 @@ var parserViewModel = function(){
                 jobActions.gcds.push({begincast: action.begincast, endcast: action.endcast, name: action.ability.name});
             });
 
-            for ( i = 1 ; i < jobActions.gcds.length ; i++ ) {
-                jobActions.intervals.push({
-                    interval : jobActions.gcds[i].begincast - jobActions.gcds[i-1].begincast,
-                    casttime : jobActions.gcds[i-1].endcast - jobActions.gcds[i-1].begincast
+            if ( jobActions.gcds.length > 0 ) {
+                for (i = 1; i < jobActions.gcds.length; i++) {
+                    jobActions.intervals.push({
+                        interval: jobActions.gcds[i].begincast - jobActions.gcds[i - 1].begincast,
+                        casttime: jobActions.gcds[i - 1].endcast - jobActions.gcds[i - 1].begincast
+                    });
+                }
+                var minGCD = jobActions.intervals.reduce(function (prev, curr) {
+                    return prev.interval < curr.interval ? prev : curr;
                 });
+                jobActions.minGCD = minGCD.interval;
             }
-            var minGCD = jobActions.intervals.reduce(function(prev, curr) {
-                return prev.interval < curr.interval ? prev : curr;
-            });
-            jobActions.minGCD = minGCD.interval;
         }
 
         return jobActions;
