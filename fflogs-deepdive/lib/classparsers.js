@@ -99,9 +99,9 @@ classParsers.defParser = class defParser {
             intervals = [],
             minGCD;
 
-        skills.forEach(function(curSkill){
+        skills.forEach(function(curSkill,skillList = this.skills){
             // determine if current skill is a GCD
-            let skill = this.skills.filter(function(obj){
+            let skill = skillList.filter(function(obj){
                 return obj.isGCD === true && obj.name === curSkill.ability.name;
             });
             // No matching GCD skills found, continue to next action
