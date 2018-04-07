@@ -1,7 +1,7 @@
 var classParsers = classParsers || {};
 
 classParsers.defParser = class defParser {
-    static parseActions(events) {
+    parseActions(events) {
         let parsedActions = [],
             processingAction = null,
             e;
@@ -153,7 +153,7 @@ classParsers.defParser = class defParser {
     }
 };
 
-classParsers.Astrologian = class Astrologian extends classParsers.defParser {
+classParsers.Astrologian = class Astrologian extends defParser {
     constructor() {
         super();
         this.name = "Astrologian";

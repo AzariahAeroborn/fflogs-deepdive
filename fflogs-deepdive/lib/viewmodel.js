@@ -202,13 +202,11 @@ let parserViewModel = function(){
             return obj.sourceID === id;
         });
 
-        if (classParsers.hasOwnProperty(actor.type)) {
-            actor.jobParser = new classParsers[actor.type]();
-            actor.parsedActions = actor.jobParser.parseActions($.extend(true, [], events));
-        }
-        else { actor.parsedActions = classParsers.defParser.parseActions($.extend(true, [], events)); }
+        if (classParsers.hasOwnProperty(actor.type)) { actor.jobParser = new classParsers[actor.type](); }
+        else { actor.jobParser = new ClassParsers["default"](); }
 
         actor.events = events;
+        actor.parsedActions = actor.jobParser.parseActions($.extend(true, [], events));
         //actor.jobActions = parseJobActions(actor.jobParser,actor.parsedActions);
     };
 
