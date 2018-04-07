@@ -620,10 +620,10 @@ classParsers.Bard = class Bard extends classParsers.defParser {
                     return obj.name === e.ability.name;
                 });
                 if (stanceSkill.length > 0) {
-                    if (currentStance !== null) {
-                        stanceActivation = this.stances[currentStance].pop();
+                    if (this.currentStance !== null) {
+                        stanceActivation = this.stances[this.currentStance].pop();
                         stanceActivation.endtime = e.timestamp;
-                        this.stances[currentStance].push(stanceActivation);
+                        this.stances[this.currentStance].push(stanceActivation);
                     }
                     this.currentStance = e.ability.name;
                     this.stances[e.ability.name].push({begintime: e.timestamp});
