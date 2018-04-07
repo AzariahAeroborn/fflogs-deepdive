@@ -19,7 +19,7 @@ classParsers.defParser = class defParser {
                     continue;
                 }
             }
-            if ( this.eventParsers.hasOwnProperty(e.type) ) { curAction = this.eventParsers[e.type](e,curAction,actions); }
+            if ( this.eventParsers.__proto__.hasOwnProperty(e.type) ) { curAction = this.eventParsers[e.type](e,curAction,actions); }
             else { console.log("Unhandled event of type " + e.type); }
         }
         // After processing all events in log, add current usage information to stack (if any)
