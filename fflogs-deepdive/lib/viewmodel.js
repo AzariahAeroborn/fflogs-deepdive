@@ -47,7 +47,7 @@ var parserViewModel = function(){
                             var clearData = {
                                 characterid: clear.character_id,
                                 job: spec.spec,
-                                joblink: "lib/classes/icons/" + spec.spec + ".png",
+                                joblink: "lib/jobs/icons/" + spec.spec + ".png",
                                 date: clearDate.toLocaleDateString('en-US',{month: 'short', day: 'numeric', year: 'numeric'}),
                                 dps: clear.persecondamount,
                                 patch: clear.ilvl,
@@ -199,21 +199,20 @@ var parserViewModel = function(){
             return obj.sourceID === id;
         });
 
-        actor.classParser = getClassParser(this.type);
+        actor.jobParser = getJobParser(this.type);
         actor.events = events;
-        actor.parsedActions = parseClassActions(actor.classParser, events);
+        actor.parsedActions = parseActions(events);
     };
-    var getClassParser = function(className){
-        var classURL = "lib/classes/" + className + ".json";
+    var getJobParser = function(jobName){
+        var jobURL = "lib/jobs/" + jobName + ".json";
 
         var xhr = new XMLHttpRequest();
-        xhr.open("GET", classURL, false);
+        xhr.open("GET", jobURL, false);
         xhr.send();
         if ( xhr.status === 200 ) { return JSON.parse(xhr.responseText); }
         else { return {}; }
     };
-    var parseClassActions = function(classParser,events){
-        // Loaded parser matches the class of the selected friendly
+    var parseActions = function(events){
         var parsedActions = [],
             processingAction = null;
 
@@ -361,50 +360,7 @@ var parserViewModel = function(){
         if ( processingAction !== null ) { parsedActions.push(processingAction); }
 
         return parsedActions;
-        /*
-        // Aggregate information about usages
-        curSkill.count = curSkill.usages.length;
-        curSkill.hits = 0;
-        curSkill.criticalhits = 0;
-        curSkill.directhits = 0;
-        curSkill.criticaldirecthits = 0;
-        curSkill.damage = 0;
-        curSkill.heal = 0;
-        curSkill.overheal = 0;
-        curSkill.usages.forEach(function(curUsage){
-            if ( curUsage.hasOwnProperty("damage") ) {
-                curSkill.hits += curUsage.damage.length;
-                curUsage.damage.forEach(function(curHit){
-                    curSkill.damage += curHit.amount;
-                    if ( curHit.criticalhit && curHit.directhit ) {
-                        curSkill.criticaldirecthits++;
-                    }
-                    else {
-                        if ( curHit.criticalhit ) {
-                            curSkill.criticalhits++;
-                        }
-                        if ( curHit.directhit ) {
-                            curSkill.directhits++;
-                        }
-                    }
-                });
-            }
 
-            if ( curUsage.hasOwnProperty("heal") ) {
-                curSkill.hits += curUsage.heal.length;
-                curUsage.heal.forEach(function(curHit){
-                    curSkill.heal += curHit.amount;
-                    curSkill.overheal += curHit.overheal;
-                    if ( curHit.criticalhit ) {
-                        curSkill.criticalhits++;
-                    }
-                });
-            }
-        });
-        curSkill.critPct = (Math.floor(curSkill.criticalhits / curSkill.hits * 10000) / 100).toFixed(2) + "%";
-        curSkill.dhitPct = (Math.floor(curSkill.directhits / curSkill.hits * 10000) / 100).toFixed(2) + "%";
-        curSkill.critdhitPct = (Math.floor(curSkill.criticaldirecthits / curSkill.hits * 10000) / 100).toFixed(2) + "%";
-        */
     };
     var fightAction = function(e){
         this.ability = e.ability;
