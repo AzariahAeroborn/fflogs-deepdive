@@ -157,6 +157,109 @@ classParsers.defParser = class defParser {
 
         return actions;
     }
+
+    aggregateActions(actions) {
+        // return an empty object if the "name" property of the classParser is empty, or if the actions parameter is empty - nothing to do
+        if ( !this.hasOwnProperty("name") ) { return {} }
+        if ( actions.length === 0 ) { return {} }
+
+        let aggActions = {};
+        // collect aggregations for job skills
+        if ( this.hasOwnProperty("skills") && this.skills.length > 0 ) {
+            aggActions.skills = [];
+            let curSkill;
+
+            // Aggregate skill usage information per skill
+            this.skills.forEach(function (skill) {
+                curSkill = $.extend(true, {
+                    count: 0,
+                    hits: 0,
+                    crits: 0,
+                    dhits: 0,
+                    critdhits: 0,
+                    damage: 0,
+                    heal: 0,
+                    overheal: 0,
+                    absorb: 0
+                }, skill);
+                usages = actions.filter(function (obj) {
+                    return obj.ability.name === skill.name;
+                });
+
+                curSkill.count = usages.length;
+                usages.forEach(function (u) {
+                    if (u.hasOwnProperty("damage")) {
+                        curSkill.hits += u.damage.length;
+                        u.damage.forEach(function (hit) {
+                            if (hit.criticalhit) {
+                                if (hit.directhit) curSkill.critdhits++;
+                                else curSkill.crits++;
+                            } else {
+                                if (hit.directhit) curSkill.dhits++;
+                            }
+                        });
+                    }
+
+                    if (u.hasOwnProperty("heal")) {
+                        curSkill.hits += u.heal.length;
+                        u.heal.forEach(function (hit) {
+                            curSkill.heal += hit.amount;
+                            curSkill.absorb += hit.absorbed;
+                            curSkill.overheal += hit.overheal;
+                            if (hit.criticalhit) curSkill.crits++;
+                        });
+                    }
+                });
+
+                curSkill.critPct = (Math.floor(curSkill.crits / curSkill.hits) * 10000 / 100).toFixed(2) + "%";
+                curSkill.dhitPct = (Math.floor(curSkill.dhits / curSkill.hits) * 10000 / 100).toFixed(2) + "%";
+                curSkill.critdhitPct = (Math.floor(curSkill.critdhits / curSkill.hits) * 10000 / 100).toFixed(2) + "%";
+
+                aggActions.skills.push(curSkill);
+            });
+        }
+
+        return(aggActions);
+    }
+
+    aggregateGCD(actions) {
+        // No actions, return early -- nothing to do
+        if ( actions.length === 0 ) { return []; }
+        let gcds = [],
+            intervals = [],
+            minGCD;
+
+        actions.forEach(function(action){
+            // determine if current action is a GCD skill
+            let skill = this.skills.filter(function(obj){
+                return obj.isGCD === true && obj.name === action.ability.name;
+            });
+            // No matching GCD skills found, continue to next action
+            if (skill.length === 0) return;
+
+            gcds.push({begincast: action.begincast, endcast: action.endcast, name: action.ability.name});
+        });
+
+        if ( gcds.length > 0 ) {
+            for (i = 1; i < gcds.length; i++) {
+                intervals.push({
+                    interval: gcds[i].begincast - gcds[i - 1].begincast,
+                    casttime: gcds[i - 1].endcast - gcds[i - 1].begincast,
+                    actiontimestamp: gcds[i].begincast
+                });
+            }
+            minGCD = intervals.reduce(function (prev, curr, currentIndex) {
+                // First check will be currentIndex = 1, check second value of array against first
+                // We want to always take the 2nd interval value in this case, to disregard the initial cast to keep
+                //    pre-pull timing issues from artificially deflating the minGCD guess
+                if ( currentIndex === 1 ) { return curr }
+
+                return prev.interval < curr.interval ? prev : curr;
+            });
+        }
+
+        return { "gcds": gcds, "intervals": intervals, "min": minGCD.interval }
+    }
 };
 
 classParsers.Astrologian = class Astrologian extends classParsers.defParser {
@@ -484,6 +587,69 @@ classParsers.Bard = class Bard extends classParsers.defParser {
                 "damage": 1.03
             }
         ];
+        this.stances = [
+            {
+                "name": "Mage's Ballad",
+                "active": []
+            },
+            {
+                "name": "Army's Paeon",
+                "active": []
+            },
+            {
+                "name": "The Warden's Paean",
+                "active": []
+            }
+        ];
+        this.currentStance = null;
+
+        this.eventParsers.cast = function(e,curAction,actions){
+            curAction = super.eventParsers.cast(e,curAction,actions);
+            let stanceSkill = this.stances.filter(function(obj) {
+                return obj.name === e.ability.name;
+            });
+            if ( stanceSkill.length > 0 ) {
+                if ( currentStance !== null ) {
+                    stanceActivation = this.stances[currentStance].pop();
+                    stanceActivation.endtime = e.timestamp;
+                    this.stances[currentStance].push(stanceActivation);
+                }
+                this.currentStance = e.ability.name;
+                this.stances[e.ability.name].push({ begintime: e.timestamp });
+            }
+            return curAction;
+        }
+    }
+
+    parseActions(events) {
+        super.parseActions(events);
+    }
+
+    aggregateGCD(actions) {
+        let gcdSummary = super.gcdSummary(actions);
+
+        // override minGCD calculation to exclude casts under Army's Paeon, which reduces GCD by variable amounts
+        let minGCD = gcdSummary.intervals.reduce(function (curr,prev,currentIndex){
+            // First check will be currentIndex = 1, check second value of array against first
+            // We want to always take the 2nd interval value in this case, to disregard the initial cast to keep
+            //    pre-pull timing issues from artificially deflating the minGCD guess
+            if ( currentIndex === 1 ) { return curr }
+
+            let activePaeon = this.stances.filter(function(obj){
+                if ( obj.name === "Army's Paeon" ) {
+                    return obj.active.filter(function(obj){
+                        return ( obj.active.begintime < curr.actiontimestamp && curr.actiontimestamp < obj.active.endtime );
+                    }).length > 0
+                }
+            });
+
+            // If Army's Paeon was active during time of current action, do not compare the GCD interval of this action to the current minimum
+            if ( activePaeon.length > 0 ) return prev;
+            return prev.interval < curr.interval ? prev : curr;
+        });
+
+        gcdSummary.min = minGCD.interval;
+        return gcdSummary;
     }
 };
 
