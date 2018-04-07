@@ -47,6 +47,7 @@ var parserViewModel = function(){
                             var clearData = {
                                 characterid: clear.character_id,
                                 class: spec.spec,
+                                classlink: "lib/classes/icons/" + spec.spec + ".jpg",
                                 date: clearDate.toLocaleDateString('en-US',{month: 'short', day: 'numeric', year: 'numeric'}),
                                 dps: clear.persecondamount,
                                 patch: clear.ilvl,

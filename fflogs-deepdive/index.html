@@ -30,6 +30,7 @@ API Key: <input type="text" data-bind="value: apiKey">
             <thead>
             <tr>
                 <th>Hist %</th>
+                <th>Class</th>
                 <th>DPS</th>
                 <th>Patch</th>
                 <th>Duration</th>
@@ -41,6 +42,7 @@ API Key: <input type="text" data-bind="value: apiKey">
             <tbody data-bind="foreach: clears">
             <tr data-bind="click: $parents[2].getFight">
                 <td data-bind="text: historyPercentile"></td>
+                <td><img data-bind="attr: { src: classlink, alt: class }"></td>
                 <td data-bind="text: dps"></td>
                 <td data-bind="text: patch"></td>
                 <td data-bind="text: duration"></td>
