@@ -112,7 +112,7 @@ classParsers.defParser = class defParser {
         });
 
         if ( gcds.length > 0 ) {
-            for (i = 1; i < gcds.length; i++) {
+            for ( let i = 1; i < gcds.length; i++) {
                 intervals.push({
                     interval: gcds[i].begincast - gcds[i - 1].begincast,
                     casttime: gcds[i - 1].endcast - gcds[i - 1].begincast,
