@@ -161,7 +161,8 @@ var parserViewModel = function(){
                 return f.id === newValue;
             });
             if ( selected.length > 0 ) {
-                console.log(selected.parsedActions);
+                console.log(selected[0].parsedActions);
+                console.log(selected[0].jobParser);
             }
         });
         fightdata.selectedFriendlySkills = ko.computed(function(){
