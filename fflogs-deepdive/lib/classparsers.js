@@ -483,7 +483,7 @@ classParsers.Bard = class Bard extends classParsers.defParser {
                 if (stanceSkill.length > 0) {
                     if (self.currentStance !== null) {
                         let stance = self.stances.filter(function(obj){
-                            return obj.name === e.ability.name;
+                            return obj.name === self.currentStance;
                         });
 
                         let stanceActivation = stance[0].active.pop();
