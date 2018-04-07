@@ -613,9 +613,9 @@ classParsers.Bard = class Bard extends classParsers.defParser {
         ];
         this.currentStance = null;
 
-        this.eventParsers = class bardEventParsers extends super.eventParsers {
+        this.eventParsers = class bardEventParsers extends classParsers.defParser.eventParsers {
             static cast(e, curAction, actions) {
-                curAction = super.eventParsers.cast(e, curAction, actions);
+                curAction = super.cast(e, curAction, actions);
                 let stanceSkill = this.stances.filter(function (obj) {
                     return obj.name === e.ability.name;
                 });
