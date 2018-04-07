@@ -204,7 +204,7 @@ var parserViewModel = function(){
 
         actor.jobParser = getJobParser(actor.type);
         actor.events = events;
-        actor.parsedActions = parseActions(events);
+        actor.parsedActions = parseActions($.extend(true,[],events));
         actor.jobActions = parseJobActions(actor.jobParser,actor.parsedActions);
     };
     var getJobParser = function(jobName){
