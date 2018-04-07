@@ -1,5 +1,5 @@
-var parserViewModel = function(){
-    var model = this;
+let parserViewModel = function(){
+    let model = this;
 
     model.apiKey = ko.observable();
     model.characterName = ko.observable();
@@ -18,33 +18,33 @@ var parserViewModel = function(){
     });
 
     model.characterSearch = function(){
-        var baseURL = "https://www.fflogs.com/v1/parses/character/";
-        var world = model.selectedWorld();
-        var character = model.characterName();
-        var apiKey = model.apiKey();
+        let baseURL = "https://www.fflogs.com/v1/parses/character/";
+        let world = model.selectedWorld();
+        let character = model.characterName();
+        let apiKey = model.apiKey();
 
-        var xhr = new XMLHttpRequest;
+        let xhr = new XMLHttpRequest;
         xhr.onreadystatechange = function() {
             if ( this.readyState === 4 && this.status === 200 ) {
                 // clear fights array - prevent adding fights over and over on re-search
                 model.fightlist.removeAll();
 
-                var apiResponse = JSON.parse(this.responseText);
-                var searchResults = {};
+                let apiResponse = JSON.parse(this.responseText);
+                let searchResults = {};
                 searchResults.character = character;
                 searchResults.bossList = [];
                 apiResponse.forEach(function(boss){
-                    var bossData = {
+                    let bossData = {
                         name: boss.name,
                         clears: []
                     };
                     boss.specs.forEach(function(spec){
                         spec.data.forEach(function(clear){
-                            var clearMinutes = Math.floor(clear.duration / 60000);
-                            var clearSeconds = ((clear.duration % 60000) / 1000).toFixed(0);
-                            var clearDate = new Date(clear.start_time);
+                            let clearMinutes = Math.floor(clear.duration / 60000);
+                            let clearSeconds = ((clear.duration % 60000) / 1000).toFixed(0);
+                            let clearDate = new Date(clear.start_time);
 
-                            var clearData = {
+                            let clearData = {
                                 characterid: clear.character_id,
                                 job: spec.spec,
                                 joblink: "lib/jobs/icons/" + spec.spec + ".png",
@@ -72,24 +72,24 @@ var parserViewModel = function(){
 
     model.getFight = function(clear) {
         // Get report information
-        var baseURL = "https://www.fflogs.com/v1/report/fights/";
-        var reportid = clear.reportid;
-        var fight = clear.fight;
-        var apiKey = model.apiKey();
+        let baseURL = "https://www.fflogs.com/v1/report/fights/";
+        let reportid = clear.reportid;
+        let fight = clear.fight;
+        let apiKey = model.apiKey();
 
-        var xhr = new XMLHttpRequest();
+        let xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
             if ( this.readyState === 4 && this.status === 200 ) {
-                var apiResponse = JSON.parse(this.responseText);
-                var clearDate = new Date(apiResponse.start);
+                let apiResponse = JSON.parse(this.responseText);
+                let clearDate = new Date(apiResponse.start);
 
-                var fightdata = {
+                let fightdata = {
                     fightlink: "#fight-" + reportid,
                     fightid: "fight-" + reportid,
                     date: clearDate.toLocaleDateString('en-US',{month: 'short', day: 'numeric'})
                 };
 
-                var f = apiResponse.fights.filter(function(obj){
+                let f = apiResponse.fights.filter(function(obj){
                     return obj.id === fight;
                 });
 
@@ -99,19 +99,19 @@ var parserViewModel = function(){
                 fightdata.displayname = fightdata.name + " - " + fightdata.date;
 
                 fightdata.friendlies = apiResponse.friendlies.filter(function(obj){
-                   var isfound = obj.fights.filter(function(o){
+                   let isfound = obj.fights.filter(function(o){
                        return o.id === fight;
                    });
                    return isfound.length > 0;
                 });
                 fightdata.friendlyPets = apiResponse.friendlyPets.filter(function(obj){
-                    var isfound = obj.fights.filter(function(o){
+                    let isfound = obj.fights.filter(function(o){
                         return o.id === fight;
                     });
                     return isfound.length > 0;
                 });
                 fightdata.enemies = apiResponse.enemies.filter(function(obj){
-                    var isfound = obj.fights.filter(function(o){
+                    let isfound = obj.fights.filter(function(o){
                         return o.id === fight;
                     });
                     return isfound.length > 0;
@@ -123,14 +123,14 @@ var parserViewModel = function(){
         xhr.send();
     };
     model.getFightEvents = function(reportid, starttime, endtime, fightdata) {
-        var baseURL = "https://www.fflogs.com/v1/report/events/";
-        var apiKey = model.apiKey();
+        let baseURL = "https://www.fflogs.com/v1/report/events/";
+        let apiKey = model.apiKey();
         fightdata.events = [];
 
-        var xhr = new XMLHttpRequest();
+        let xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
             if (this.readyState === 4 && this.status === 200) {
-                var apiResponse = JSON.parse(this.responseText);
+                let apiResponse = JSON.parse(this.responseText);
                 fightdata.events = fightdata.events.concat(apiResponse.events);
 
                 if ( apiResponse.nextPageTimestamp < endtime ) {
@@ -157,7 +157,7 @@ var parserViewModel = function(){
         });
         fightdata.selectedFriendly = ko.observable();
         fightdata.selectedFriendly.subscribe(function(newValue){
-            var selected = fightdata.friendlies.filter(function(f){
+            let selected = fightdata.friendlies.filter(function(f){
                 return f.id === newValue;
             });
             if ( selected.length > 0 ) {
@@ -167,7 +167,7 @@ var parserViewModel = function(){
             }
         });
         fightdata.selectedFriendlySkills = ko.computed(function(){
-           var selected = fightdata.friendlies.filter(function(f){
+           let selected = fightdata.friendlies.filter(function(f){
                return f.id === fightdata.selectedFriendly();
            });
            if ( selected.length > 0 ) {
@@ -187,7 +187,7 @@ var parserViewModel = function(){
             model.fights.remove(fight);
         };
 
-        var defaultFriendly = fightdata.friendlies.filter(function(obj){
+        let defaultFriendly = fightdata.friendlies.filter(function(obj){
             return obj.name === model.characterName();
         });
         if ( defaultFriendly.length > 0 ) {
@@ -196,31 +196,32 @@ var parserViewModel = function(){
 
         model.fights.push(fightdata);
     };
-    var parseActorEvents = function(actor,fightdata) {
-        var id = actor.id;
-        var events = fightdata.events.filter(function (obj) {
+    let parseActorEvents = function(actor,fightdata) {
+        let id = actor.id;
+        let events = fightdata.events.filter(function (obj) {
             return obj.sourceID === id;
         });
 
-        if (classParsers.hasOwnProperty(actor.type)) { actor.jobParser = new classParsers[actor.type](); }
-        else { actor.jobParser = new classParsers["default"](); }
+        if (classParsers.hasOwnProperty(actor.type)) {
+            actor.jobParser = new classParsers[actor.type]();
+            actor.parsedActions = actor.jobParser.parseActions($.extend(true, [], events));
+        }
+        else { actor.parsedActions = classParsers.default.parseActions($.extend(true, [], events)); }
 
         actor.events = events;
-        actor.parsedActions = actor.jobParser.parseActions($.extend(true, [], events));
-
         //actor.jobActions = parseJobActions(actor.jobParser,actor.parsedActions);
     };
 
-    var parseJobActions = function(jobParser,parsedActions) {
+    let parseJobActions = function(jobParser,parsedActions) {
         // return an empty array without property if jobParser or parsedActions are empty - nothing to do
         if ( !jobParser.hasOwnProperty("class") ) { return [] }
         if ( parsedActions.length === 0 ) { return [] }
 
-        var jobActions = {};
+        let jobActions = {};
         // collect aggregations for job skills
         if ( jobParser.hasOwnProperty("skills") ) {
             jobActions.skills = [];
-            var curSkill;
+            let curSkill;
 
             // Aggregate skill usage information per skill
             jobParser.skills.forEach(function(skill){
@@ -276,7 +277,7 @@ var parserViewModel = function(){
             jobActions.intervals = [];
             parsedActions.forEach(function(action){
                 // determine if current action is a GCD skill
-                var skill = jobParser.skills.filter(function(obj){
+                let skill = jobParser.skills.filter(function(obj){
                     return obj.isGCD === true && obj.name === action.ability.name;
                 });
                 // No matching GCD skills found, continue to next action
@@ -292,7 +293,7 @@ var parserViewModel = function(){
                         casttime: jobActions.gcds[i - 1].endcast - jobActions.gcds[i - 1].begincast
                     });
                 }
-                var minGCD = jobActions.intervals.reduce(function (prev, curr, currentIndex) {
+                let minGCD = jobActions.intervals.reduce(function (prev, curr, currentIndex) {
                     // First check will be currentIndex = 1, check second value of array against first
                     // We want to always take the 2nd interval value in this case, to disregard the initial cast to keep
                     //    pre-pull timing issues from artificially deflating the minGCD guess
@@ -306,7 +307,7 @@ var parserViewModel = function(){
 
         return jobActions;
     };
-    var fightAction = function(e){
+    let fightAction = function(e){
         this.ability = e.ability;
         this.sourceID = e.sourceID;
         this.sourceIsFriendly = e.sourceIsFriendly;
