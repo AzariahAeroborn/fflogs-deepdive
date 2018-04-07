@@ -203,7 +203,7 @@ let parserViewModel = function(){
         });
 
         if (classParsers.hasOwnProperty(actor.type)) { actor.jobParser = new classParsers[actor.type](); }
-        else { actor.jobParser = new ClassParsers["default"](); }
+        else { actor.jobParser = new classParsers["defParser"](); }
 
         actor.events = events;
         actor.parsedActions = actor.jobParser.parseActions($.extend(true, [], events));
