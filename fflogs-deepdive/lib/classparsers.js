@@ -81,7 +81,7 @@ classParsers.defParser = class defParser {
                     if (!processingAction.hasOwnProperty("debuffs")) {
                         processingAction.debuffs = [];
                     }
-                    debuffed = processingAction.debuffs.filter(function (obj) {
+                    let debuffed = processingAction.debuffs.filter(function (obj) {
                         return obj.targetID === e.targetID;
                     });
                     if (debuffed.length > 0) {
@@ -98,7 +98,7 @@ classParsers.defParser = class defParser {
                     if (!processingAction.hasOwnProperty("debuffs")) {
                         console.log("removedebuff event occurred outside of a cast event");
                     } else {
-                        debuffed = processingAction.debuffs.filter(function (obj) {
+                        let debuffed = processingAction.debuffs.filter(function (obj) {
                             return obj.targetID === e.targetID;
                         });
                         if (debuffed.length > 0) {
@@ -112,7 +112,7 @@ classParsers.defParser = class defParser {
                     if (!processingAction.hasOwnProperty("buffs")) {
                         processingAction.buffs = [];
                     }
-                    buffed = processingAction.buffs.filter(function (obj) {
+                    let buffed = processingAction.buffs.filter(function (obj) {
                         return obj.targetID === e.targetID;
                     });
                     if (buffed.length > 0) {
@@ -129,7 +129,7 @@ classParsers.defParser = class defParser {
                     if (!processingAction.hasOwnProperty("buffs")) {
                         console.log("removebuff event occurred outside of a cast event");
                     } else {
-                        buffed = processingAction.buffs.filter(function (obj) {
+                        let buffed = processingAction.buffs.filter(function (obj) {
                             return obj.targetID === e.targetID;
                         });
                         if (buffed.length > 0) {
