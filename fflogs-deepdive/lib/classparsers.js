@@ -11,6 +11,7 @@ classParsers.defParser = class defParser {
             if ( curAction.begincast > 0 && curAction.endcast == null ) {
                 // Cast event for a channeled skill that is currently being processed
                 curAction.endcast = e.timestamp;
+                return curAction;
             } else {
                 actions.push(curAction);
                 return new fightAction(e);
