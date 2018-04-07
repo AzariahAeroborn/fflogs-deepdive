@@ -259,7 +259,7 @@ classParsers.Bard = class Bard extends classParsers.defParser {
                 "buffProcRate": 1
             },
             {
-                "name": "the Wanderer's Minuet",
+                "name": "The Wanderer's Minuet",
                 "potency": 100,
                 "isGCD": false,
                 "multitarget": false,
@@ -469,7 +469,7 @@ classParsers.Bard = class Bard extends classParsers.defParser {
                 "active": []
             },
             {
-                "name": "The Warden's Paean",
+                "name": "The Wanderer's Minuet",
                 "active": []
             }
         ];
