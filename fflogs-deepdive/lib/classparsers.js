@@ -232,22 +232,22 @@ classParsers.defParser = class defParser {
         return(aggActions);
     }
 
-    aggregateGCD(actions) {
+    aggregateGCD(skills) {
         // No actions, return early -- nothing to do
-        if ( actions.length === 0 ) { return []; }
+        if ( skills.length === 0 ) { return []; }
         let gcds = [],
             intervals = [],
             minGCD;
 
-        actions.forEach(function(action){
-            // determine if current action is a GCD skill
+        skills.forEach(function(curSkill){
+            // determine if current skill is a GCD
             let skill = this.skills.filter(function(obj){
-                return obj.isGCD === true && obj.name === action.ability.name;
+                return obj.isGCD === true && obj.name === curSkill.ability.name;
             });
             // No matching GCD skills found, continue to next action
             if (skill.length === 0) return;
 
-            gcds.push({begincast: action.begincast, endcast: action.endcast, name: action.ability.name});
+            gcds.push({begincast: curSkill.begincast, endcast: curSkill.endcast, name: curSkill.ability.name});
         });
 
         if ( gcds.length > 0 ) {
@@ -637,8 +637,8 @@ classParsers.Bard = class Bard extends classParsers.defParser {
         super.parseActions(events);
     }
 
-    aggregateGCD(actions) {
-        let gcdSummary = super.gcdSummary(actions);
+    aggregateGCD(skills) {
+        let gcdSummary = super.gcdSummary(skills);
 
         // override minGCD calculation to exclude casts under Army's Paeon, which reduces GCD by variable amounts
         let minGCD = gcdSummary.intervals.reduce(function (curr,prev,currentIndex){
