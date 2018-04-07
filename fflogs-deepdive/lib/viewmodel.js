@@ -206,7 +206,7 @@ let parserViewModel = function(){
             actor.jobParser = new classParsers[actor.type]();
             actor.parsedActions = actor.jobParser.parseActions($.extend(true, [], events));
         }
-        else { actor.parsedActions = classParsers.default.parseActions($.extend(true, [], events)); }
+        else { actor.parsedActions = classParsers.defParser.parseActions($.extend(true, [], events)); }
 
         actor.events = events;
         //actor.jobActions = parseJobActions(actor.jobParser,actor.parsedActions);

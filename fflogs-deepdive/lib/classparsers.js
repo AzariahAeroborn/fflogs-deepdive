@@ -1,6 +1,6 @@
 var classParsers = classParsers || {};
 
-classParsers.default = class classParser {
+classParsers.defParser = class defParser {
     static parseActions(events) {
         let parsedActions = [],
             processingAction = null;
@@ -152,7 +152,7 @@ classParsers.default = class classParser {
     }
 };
 
-classParsers.Astrologian = class Astrologian extends classParser {
+classParsers.Astrologian = class Astrologian extends classParsers.defParser {
     constructor() {
         super();
         this.name = "Astrologian";
@@ -160,7 +160,7 @@ classParsers.Astrologian = class Astrologian extends classParser {
     }
 };
 
-classParsers.Bard = class Bard extends classParser {
+classParsers.Bard = class Bard extends classParsers.defParser {
     constructor() {
         super();
         this.name = "Bard";
@@ -480,7 +480,7 @@ classParsers.Bard = class Bard extends classParser {
     }
 };
 
-classParsers.BlackMage = class BlackMage extends classParser {
+classParsers.BlackMage = class BlackMage extends classParsers.defParser {
     constructor() {
         super();
         this.name = "BlackMage";
@@ -488,7 +488,7 @@ classParsers.BlackMage = class BlackMage extends classParser {
     }
 };
 
-classParsers.DarkKnight = class DarkKnight extends classParser {
+classParsers.DarkKnight = class DarkKnight extends classParsers.defParser {
     constructor() {
         super();
         this.name = "DarkKnight";
@@ -496,7 +496,7 @@ classParsers.DarkKnight = class DarkKnight extends classParser {
     }
 };
 
-classParsers.Dragoon = class Dragoon extends classParser {
+classParsers.Dragoon = class Dragoon extends classParsers.defParser {
     constructor() {
         super();
         this.name = "Dragoon";
@@ -504,7 +504,7 @@ classParsers.Dragoon = class Dragoon extends classParser {
     }
 };
 
-classParsers.Machinist = class Machinist extends classParser {
+classParsers.Machinist = class Machinist extends classParsers.defParser {
     constructor() {
         super();
         this.name = "Machinist";
@@ -512,7 +512,7 @@ classParsers.Machinist = class Machinist extends classParser {
     }
 };
 
-classParsers.Monk = class Monk extends classParser {
+classParsers.Monk = class Monk extends classParsers.defParser {
     constructor() {
         super();
         this.name = "Monk";
@@ -520,7 +520,7 @@ classParsers.Monk = class Monk extends classParser {
     }
 };
 
-classParsers.Ninja = class Ninja extends classParser {
+classParsers.Ninja = class Ninja extends classParsers.defParser {
     constructor() {
         super();
         this.name = "Ninja";
@@ -528,7 +528,7 @@ classParsers.Ninja = class Ninja extends classParser {
     }
 };
 
-classParsers.Paladin = class Paladin extends classParser {
+classParsers.Paladin = class Paladin extends classParsers.defParser {
     constructor() {
         super();
         this.name = "Paladin";
@@ -536,7 +536,7 @@ classParsers.Paladin = class Paladin extends classParser {
     }
 };
 
-classParsers.RedMage = class RedMage extends classParser {
+classParsers.RedMage = class RedMage extends classParsers.defParser {
     constructor() {
         super();
         this.name = "RedMage";
@@ -544,7 +544,7 @@ classParsers.RedMage = class RedMage extends classParser {
     }
 };
 
-classParsers.Samurai = class Samurai extends classParser {
+classParsers.Samurai = class Samurai extends classParsers.defParser {
     constructor() {
         super();
         this.name = "Samurai";
@@ -552,7 +552,7 @@ classParsers.Samurai = class Samurai extends classParser {
     }
 };
 
-classParsers.Scholar = class Scholar extends classParser {
+classParsers.Scholar = class Scholar extends classParsers.defParser {
     constructor() {
         super();
         this.name = "Scholar";
@@ -560,7 +560,7 @@ classParsers.Scholar = class Scholar extends classParser {
     }
 };
 
-classParsers.Summoner = class Summoner extends classParser {
+classParsers.Summoner = class Summoner extends classParsers.defParser {
     constructor() {
         super();
         this.name = "Summoner";
@@ -568,7 +568,7 @@ classParsers.Summoner = class Summoner extends classParser {
     }
 };
 
-classParsers.Warrior = class Warrior extends classParser {
+classParsers.Warrior = class Warrior extends classParsers.defParser {
     constructor() {
         super();
         this.name = "Warrior";
@@ -576,7 +576,7 @@ classParsers.Warrior = class Warrior extends classParser {
     }
 };
 
-classParsers.WhiteMage = class WhiteMage extends classParser {
+classParsers.WhiteMage = class WhiteMage extends classParsers.defParser {
     constructor() {
         super();
         this.name = "WhiteMage";
