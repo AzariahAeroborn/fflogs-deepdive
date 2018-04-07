@@ -3,7 +3,8 @@ var classParsers = classParsers || {};
 classParsers.defParser = class defParser {
     static parseActions(events) {
         let parsedActions = [],
-            processingAction = null;
+            processingAction = null,
+            e;
 
         // Pull the first event off the stack - will always create a new fight event for this
         while ( e = events.shift() ) {
