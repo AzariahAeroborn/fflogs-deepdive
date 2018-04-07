@@ -488,14 +488,15 @@ classParsers.Bard = class Bard extends classParsers.defParser {
                         });
 
                         let stanceActivation = stance[0].active.pop();
-                        stanceActivation.endtime = e.timestamp;
+                        stanceActivation.endtime = Math.min(e.timestamp,stanceActivation.endtime);
                         stance[0].active.push(stanceActivation);
                     }
                     self.currentStance = e.ability.name;
                     let stance = self.stances.filter(function(obj) {
                         return obj.name === e.ability.name;
                     });
-                    stance[0].active.push({begintime: e.timestamp});
+                    // Default stance length 30 seconds
+                    stance[0].active.push({begintime: e.timestamp, endtime: e.timestamp + 30000});
                 }
                 return curAction;
             }
