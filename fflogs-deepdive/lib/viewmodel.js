@@ -374,7 +374,6 @@ var parserViewModel = function(){
         // collect aggregations for job skills
         if ( jobParser.hasOwnProperty("skills") ) {
             jobActions.skills = [];
-            jobActions.gcds = [];
             var curSkill;
 
             // Aggregate skill usage information per skill
@@ -427,6 +426,8 @@ var parserViewModel = function(){
             });
 
             // Build GCD usage timeline
+            jobActions.gcds = [];
+            jobActions.intervals = {};
             parsedActions.forEach(function(action){
                 // determine if current action is a GCD skill
                 var skill = jobParser.skills.filter(function(obj){
@@ -436,7 +437,18 @@ var parserViewModel = function(){
                 if (skill.length === 0) return;
 
                 jobActions.gcds.push({begincast: action.begincast, endcast: action.endcast, name: action.ability.name});
-            })
+            });
+
+            for ( i = 1 ; i < jobActions.gcds.length ; i++ ) {
+                jobActions.intervals.push({
+                    interval : jobActions.gcds[i].begincast - jobActions.gcds[i-1].begincast,
+                    casttime : jobActions.gcds[i-1].endcast - jobActions.gcds[i-1].endcast
+                });
+            }
+            var minGCD = jobActions.intervals.reduce(function(prev, curr) {
+                return prev.interval < curr.interval ? prev : curr;
+            });
+            jobActions.minGCD = minGCD.interval;
         }
 
         return jobActions;
