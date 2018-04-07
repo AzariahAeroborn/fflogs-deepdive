@@ -502,7 +502,7 @@ classParsers.Bard = class Bard extends classParsers.defParser {
     }
 
     aggregateGCD(skills) {
-        let gcdSummary = super.gcdSummary(skills);
+        let gcdSummary = super.aggregateGCD(skills);
 
         // override minGCD calculation to exclude casts under Army's Paeon, which reduces GCD by variable amounts
         let minGCD = gcdSummary.intervals.reduce(function (curr,prev,currentIndex){
