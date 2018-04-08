@@ -550,12 +550,14 @@ classParsers.Bard = class Bard extends classParsers.defParser {
 
             let activePaeon = stanceList.filter(function(obj){
                 if ( obj.name === "Army's Paeon" ) {
-                    return obj.active.filter(function(obj){
-                        // If the effects of a song expire due to a time out (rather than being overwritten by the next song),
-                        //   then they will not expire until the next server tick, up to 3 seconds later.  Fudge our exclusions to avoid
-                        //   having GCD estimation too low because of a GCD at the end of an expiring Paeon.
-                        if ( obj.endtime - obj.begintime === 30000 ) { obj.endtime += 3000 }
-                        return ( obj.begintime < curr.actiontimestamp && curr.actiontimestamp < obj.endtime );
+                    return obj.active.filter(function(activeStance){
+                        // Copy values from stance active time to avoid manipulating stance duration information on the actual object
+                        let begintime = activeStance.begintime,
+                            // If the effects of a song expire or are replaced, they may persist until the next server tick, up to 3 seconds later.
+                            //   Fudge our exclusions to avoid having GCD estimation too low because of a GCD at the end of a Paeon.
+                            endtime = activeStance.endtime + 3000;
+
+                        return ( begintime < curr.actiontimestamp && curr.actiontimestamp < endtime );
                     }).length > 0
                 }
             });
