@@ -184,14 +184,16 @@ let parserViewModel = function(){
                    retval.damage.push({
                        gcd: selected[0].jobActions.skills.filter(function (obj) {
                            return obj.isGCD && obj.count > 0;
-                       }),
+                       }).sort(function(a,b){ return b.count > a.count }),
                        ogcd: selected[0].jobActions.skills.filter(function (obj) {
                            return !obj.isGCD && obj.count > 0;
-                       }),
+                       }).sort(function(a,b){ return b.count > a.count }),
+                       minGCD: null,
                        thresholds: []
                    });
                }
                if ( selected[0].hasOwnProperty("gcdSummary") && selected[0].gcdSummary.thresholds.length > 0 ) {
+                   retval.damage[0].minGCD = (selected[0].gcdSummary.minGCD / 1000).toFixed(2) + "s";
                    retval.damage[0].thresholds = selected[0].gcdSummary.thresholds;
                }
                return retval;

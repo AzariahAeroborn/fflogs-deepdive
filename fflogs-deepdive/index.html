@@ -63,7 +63,7 @@ API Key: <input type="text" data-bind="value: apiKey">
         <div data-bind="text: display"></div>
         <div data-bind="foreach: damage">
             <p>Damage Done --
-                <br> GCD:
+                <br> GCD skill usage:
             </p>
             <table>
                 <thead>
@@ -90,6 +90,7 @@ API Key: <input type="text" data-bind="value: apiKey">
                 </tbody>
             </table>
             <br> GCD Analysis:
+            <br> Minimum observed GCD: <span data-bind="text: minGCD"></span>
             <table>
                 <thead>
                 <tr>
@@ -104,7 +105,7 @@ API Key: <input type="text" data-bind="value: apiKey">
                 </tr>
                 </tbody>
             </table>
-            <br> OGCD:
+            <br> OGCD skill usage:
             <table>
                 <thead>
                 <tr>
