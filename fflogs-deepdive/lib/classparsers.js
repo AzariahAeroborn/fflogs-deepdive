@@ -129,7 +129,34 @@ classParsers.defParser = class defParser {
             });
         }
 
-        return { "gcds": gcds, "intervals": intervals, "min": minGCD.interval }
+        return { "gcds": gcds, "intervals": intervals, "min": minGCD.interval, "thresholds": this.calculateGCDThresholds(intervals,minGCD.interval) }
+    }
+
+    calculateGCDThresholds(intervals,minGCD) {
+        thresholds = [
+            // Initialize minimum GCD to 0 for classes that have speed effects - will set to minGCD after processing events to prepare display values
+            { min: 0, max: Math.floor(1.05*minGCD), count: 0 },
+            { min: Math.floor(1.05*minGCD), max: Math.floor(1.25*minGCD), count: 0 },
+            { min: Math.floor(1.25*minGCD), max: Math.floor(2*minGCD), count: 0 },
+            { min: Math.floor(2*minGCD), max: null, count: 0 }
+        ];
+
+        thresholds.forEach(function(thresh) {
+            thresh.count = intervals.filter(function (obj) {
+                return (obj.interval > thresh.min && (thresh.max === null || obj.interval < thresh.max));
+            }).length;
+
+            // Reset initial minimum threshold value to calculated minGCD
+            if ( thresh.min === 0 ) { thresh.min = minGCD }
+
+            // Calculate display range for thresholds, round to 2 decimal places
+            thresh.display = (thresh.min / 1000).toFixed(2).toString();
+            thresh.display += (thresh.max === null) ? "+" : " - " + (thresh.max / 1000).toFixed(2).toString();
+        });
+
+        thresholds[0].min = minGCD;
+
+        return thresholds;
     }
 };
 
@@ -528,6 +555,10 @@ classParsers.Bard = class Bard extends classParsers.defParser {
         });
 
         gcdSummary.min = minGCD.interval;
+
+        // re-run GCD Threshold calculation with new minimum GCD
+        gcdSummary.thresholds = this.calculateGCDThresholds(gcdSummary.intervals,minGCD.interval);
+
         return gcdSummary;
     }
 };

@@ -177,10 +177,22 @@ let parserViewModel = function(){
                return f.id === fightdata.selectedFriendly();
            });
            if ( selected.length > 0 ) {
-               return {
-                   display: selected[0].name,
-                   damage: []
-               };
+               let retval = {};
+               retval.display = selected[0].name;
+               if ( selected[0].hasOwnProperty("jobActions") && selected[0].jobActions.length > 0 ) {
+                   retval.damage = {
+                       gcd: selected[0].skills.filter(function (obj) {
+                           return obj.isGCD;
+                       }),
+                       ogcd: selected[0].skills.filter(function (obj) {
+                           return !obj.isGCD;
+                       })
+                   }
+               }
+               if ( selected[0].hasOwnProperty("gcdSummary") && selected[0].gcdSummary.length > 0 ) {
+                   retval.thresholds = selected[0].gcdSummary.thresholds;
+               }
+               return retval;
            } else {
                return {
                    display: "",
