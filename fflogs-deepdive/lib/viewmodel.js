@@ -180,7 +180,7 @@ let parserViewModel = function(){
                let retval = {};
                retval.display = selected[0].name;
                retval.damage = [];
-               if ( selected[0].hasOwnProperty("jobActions") && selected[0].jobActions.length > 0 ) {
+               if ( selected[0].hasOwnProperty("jobActions") && selected[0].jobActions.skills.length > 0 ) {
                    retval.damage.push({
                        gcd: selected[0].skills.filter(function (obj) {
                            return obj.isGCD;
