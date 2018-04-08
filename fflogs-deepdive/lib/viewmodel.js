@@ -179,18 +179,19 @@ let parserViewModel = function(){
            if ( selected.length > 0 ) {
                let retval = {};
                retval.display = selected[0].name;
+               retval.damage = [];
                if ( selected[0].hasOwnProperty("jobActions") && selected[0].jobActions.length > 0 ) {
-                   retval.damage = {
+                   retval.damage.push({
                        gcd: selected[0].skills.filter(function (obj) {
                            return obj.isGCD;
                        }),
                        ogcd: selected[0].skills.filter(function (obj) {
                            return !obj.isGCD;
                        })
-                   }
+                   });
                }
                if ( selected[0].hasOwnProperty("gcdSummary") && selected[0].gcdSummary.length > 0 ) {
-                   retval.thresholds = selected[0].gcdSummary.thresholds;
+                   retval.damage[0].thresholds = selected[0].gcdSummary.thresholds;
                }
                return retval;
            } else {
