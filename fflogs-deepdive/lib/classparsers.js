@@ -67,6 +67,7 @@ classParsers.defParser = class defParser {
                             } else {
                                 if (hit.directhit) curSkill.dhits++;
                             }
+                            curSkill.damage += hit.amount;
                         });
                     }
 

@@ -84,8 +84,8 @@ let parserViewModel = function(){
                 let clearDate = new Date(apiResponse.start);
 
                 let fightdata = {
-                    fightlink: "#fight-" + reportid,
-                    fightid: "fight-" + reportid,
+                    fightlink: "#fight-" + reportid + "-" + fight,
+                    fightid: "fight-" + reportid + "-" + fight,
                     date: clearDate.toLocaleDateString('en-US',{month: 'short', day: 'numeric'})
                 };
 
