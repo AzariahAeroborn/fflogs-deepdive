@@ -132,7 +132,7 @@ classParsers.defParser = class defParser {
                 if ( currentIndex <= 1 ) { return curr }
 
                 return prev.interval < curr.interval ? prev : curr;
-            }, intervals[0]);
+            });
         }
 
         return { "gcds": gcds, "intervals": intervals, "min": minGCD.interval, "thresholds": this.calculateGCDThresholds(intervals,minGCD.interval) }
@@ -542,7 +542,7 @@ classParsers.Bard = class Bard extends classParsers.defParser {
             stanceList = this.stances;
 
         // override minGCD calculation to exclude casts under Army's Paeon, which reduces GCD by variable amounts
-        let minGCD = gcdSummary.intervals.reduce(function (curr,prev,currentIndex){
+        let minGCD = gcdSummary.intervals.reduce(function (prev,curr,currentIndex){
             // First check will be currentIndex = 1, check second value of array against first
             // We want to always take the 2nd interval value in this case, to disregard the initial cast to keep
             //    pre-pull timing issues from artificially deflating the minGCD guess
@@ -559,7 +559,7 @@ classParsers.Bard = class Bard extends classParsers.defParser {
             // If Army's Paeon was active during time of current action, do not compare the GCD interval of this action to the current minimum
             if ( activePaeon.length > 0 ) return prev;
             return prev.interval < curr.interval ? prev : curr;
-        },gcdSummary.intervals[0]);
+        });
 
         gcdSummary.min = minGCD.interval;
 
