@@ -180,7 +180,7 @@ let parserViewModel = function(){
                let retval = {};
                retval.display = selected[0].name;
                retval.damage = [];
-               if ( selected[0].hasOwnProperty("jobActions") && selected[0].jobActions.skills.length > 0 ) {
+               if ( selected[0].hasOwnProperty("jobActions") && selected[0].jobActions.hasOwnProperty("skills") && selected[0].jobActions.skills.length > 0 ) {
                    retval.damage.push({
                        gcd: selected[0].jobActions.skills.filter(function (obj) {
                            return obj.isGCD && obj.count > 0;
@@ -192,8 +192,8 @@ let parserViewModel = function(){
                        thresholds: []
                    });
                }
-               if ( selected[0].hasOwnProperty("gcdSummary") && selected[0].gcdSummary.thresholds.length > 0 ) {
-                   retval.damage[0].minGCD = (selected[0].gcdSummary.minGCD / 1000).toFixed(2) + "s";
+               if ( selected[0].hasOwnProperty("gcdSummary") && selected[0].gcdSummary.hasOwnProperty("thresholds") && selected[0].gcdSummary.thresholds.length > 0 ) {
+                   retval.damage[0].minGCD = (selected[0].gcdSummary.min / 1000).toFixed(2) + "s";
                    retval.damage[0].thresholds = selected[0].gcdSummary.thresholds;
                }
                return retval;
