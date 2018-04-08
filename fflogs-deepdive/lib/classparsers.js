@@ -133,7 +133,7 @@ classParsers.defParser = class defParser {
     }
 
     calculateGCDThresholds(intervals,minGCD) {
-        thresholds = [
+        let thresholds = [
             // Initialize minimum GCD to 0 for classes that have speed effects - will set to minGCD after processing events to prepare display values
             { min: 0, max: Math.floor(1.05*minGCD), count: 0 },
             { min: Math.floor(1.05*minGCD), max: Math.floor(1.25*minGCD), count: 0 },
