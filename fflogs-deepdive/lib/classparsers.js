@@ -554,12 +554,12 @@ classParsers.Bard = class Bard extends classParsers.defParser {
                         return ( obj.begintime < curr.actiontimestamp && curr.actiontimestamp < obj.endtime );
                     }).length > 0
                 }
-            },gcdSummary.intervals[0]);
+            });
 
             // If Army's Paeon was active during time of current action, do not compare the GCD interval of this action to the current minimum
             if ( activePaeon.length > 0 ) return prev;
             return prev.interval < curr.interval ? prev : curr;
-        });
+        },gcdSummary.intervals[0]);
 
         gcdSummary.min = minGCD.interval;
 
