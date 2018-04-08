@@ -183,14 +183,15 @@ let parserViewModel = function(){
                if ( selected[0].hasOwnProperty("jobActions") && selected[0].jobActions.skills.length > 0 ) {
                    retval.damage.push({
                        gcd: selected[0].jobActions.skills.filter(function (obj) {
-                           return obj.isGCD;
+                           return obj.isGCD && obj.count > 0;
                        }),
                        ogcd: selected[0].jobActions.skills.filter(function (obj) {
-                           return !obj.isGCD;
-                       })
+                           return !obj.isGCD && obj.count > 0;
+                       }),
+                       thresholds: []
                    });
                }
-               if ( selected[0].hasOwnProperty("gcdSummary") && selected[0].gcdSummary.length > 0 ) {
+               if ( selected[0].hasOwnProperty("gcdSummary") && selected[0].gcdSummary.thresholds.length > 0 ) {
                    retval.damage[0].thresholds = selected[0].gcdSummary.thresholds;
                }
                return retval;
