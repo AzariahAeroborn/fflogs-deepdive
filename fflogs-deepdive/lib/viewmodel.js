@@ -182,10 +182,10 @@ let parserViewModel = function(){
                retval.damage = [];
                if ( selected[0].hasOwnProperty("jobActions") && selected[0].jobActions.skills.length > 0 ) {
                    retval.damage.push({
-                       gcd: selected[0].skills.filter(function (obj) {
+                       gcd: selected[0].jobActions.skills.filter(function (obj) {
                            return obj.isGCD;
                        }),
-                       ogcd: selected[0].skills.filter(function (obj) {
+                       ogcd: selected[0].jobActions.skills.filter(function (obj) {
                            return !obj.isGCD;
                        })
                    });
