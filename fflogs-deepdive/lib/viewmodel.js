@@ -186,7 +186,7 @@ let parserViewModel = function(){
                            return obj.isGCD && obj.casts > 0;
                        }).sort(function(a,b){ return b.casts > a.casts }),
                        ogcd: selected[0].jobActions.skills.filter(function (obj) {
-                           return !obj.isGCD && obj.count > 0;
+                           return !obj.isGCD && obj.casts > 0;
                        }).sort(function(a,b){ return b.casts > a.casts }),
                        minGCD: null,
                        thresholds: []
