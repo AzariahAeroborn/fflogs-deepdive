@@ -277,7 +277,7 @@ classParsers.Astrologian = class Astrologian extends classParsers.defParser {
             { name: "Lord of Crowns", potency: 300, isGCD: false, multitarget: false, cooldown: 5, cast: 0 },
             { name: "Lady of Crowns", healpotency: 500, isGCD: false, multitarget: false, cooldown: 5, cast: 0 }
         ];
-        self.skills.concat(defParser.healerRoleSkills()());
+        self.skills.concat(classParsers.defParser.healerRoleSkills()());
         self.dots = [
             { name: "Combust II", potency: 50, duration: 30 }
         ];
@@ -407,7 +407,7 @@ classParsers.Bard = class Bard extends classParsers.defParser {
             { name: "Nature's Minne", potency: 0, isGCD: false, multitarget: false, cooldown: 45, cast: 0, buff: "Nature's Minne", buffProcRate: 1 },
             { name: "Refulgent Arrow", potency: 300, isGCD: true, multitarget: false, cooldown: null, cast: 0, requiredBuff: "Straighter Shot" }
         ];
-        self.skills.concat(defParser.rangedPhysicalRoleSkills()());
+        self.skills.concat(classParsers.defParser.rangedPhysicalRoleSkills()());
         self.dots = [
             {name: "Caustic Bite", potency: 45, duration: 30},
             {name: "Stormbite", potency: 55, duration: 30}
@@ -618,7 +618,7 @@ classParsers.BlackMage = class BlackMage extends classParsers.defParser {
             { name: "Triplecast", potency: 0, isGCD: true, multitarget: false, cooldown: 60, cast: 0 },
             { name: "Foul", potency: 650, isGCD: true, multitarget: true, falloffratio: 0.1, falloffmax: 0.5, cooldown: null, cast: 2.5 }
         ];
-        self.skills.concat(defParser.rangedMagicalRoleSkills());
+        self.skills.concat(classParsers.defParser.rangedMagicalRoleSkills());
         self.dots = [
             { name: "Thunder III", potency: 40, duration: 24 },
             { name: "Thunder IV", potency: 30, duration: 18 }
@@ -764,7 +764,7 @@ classParsers.DarkKnight = class DarkKnight extends classParsers.defParser {
             { name: "Bloodspiller", potency: 400, darkarts: 140, isGCD: true, multitarget: false, cooldown: null, cast: 0 },
             { name: "The Blackest Night", potency: 0, isGCD: false, multitarget: false, cooldown: 15, cast: 0, buff: "The Blackest Night", buffProcRate: 1 },
         ];
-        self.skills.concat(defParser.tankRoleSkills());
+        self.skills.concat(classParsers.defParser.tankRoleSkills());
         self.dots = [
             { name: "Salted Earth", potency: 75, duration: 21, groundarea: true }
         ];
@@ -946,7 +946,7 @@ classParsers.Dragoon = class Dragoon extends classParsers.defParser {
             { name: "Mirage Dive", potency: 210, isGCD: false, multitarget: false, cooldown: 1, cast: 0, requiredBuff: "Dive Ready" },
             { name: "Nastrond", potency: 330, isGCD: false, multitarget: false, cooldown: 10, cast: 0, requiredStance: "Life of the Dragon" },
         ];
-        self.skills.concat(defParser.meleeRoleSkills());
+        self.skills.concat(classParsers.defParser.meleeRoleSkills());
         self.dots = [
             { name: "Chaos Thrust", potency: 35, duration: 30 }
         ];
@@ -1099,7 +1099,7 @@ classParsers.Machinist = class Machinist extends classParsers.defParser {
             { name: "Bishop Overdrive", potency: 0, isGCD: true, multitarget: false, cooldown: 120, cast: 0 },
             { name: "Flamethrower", potency: 60, isGCD: true, multitarget: true, cooldown: 60, cast: 0 }
         ];
-        self.skills.concat(defParser.rangedPhysicalRoleSkills());
+        self.skills.concat(classParsers.defParser.rangedPhysicalRoleSkills());
         self.dots = [];
         self.buffs = [];
         self.debuffs = [];
@@ -1447,7 +1447,7 @@ classParsers.Monk = class Monk extends classParsers.defParser {
                 }
             }
         ];
-        self.skills.concat(defParser.meleeRoleSkills());
+        self.skills.concat(classParsers.defParser.meleeRoleSkills());
         self.stances = [];
         self.currentStance = null;
 
@@ -1757,7 +1757,7 @@ classParsers.Ninja = class Ninja extends classParsers.defParser {
                 }
             }
         ];
-        self.skills.concat(defParser.meleeRoleSkills());
+        self.skills.concat(classParsers.defParser.meleeRoleSkills());
         self.stances = [];
         self.currentStance = null;
 
@@ -1771,7 +1771,7 @@ classParsers.Paladin = class Paladin extends classParsers.defParser {
         let self = this;
         self.name = "Paladin";
         self.skills = [];
-        self.skills.concat(defParser.tankRoleSkills());
+        self.skills.concat(classParsers.defParser.tankRoleSkills());
         self.dots = [];
         self.buffs = [];
         self.debuffs = [];
@@ -1788,7 +1788,7 @@ classParsers.RedMage = class RedMage extends classParsers.defParser {
         let self = this;
         self.name = "RedMage";
         self.skills = [];
-        self.skills.concat(defParser.rangedMagicalRoleSkills());
+        self.skills.concat(classParsers.defParser.rangedMagicalRoleSkills());
         self.dots = [];
         self.buffs = [];
         self.debuffs = [];
@@ -1805,7 +1805,7 @@ classParsers.Samurai = class Samurai extends classParsers.defParser {
         let self = this;
         self.name = "Samurai";
         self.skills = [];
-        self.skills.concat(defParser.meleeRoleSkills());
+        self.skills.concat(classParsers.defParser.meleeRoleSkills());
         self.dots = [];
         self.buffs = [];
         self.debuffs = [];
@@ -1822,7 +1822,7 @@ classParsers.Scholar = class Scholar extends classParsers.defParser {
         let self = this;
         self.name = "Scholar";
         self.skills = [];
-        self.skills.concat(defParser.healerRoleSkills());
+        self.skills.concat(classParsers.defParser.healerRoleSkills());
         self.dots = [];
         self.buffs = [];
         self.debuffs = [];
@@ -1839,7 +1839,7 @@ classParsers.Summoner = class Summoner extends classParsers.defParser {
         let self = this;
         self.name = "Summoner";
         self.skills = [];
-        self.skills.concat(defParser.rangedMagicalRoleSkills());
+        self.skills.concat(classParsers.defParser.rangedMagicalRoleSkills());
         self.dots = [];
         self.buffs = [];
         self.debuffs = [];
@@ -1856,7 +1856,7 @@ classParsers.Warrior = class Warrior extends classParsers.defParser {
         let self = this;
         self.name = "Warrior";
         self.skills = [];
-        self.skills.concat(defParser.tankRoleSkills());
+        self.skills.concat(classParsers.defParser.tankRoleSkills());
         self.dots = [];
         self.buffs = [];
         self.debuffs = [];
@@ -1873,7 +1873,7 @@ classParsers.WhiteMage = class WhiteMage extends classParsers.defParser {
         let self = this;
         self.name = "WhiteMage";
         self.skills = [];
-        self.skills.concat(defParser.healerRoleSkills());
+        self.skills.concat(classParsers.defParser.healerRoleSkills());
         self.dots = [];
         self.buffs = [];
         self.debuffs = [];
