@@ -117,7 +117,7 @@ classParsers.defParser = class defParser {
             // Aggregate skill usage information per skill
             this.skills.forEach(function (skill) {
                 curSkill = $.extend(true, {
-                    count: 0,
+                    casts: 0,
                     hits: 0,
                     crits: 0,
                     dhits: 0,
@@ -131,7 +131,7 @@ classParsers.defParser = class defParser {
                     return obj.ability.name === skill.name;
                 });
 
-                curSkill.count = usages.length;
+                curSkill.casts = usages.length;
                 usages.forEach(function (u) {
                     if (u.hasOwnProperty("damage")) {
                         curSkill.hits += u.damage.length;
@@ -217,15 +217,15 @@ classParsers.defParser = class defParser {
     calculateGCDThresholds(intervals,minGCD) {
         let thresholds = [
             // Initialize minimum GCD to 0 for classes that have speed effects - will set to minGCD after processing events to prepare display values
-            { min: 0, max: Math.floor(1.03*minGCD), count: 0 },
-            { min: Math.floor(1.03*minGCD), max: Math.floor(1.10*minGCD), count: 0 },
-            { min: Math.floor(1.10*minGCD), max: Math.floor(1.25*minGCD), count: 0 },
-            { min: Math.floor(1.25*minGCD), max: Math.floor(1.5*minGCD), count: 0 },
-            { min: Math.floor(1.5*minGCD), max: null, count: 0 }
+            { min: 0, max: Math.floor(1.03*minGCD), casts: 0 },
+            { min: Math.floor(1.03*minGCD), max: Math.floor(1.10*minGCD), casts: 0 },
+            { min: Math.floor(1.10*minGCD), max: Math.floor(1.25*minGCD), casts: 0 },
+            { min: Math.floor(1.25*minGCD), max: Math.floor(1.5*minGCD), casts: 0 },
+            { min: Math.floor(1.5*minGCD), max: null, casts: 0 }
         ];
 
         thresholds.forEach(function(thresh) {
-            thresh.count = intervals.filter(function (obj) {
+            thresh.casts = intervals.filter(function (obj) {
                 return (obj.interval > thresh.min && (thresh.max === null || obj.interval < thresh.max));
             }).length;
 
