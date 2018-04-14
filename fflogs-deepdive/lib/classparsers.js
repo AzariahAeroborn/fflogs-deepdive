@@ -1,4 +1,6 @@
-class defParser {
+var classParsers = classParsers || {};
+
+classParsers.defParser = class defParser {
     constructor() {
         this.eventParsers = class e extends eventParsers{};
     }
@@ -239,171 +241,9 @@ class defParser {
 
         return thresholds;
     }
-}
+};
 
-class fightAction {
-    constructor(e) {
-        this.ability = e.ability;
-        this.sourceID = e.sourceID;
-        this.sourceIsFriendly = e.sourceIsFriendly;
-        this.targetID = e.targetID;
-        this.targetIsFriendly = e.targetIsFriendly;
-        if ( e.targetIsFriendly === false ) {
-            this.targetInstance = [e.targetInstance];
-        }
-        this.begincast = e.timestamp;
-        this.endcast = ( e.type === "begincast" ) ? null : e.timestamp;
-        this.type = null;
-    }
-}
-
-class eventParsers {
-    static begincast(e, curAction, actions) {
-        actions.push(curAction);
-        return new fightAction(e);
-    }
-
-    static cast(e, curAction, actions) {
-        if (curAction.begincast > 0 && curAction.endcast == null) {
-            // Cast event for a channeled skill that is currently being processed
-            curAction.endcast = e.timestamp;
-            return curAction;
-        } else {
-            actions.push(curAction);
-            return new fightAction(e);
-        }
-    }
-
-    static damage(e, curAction, actions) {
-        if (e.hasOwnProperty("tick")) {
-            // damage of type "tick" is simulated DOT damage
-        } else {
-            // direct damage from use of a skill
-            if (!curAction.hasOwnProperty("damage")) {
-                curAction.damage = [];
-            }
-            // push this damage event onto array
-            curAction.damage.push({
-                amount: e.amount,
-                absorbed: e.absorbed,
-                criticalhit: (e.hitType === 2),
-                directhit: (e.multistrike === true),
-                debugMultiplier: e.debugMultiplier,
-                sourceResources: e.sourceResources,
-                targetResources: e.targetResources,
-                timestamp: e.timestamp
-            });
-        }
-        return curAction;
-    };
-
-    static heal(e, curAction, actions) {
-        if (e.hasOwnProperty("tick")) {
-            // damage of type "tick" is simulated heal over time
-        } else {
-            // direct heal from use of a skill
-            if (!curAction.hasOwnProperty("heal")) {
-                curAction.heal = [];
-            }
-            // push this heal event onto array
-            curAction.heal.push({
-                amount: e.amount,
-                overheal: e.overheal,
-                criticalhit: (e.hitType === 2),
-                sourceResources: e.sourceResources,
-                targetResources: e.targetResources,
-                timestamp: e.timestamp
-            });
-        }
-        return curAction;
-    };
-
-    static applydebuff(e, curAction, actions) {
-        if (!curAction.hasOwnProperty("debuffs")) {
-            curAction.debuffs = [];
-        }
-        let debuffed = curAction.debuffs.filter(function (obj) {
-            return obj.targetID === e.targetID;
-        });
-        if (debuffed.length > 0) {
-            debuffed[0].targetInstances.push(e.targetInstance);
-        } else {
-            curAction.debuffs.push({
-                targetID: e.targetID,
-                targetInstances: [e.targetInstance],
-                starttime: e.timestamp
-            });
-        }
-        return curAction;
-    };
-
-    static removedebuff(e, curAction, actions) {
-        if (!curAction.hasOwnProperty("debuffs")) {
-            console.log("removedebuff event occurred outside of a cast event");
-        } else {
-            let debuffed = curAction.debuffs.filter(function (obj) {
-                return obj.targetID === e.targetID;
-            });
-            if (debuffed.length > 0) {
-                debuffed[0].endtime = e.timestamp;
-            } else {
-                console.log("removedebuff event occurred without a matching target for the debuff")
-            }
-        }
-        return curAction;
-    };
-
-    static applybuff(e, curAction, actions) {
-        if (!curAction.hasOwnProperty("buffs")) {
-            curAction.buffs = [];
-        }
-        let buffed = curAction.buffs.filter(function (obj) {
-            return obj.targetID === e.targetID;
-        });
-        if (buffed.length > 0) {
-            buffed[0].targetInstances.push(e.targetInstance);
-        } else {
-            curAction.buffs.push({
-                targetID: e.targetID,
-                targetInstances: [e.targetInstance],
-                starttime: e.timestamp
-            })
-        }
-        return curAction;
-    };
-
-    static removebuff(e, curAction, actions) {
-        if (!curAction.hasOwnProperty("buffs")) {
-            console.log("removebuff event occurred outside of a cast event");
-        } else {
-            let buffed = curAction.buffs.filter(function (obj) {
-                return obj.targetID === e.targetID;
-            });
-            if (buffed.length > 0) {
-                buffed[0].endtime = e.timestamp;
-            } else {
-                console.log("removebuff event occurred without a matching target for the buff")
-            }
-        }
-        return curAction;
-    };
-
-    static refreshdebuff(e, curAction, actions) {
-        // TODO: implement handling for refreshdebuff
-        return curAction;
-    };
-
-    static refreshbuff(e, curAction, actions) {
-        // TODO: implement handling for refreshbuff
-        return curAction;
-    };
-}
-
-var classParsers = classParsers || {};
-
-classParsers.defParser = new defParser();
-
-classParsers.Astrologian = class Astrologian extends defParser {
+classParsers.Astrologian = class Astrologian extends classParsers.defParser {
     constructor() {
         super();
         let self = this;
@@ -437,7 +277,7 @@ classParsers.Astrologian = class Astrologian extends defParser {
             { name: "Lord of Crowns", potency: 300, isGCD: false, multitarget: false, cooldown: 5, cast: 0 },
             { name: "Lady of Crowns", healpotency: 500, isGCD: false, multitarget: false, cooldown: 5, cast: 0 }
         ];
-        self.skills.concat(defParser.healerRoleSkills);
+        self.skills.concat(classParsers.defParser.healerRoleSkills);
         self.dots = [
             { name: "Combust II", potency: 50, duration: 30 }
         ];
@@ -536,7 +376,7 @@ classParsers.Astrologian = class Astrologian extends defParser {
     }
 };
 
-classParsers.Bard = class Bard extends defParser {
+classParsers.Bard = class Bard extends classParsers.defParser {
     constructor() {
         super();
         let self = this;
@@ -567,7 +407,7 @@ classParsers.Bard = class Bard extends defParser {
             { name: "Nature's Minne", potency: 0, isGCD: false, multitarget: false, cooldown: 45, cast: 0, buff: "Nature's Minne", buffProcRate: 1 },
             { name: "Refulgent Arrow", potency: 300, isGCD: true, multitarget: false, cooldown: null, cast: 0, requiredBuff: "Straighter Shot" }
         ];
-        self.skills.concat(defParser.rangedPhysicalRoleSkills);
+        self.skills.concat(classParsers.defParser.rangedPhysicalRoleSkills);
         self.dots = [
             {name: "Caustic Bite", potency: 45, duration: 30},
             {name: "Stormbite", potency: 55, duration: 30}
@@ -746,7 +586,7 @@ classParsers.Bard = class Bard extends defParser {
     }
 };
 
-classParsers.BlackMage = class BlackMage extends defParser {
+classParsers.BlackMage = class BlackMage extends classParsers.defParser {
     constructor() {
         super();
         let self = this;
@@ -778,7 +618,7 @@ classParsers.BlackMage = class BlackMage extends defParser {
             { name: "Triplecast", potency: 0, isGCD: true, multitarget: false, cooldown: 60, cast: 0 },
             { name: "Foul", potency: 650, isGCD: true, multitarget: true, falloffratio: 0.1, falloffmax: 0.5, cooldown: null, cast: 2.5 }
         ];
-        self.skills.concat(defParser.rangedMagicalRoleSkills);
+        self.skills.concat(classParsers.defParser.rangedMagicalRoleSkills);
         self.dots = [
             { name: "Thunder III", potency: 40, duration: 24 },
             { name: "Thunder IV", potency: 30, duration: 18 }
@@ -892,7 +732,7 @@ classParsers.BlackMage = class BlackMage extends defParser {
     }
 };
 
-classParsers.DarkKnight = class DarkKnight extends defParser {
+classParsers.DarkKnight = class DarkKnight extends classParsers.defParser {
     constructor() {
         super();
         let self = this;
@@ -924,7 +764,7 @@ classParsers.DarkKnight = class DarkKnight extends defParser {
             { name: "Bloodspiller", potency: 400, darkarts: 140, isGCD: true, multitarget: false, cooldown: null, cast: 0 },
             { name: "The Blackest Night", potency: 0, isGCD: false, multitarget: false, cooldown: 15, cast: 0, buff: "The Blackest Night", buffProcRate: 1 },
         ];
-        self.skills.concat(defParser.tankRoleSkills);
+        self.skills.concat(classParsers.defParser.tankRoleSkills);
         self.dots = [
             { name: "Salted Earth", potency: 75, duration: 21, groundarea: true }
         ];
@@ -1075,7 +915,7 @@ classParsers.DarkKnight = class DarkKnight extends defParser {
     }
 };
 
-classParsers.Dragoon = class Dragoon extends defParser {
+classParsers.Dragoon = class Dragoon extends classParsers.defParser {
     constructor() {
         super();
         let self = this;
@@ -1106,7 +946,7 @@ classParsers.Dragoon = class Dragoon extends defParser {
             { name: "Mirage Dive", potency: 210, isGCD: false, multitarget: false, cooldown: 1, cast: 0, requiredBuff: "Dive Ready" },
             { name: "Nastrond", potency: 330, isGCD: false, multitarget: false, cooldown: 10, cast: 0, requiredStance: "Life of the Dragon" },
         ];
-        self.skills.concat(defParser.meleeRoleSkills);
+        self.skills.concat(classParsers.defParser.meleeRoleSkills);
         self.dots = [
             { name: "Chaos Thrust", potency: 35, duration: 30 }
         ];
@@ -1227,7 +1067,7 @@ classParsers.Dragoon = class Dragoon extends defParser {
     }
 };
 
-classParsers.Machinist = class Machinist extends defParser {
+classParsers.Machinist = class Machinist extends classParsers.defParser {
     constructor() {
         super();
         let self = this;
@@ -1259,7 +1099,7 @@ classParsers.Machinist = class Machinist extends defParser {
             { name: "Bishop Overdrive", potency: 0, isGCD: true, multitarget: false, cooldown: 120, cast: 0 },
             { name: "Flamethrower", potency: 60, isGCD: true, multitarget: true, cooldown: 60, cast: 0 }
         ];
-        self.skills.concat(defParser.rangedPhysicalRoleSkills);
+        self.skills.concat(classParsers.defParser.rangedPhysicalRoleSkills);
         self.dots = [];
         self.buffs = [];
         self.debuffs = [];
@@ -1270,7 +1110,7 @@ classParsers.Machinist = class Machinist extends defParser {
     }
 };
 
-classParsers.Monk = class Monk extends defParser {
+classParsers.Monk = class Monk extends classParsers.defParser {
     constructor() {
         super();
         let self = this;
@@ -1607,7 +1447,7 @@ classParsers.Monk = class Monk extends defParser {
                 }
             }
         ];
-        self.skills.concat(defParser.meleeRoleSkills);
+        self.skills.concat(classParsers.defParser.meleeRoleSkills);
         self.stances = [];
         self.currentStance = null;
 
@@ -1615,7 +1455,7 @@ classParsers.Monk = class Monk extends defParser {
     }
 };
 
-classParsers.Ninja = class Ninja extends defParser {
+classParsers.Ninja = class Ninja extends classParsers.defParser {
     constructor() {
         super();
         let self = this;
@@ -1917,7 +1757,7 @@ classParsers.Ninja = class Ninja extends defParser {
                 }
             }
         ];
-        self.skills.concat(defParser.meleeRoleSkills);
+        self.skills.concat(classParsers.defParser.meleeRoleSkills);
         self.stances = [];
         self.currentStance = null;
 
@@ -1925,13 +1765,13 @@ classParsers.Ninja = class Ninja extends defParser {
     }
 };
 
-classParsers.Paladin = class Paladin extends defParser {
+classParsers.Paladin = class Paladin extends classParsers.defParser {
     constructor() {
         super();
         let self = this;
         self.name = "Paladin";
         self.skills = [];
-        self.skills.concat(defParser.tankRoleSkills);
+        self.skills.concat(classParsers.defParser.tankRoleSkills);
         self.dots = [];
         self.buffs = [];
         self.debuffs = [];
@@ -1942,13 +1782,13 @@ classParsers.Paladin = class Paladin extends defParser {
     }
 };
 
-classParsers.RedMage = class RedMage extends defParser {
+classParsers.RedMage = class RedMage extends classParsers.defParser {
     constructor() {
         super();
         let self = this;
         self.name = "RedMage";
         self.skills = [];
-        self.skills.concat(defParser.rangedMagicalRoleSkills);
+        self.skills.concat(classParsers.defParser.rangedMagicalRoleSkills);
         self.dots = [];
         self.buffs = [];
         self.debuffs = [];
@@ -1959,13 +1799,13 @@ classParsers.RedMage = class RedMage extends defParser {
     }
 };
 
-classParsers.Samurai = class Samurai extends defParser {
+classParsers.Samurai = class Samurai extends classParsers.defParser {
     constructor() {
         super();
         let self = this;
         self.name = "Samurai";
         self.skills = [];
-        self.skills.concat(defParser.meleeRoleSkills);
+        self.skills.concat(classParsers.defParser.meleeRoleSkills);
         self.dots = [];
         self.buffs = [];
         self.debuffs = [];
@@ -1976,13 +1816,13 @@ classParsers.Samurai = class Samurai extends defParser {
     }
 };
 
-classParsers.Scholar = class Scholar extends defParser {
+classParsers.Scholar = class Scholar extends classParsers.defParser {
     constructor() {
         super();
         let self = this;
         self.name = "Scholar";
         self.skills = [];
-        self.skills.concat(defParser.healerRoleSkills);
+        self.skills.concat(classParsers.defParser.healerRoleSkills);
         self.dots = [];
         self.buffs = [];
         self.debuffs = [];
@@ -1993,13 +1833,13 @@ classParsers.Scholar = class Scholar extends defParser {
     }
 };
 
-classParsers.Summoner = class Summoner extends defParser {
+classParsers.Summoner = class Summoner extends classParsers.defParser {
     constructor() {
         super();
         let self = this;
         self.name = "Summoner";
         self.skills = [];
-        self.skills.concat(defParser.rangedMagicalRoleSkills);
+        self.skills.concat(classParsers.defParser.rangedMagicalRoleSkills);
         self.dots = [];
         self.buffs = [];
         self.debuffs = [];
@@ -2010,13 +1850,13 @@ classParsers.Summoner = class Summoner extends defParser {
     }
 };
 
-classParsers.Warrior = class Warrior extends defParser {
+classParsers.Warrior = class Warrior extends classParsers.defParser {
     constructor() {
         super();
         let self = this;
         self.name = "Warrior";
         self.skills = [];
-        self.skills.concat(defParser.tankRoleSkills);
+        self.skills.concat(classParsers.defParser.tankRoleSkills);
         self.dots = [];
         self.buffs = [];
         self.debuffs = [];
@@ -2027,13 +1867,13 @@ classParsers.Warrior = class Warrior extends defParser {
     }
 };
 
-classParsers.WhiteMage = class WhiteMage extends defParser {
+classParsers.WhiteMage = class WhiteMage extends classParsers.defParser {
     constructor() {
         super();
         let self = this;
         self.name = "WhiteMage";
         self.skills = [];
-        self.skills.concat(defParser.healerRoleSkills);
+        self.skills.concat(classParsers.defParser.healerRoleSkills);
         self.dots = [];
         self.buffs = [];
         self.debuffs = [];
@@ -2044,3 +1884,160 @@ classParsers.WhiteMage = class WhiteMage extends defParser {
     }
 };
 
+class fightAction {
+    constructor(e) {
+        this.ability = e.ability;
+        this.sourceID = e.sourceID;
+        this.sourceIsFriendly = e.sourceIsFriendly;
+        this.targetID = e.targetID;
+        this.targetIsFriendly = e.targetIsFriendly;
+        if ( e.targetIsFriendly === false ) {
+            this.targetInstance = [e.targetInstance];
+        }
+        this.begincast = e.timestamp;
+        this.endcast = ( e.type === "begincast" ) ? null : e.timestamp;
+        this.type = null;
+    }
+}
+
+class eventParsers {
+    static begincast(e, curAction, actions) {
+        actions.push(curAction);
+        return new fightAction(e);
+    }
+
+    static cast(e, curAction, actions) {
+        if (curAction.begincast > 0 && curAction.endcast == null) {
+            // Cast event for a channeled skill that is currently being processed
+            curAction.endcast = e.timestamp;
+            return curAction;
+        } else {
+            actions.push(curAction);
+            return new fightAction(e);
+        }
+    }
+
+    static damage(e, curAction, actions) {
+        if (e.hasOwnProperty("tick")) {
+            // damage of type "tick" is simulated DOT damage
+        } else {
+            // direct damage from use of a skill
+            if (!curAction.hasOwnProperty("damage")) {
+                curAction.damage = [];
+            }
+            // push this damage event onto array
+            curAction.damage.push({
+                amount: e.amount,
+                absorbed: e.absorbed,
+                criticalhit: (e.hitType === 2),
+                directhit: (e.multistrike === true),
+                debugMultiplier: e.debugMultiplier,
+                sourceResources: e.sourceResources,
+                targetResources: e.targetResources,
+                timestamp: e.timestamp
+            });
+        }
+        return curAction;
+    };
+
+    static heal(e, curAction, actions) {
+        if (e.hasOwnProperty("tick")) {
+            // damage of type "tick" is simulated heal over time
+        } else {
+            // direct heal from use of a skill
+            if (!curAction.hasOwnProperty("heal")) {
+                curAction.heal = [];
+            }
+            // push this heal event onto array
+            curAction.heal.push({
+                amount: e.amount,
+                overheal: e.overheal,
+                criticalhit: (e.hitType === 2),
+                sourceResources: e.sourceResources,
+                targetResources: e.targetResources,
+                timestamp: e.timestamp
+            });
+        }
+        return curAction;
+    };
+
+    static applydebuff(e, curAction, actions) {
+        if (!curAction.hasOwnProperty("debuffs")) {
+            curAction.debuffs = [];
+        }
+        let debuffed = curAction.debuffs.filter(function (obj) {
+            return obj.targetID === e.targetID;
+        });
+        if (debuffed.length > 0) {
+            debuffed[0].targetInstances.push(e.targetInstance);
+        } else {
+            curAction.debuffs.push({
+                targetID: e.targetID,
+                targetInstances: [e.targetInstance],
+                starttime: e.timestamp
+            });
+        }
+        return curAction;
+    };
+
+    static removedebuff(e, curAction, actions) {
+        if (!curAction.hasOwnProperty("debuffs")) {
+            console.log("removedebuff event occurred outside of a cast event");
+        } else {
+            let debuffed = curAction.debuffs.filter(function (obj) {
+                return obj.targetID === e.targetID;
+            });
+            if (debuffed.length > 0) {
+                debuffed[0].endtime = e.timestamp;
+            } else {
+                console.log("removedebuff event occurred without a matching target for the debuff")
+            }
+        }
+        return curAction;
+    };
+
+    static applybuff(e, curAction, actions) {
+        if (!curAction.hasOwnProperty("buffs")) {
+            curAction.buffs = [];
+        }
+        let buffed = curAction.buffs.filter(function (obj) {
+            return obj.targetID === e.targetID;
+        });
+        if (buffed.length > 0) {
+            buffed[0].targetInstances.push(e.targetInstance);
+        } else {
+            curAction.buffs.push({
+                targetID: e.targetID,
+                targetInstances: [e.targetInstance],
+                starttime: e.timestamp
+            })
+        }
+        return curAction;
+    };
+
+    static removebuff(e, curAction, actions) {
+        if (!curAction.hasOwnProperty("buffs")) {
+            console.log("removebuff event occurred outside of a cast event");
+        } else {
+            let buffed = curAction.buffs.filter(function (obj) {
+                return obj.targetID === e.targetID;
+            });
+            if (buffed.length > 0) {
+                buffed[0].endtime = e.timestamp;
+            } else {
+                console.log("removebuff event occurred without a matching target for the buff")
+            }
+        }
+        return curAction;
+    };
+
+    static refreshdebuff(e, curAction, actions) {
+        // TODO: implement handling for refreshdebuff
+        return curAction;
+    };
+
+    static refreshbuff(e, curAction, actions) {
+        // TODO: implement handling for refreshbuff
+        return curAction;
+    };
+}
