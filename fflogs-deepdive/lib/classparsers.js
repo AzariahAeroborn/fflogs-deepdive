@@ -403,7 +403,7 @@ var classParsers = classParsers || {};
 
 classParsers.defParser = new defParser();
 
-classParsers.Astrologian = class Astrologian extends classParsers.defParser {
+classParsers.Astrologian = class Astrologian extends defParser {
     constructor() {
         super();
         let self = this;
@@ -536,7 +536,7 @@ classParsers.Astrologian = class Astrologian extends classParsers.defParser {
     }
 };
 
-classParsers.Bard = class Bard extends classParsers.defParser {
+classParsers.Bard = class Bard extends defParser {
     constructor() {
         super();
         let self = this;
@@ -746,7 +746,7 @@ classParsers.Bard = class Bard extends classParsers.defParser {
     }
 };
 
-classParsers.BlackMage = class BlackMage extends classParsers.defParser {
+classParsers.BlackMage = class BlackMage extends defParser {
     constructor() {
         super();
         let self = this;
@@ -892,7 +892,7 @@ classParsers.BlackMage = class BlackMage extends classParsers.defParser {
     }
 };
 
-classParsers.DarkKnight = class DarkKnight extends classParsers.defParser {
+classParsers.DarkKnight = class DarkKnight extends defParser {
     constructor() {
         super();
         let self = this;
@@ -1075,7 +1075,7 @@ classParsers.DarkKnight = class DarkKnight extends classParsers.defParser {
     }
 };
 
-classParsers.Dragoon = class Dragoon extends classParsers.defParser {
+classParsers.Dragoon = class Dragoon extends defParser {
     constructor() {
         super();
         let self = this;
@@ -1227,7 +1227,7 @@ classParsers.Dragoon = class Dragoon extends classParsers.defParser {
     }
 };
 
-classParsers.Machinist = class Machinist extends classParsers.defParser {
+classParsers.Machinist = class Machinist extends defParser {
     constructor() {
         super();
         let self = this;
@@ -1270,7 +1270,7 @@ classParsers.Machinist = class Machinist extends classParsers.defParser {
     }
 };
 
-classParsers.Monk = class Monk extends classParsers.defParser {
+classParsers.Monk = class Monk extends defParser {
     constructor() {
         super();
         let self = this;
@@ -1615,7 +1615,7 @@ classParsers.Monk = class Monk extends classParsers.defParser {
     }
 };
 
-classParsers.Ninja = class Ninja extends classParsers.defParser {
+classParsers.Ninja = class Ninja extends defParser {
     constructor() {
         super();
         let self = this;
@@ -1925,7 +1925,7 @@ classParsers.Ninja = class Ninja extends classParsers.defParser {
     }
 };
 
-classParsers.Paladin = class Paladin extends classParsers.defParser {
+classParsers.Paladin = class Paladin extends defParser {
     constructor() {
         super();
         let self = this;
@@ -1942,7 +1942,7 @@ classParsers.Paladin = class Paladin extends classParsers.defParser {
     }
 };
 
-classParsers.RedMage = class RedMage extends classParsers.defParser {
+classParsers.RedMage = class RedMage extends defParser {
     constructor() {
         super();
         let self = this;
@@ -1959,7 +1959,7 @@ classParsers.RedMage = class RedMage extends classParsers.defParser {
     }
 };
 
-classParsers.Samurai = class Samurai extends classParsers.defParser {
+classParsers.Samurai = class Samurai extends defParser {
     constructor() {
         super();
         let self = this;
@@ -1976,7 +1976,7 @@ classParsers.Samurai = class Samurai extends classParsers.defParser {
     }
 };
 
-classParsers.Scholar = class Scholar extends classParsers.defParser {
+classParsers.Scholar = class Scholar extends defParser {
     constructor() {
         super();
         let self = this;
@@ -1993,7 +1993,7 @@ classParsers.Scholar = class Scholar extends classParsers.defParser {
     }
 };
 
-classParsers.Summoner = class Summoner extends classParsers.defParser {
+classParsers.Summoner = class Summoner extends defParser {
     constructor() {
         super();
         let self = this;
@@ -2010,7 +2010,7 @@ classParsers.Summoner = class Summoner extends classParsers.defParser {
     }
 };
 
-classParsers.Warrior = class Warrior extends classParsers.defParser {
+classParsers.Warrior = class Warrior extends defParser {
     constructor() {
         super();
         let self = this;
@@ -2027,7 +2027,7 @@ classParsers.Warrior = class Warrior extends classParsers.defParser {
     }
 };
 
-classParsers.WhiteMage = class WhiteMage extends classParsers.defParser {
+classParsers.WhiteMage = class WhiteMage extends defParser {
     constructor() {
         super();
         let self = this;
