@@ -184,10 +184,10 @@ let parserViewModel = function(){
                    retval.damage.push({
                        gcd: selected[0].jobActions.skills.filter(function (obj) {
                            return obj.isGCD && obj.casts > 0;
-                       }).sort(function(a,b){ return b.casts > a.casts }),
+                       }).sort(function(a,b){ return b.casts - a.casts }),
                        ogcd: selected[0].jobActions.skills.filter(function (obj) {
                            return !obj.isGCD && obj.casts > 0;
-                       }).sort(function(a,b){ return b.casts > a.casts }),
+                       }).sort(function(a,b){ return b.casts - a.casts }),
                        minGCD: null,
                        thresholds: []
                    });
