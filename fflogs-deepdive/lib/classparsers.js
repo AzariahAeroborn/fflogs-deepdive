@@ -2589,11 +2589,18 @@ class fightAction {
         this.begincast = e.timestamp;
         this.endcast = ( e.type === "begincast" ) ? null : e.timestamp;
         this.type = null;
+        this.cancelled = false;
     }
 }
 
 class eventParsers {
     static begincast(e, curAction, actions) {
+        if (curAction.endcast === null) {
+            // If we get a second begincast event when the previous event on the stack started with a begincast (endcast timestamp is NULL)
+            //   mark the previous cast as interrupted/cancelled - cast event will set the "endcast" timestamp of a begincast event,
+            //   so back to back begincast events means the previous event did not complete successfully
+            curAction.cancelled = true;
+        }
         actions.push(curAction);
         return new fightAction(e);
     }
