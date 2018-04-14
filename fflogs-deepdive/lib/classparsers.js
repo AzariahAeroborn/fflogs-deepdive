@@ -105,7 +105,7 @@ classParsers.defParser = class defParser {
 
     aggregateActions(actions) {
         // return an empty object if the name property of the classParser is empty, or if the actions parameter is empty - nothing to do
-        if ( !this.hasOwnProperty(name) ) { return {} }
+        if ( !this.hasOwnProperty("name") ) { return {} }
         if ( actions.length === 0 ) { return {} }
 
         let aggActions = {};
