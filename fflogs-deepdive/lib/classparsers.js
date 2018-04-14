@@ -1321,7 +1321,7 @@ classParsers.Dragoon = class Dragoon extends classParsers.defParser {
                 stance: "Blood of the Dragon"
             },
             {
-                name: "Fang and Claw",
+                name: "Fang And Claw",
                 potency: 260,
                 positional: { position: "flank", potency: 40 },
                 isGCD: true,
@@ -2105,12 +2105,369 @@ classParsers.Paladin = class Paladin extends classParsers.defParser {
         super();
         let self = this;
         self.name = "Paladin";
-        self.skills = [];
+        self.skills = [
+            {
+                name: "Fast Blade",
+                potency: 160,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Fight or Flight",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 60,
+                cast: 0,
+                buff: {
+                    name: "Fight or Flight",
+                    procRate: 1,
+                    target: "self",
+                    duration: 25,
+                    consumed: false,
+                    physicaldamage: 1.25,
+                    expected: {
+                        logic: "and",
+                        skills: [
+                            { name: "Royal Authority", quantity: 2, comparison: "=" },
+                            { name: "Goring Blade", quantity: 2, comparison: "=" }
+                        ]
+                    }
+                }
+            },
+            {
+                name: "Savage Blade",
+                potency: 100,
+                combo: { action: "Fast Blade", potency: 110 },
+                enmity: 6.3,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Flash",
+                potency: 0,
+                isGCD: true,
+                multitarget: true,
+                cooldown: null,
+                cast: 0,
+                debuff: {
+                    name: "Blind",
+                    procRate: 1,
+                    duration: 12,
+                    damageremoves: false,
+                    target: "enemyparty"
+                }
+            },
+            {
+                name: "Riot Blade",
+                potency: 100,
+                combo: { action: "Fast Blade", potency: 140, mprecovery: 50 },
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Shield Lob",
+                potency: 120,
+                enmity: 7,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Shield Bash",
+                potency: 110,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0,
+                debuff: {
+                    name: "Stun",
+                    target: "enemy",
+                    procRate: 1,
+                    duration: 6,
+                    damageremoves: false,
+                    actionspeed: 0
+                }
+            },
+            {
+                name: "Rage of Halone",
+                potency: 100,
+                combo: { action: "Savage Blade", potency: 170 },
+                enmity: 7,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Shield Swipe",
+                potency: 100,
+                enmity: 3,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 15,
+                cast: 0,
+                debuff: {
+                    name: "Pacification",
+                    target: "enemy",
+                    procRate: 1,
+                    duration: 6,
+                    damageremoves: false
+                }
+            },
+            {
+                name: "Shield Oath",
+                potency: 0,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0,
+                stance: "Shield Oath"
+            },
+            {
+                name: "Sword Oath",
+                potency: 0,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0,
+                stance: "Sword Oath"
+            },
+            {
+                name: "Sentinel",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 180,
+                cast: 0,
+                buff: {
+                    name: "Sentinel",
+                    procRate: 1,
+                    target: "self",
+                    duration: 10,
+                    damage: 0.6,
+                    consumed: false
+                }
+            },
+            {
+                name: "Cover",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 120,
+                cast: 0,
+                buff: {
+                    name: "Cover",
+                    procRate: 1,
+                    target: "party",
+                    duration: 12,
+                    damage: 0.8,
+                    consumed: false
+                }
+            },
+            {
+                name: "Tempered Will",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 180,
+                cast: 0
+            },
+            {
+                name: "Spirits Within",
+                potency: 300,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 30,
+                cast: 0
+            },
+            {
+                name: "Bulwark",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 180,
+                cast: 0,
+                buff: {
+                    name: "Bulwark",
+                    procRate: 1,
+                    target: "self",
+                    duration: 15,
+                    blockrateadd: 0.6,
+                    consumed: false
+                }
+            },
+            {
+                name: "Total Eclipse",
+                potency: 110,
+                isGCD: true,
+                multitarget: true,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Circle of Scorn",
+                potency: 100,
+                isGCD: false,
+                multitarget: true,
+                cooldown: 25,
+                cast: 0,
+                dot: {
+                    name: "Circle of Scorn",
+                    procRate: 1,
+                    duration: 15,
+                    potency: 30
+                }
+            },
+            {
+                name: "Hallowed Ground",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 420,
+                cast: 0,
+                buff: {
+                    name: "Hallowed Ground",
+                    procRate: 1,
+                    target: "self",
+                    duration: 10,
+                    consumed: false,
+                    damagereceived: 0
+                }
+            },
+            {
+                name: "Sheltron",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 5,
+                cast: 0,
+                resourcecost: 50,
+                buff: {
+                    name: "Sheltron",
+                    procRate: 1,
+                    target: "self",
+                    duration: 10,
+                    consumed: true,
+                    blockrateadd: 1
+                }
+            },
+            {
+                name: "Goring Blade",
+                potency: 100,
+                combo: { action: "Riot Blade", potency: 150, dotProcRate: 1 },
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0,
+                dot: {
+                    name: "Goring Blade",
+                    procRate: 0,
+                    duration: 21,
+                    potency: 60
+                }
+            },
+            {
+                name: "Divine Veil",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 120,
+                cast: 0,
+                buff: {
+                    name: "Divine Veil",
+                    procRate: 1,
+                    target: "party",
+                    duration: 30,
+                    maxhealthabsorb: 0.1
+                }
+            },
+            {
+                name: "Clemency",
+                healpotency: 1200,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 1.5
+            },
+            {
+                name: "Royal Authority",
+                potency: 100,
+                combo: { action: "Riot Blade", potency: 260 },
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Intervention",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: null,
+                cast: 0,
+                resourcecost: 50,
+                buff: {
+                    name: "Intervention",
+                    procRate: 1,
+                    target: "partyother",
+                    duration: 6,
+                    consumed: false,
+                    damagereceived: 0.9
+                }
+            },
+            {
+                name: "Holy Spirit",
+                potency: 380,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 1.5
+            },
+            {
+                name: "Requiescat",
+                potency: 350,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 60,
+                cast: 0,
+                buff: {
+                    name: "Requiescat",
+                    procRate: 1,
+                    target: "self",
+                    duration: 12,
+                    consumed: false,
+                    magicdamage: 1.2,
+                    expected: {
+                        logic: "and",
+                        skills: [
+                            { name: "Holy Spirit", quantity: 5, comparison: "=" }
+                        ]
+                    }
+                }
+            },
+            {
+                name: "Passage of Arms",
+                potency: 0,
+                isGCD: false,
+                multitarget: true,
+                cooldown: 120,
+                cast: 0
+            }
+        ];
         self.skills.concat(classParsers.defParser.tankRoleSkills);
-        self.dots = [];
-        self.buffs = [];
-        self.debuffs = [];
-        self.stances = [];
+
+        self.stances = [
+            { name: "Shield Oath", active: [] },
+            { name: "Sword Oath", active: [] }
+        ];
         self.currentStance = null;
 
         this.eventParsers = class paladinEventParsers extends eventParsers {}
