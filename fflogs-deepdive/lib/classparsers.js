@@ -1,247 +1,6 @@
 var classParsers = classParsers || {};
 
-classParsers.defParser = class defParser {
-    constructor() {
-        this.eventParsers = class e extends eventParsers{};
-    }
-
-    static get rangedPhysicalRoleSkills() {
-        return [
-            { name: "Second Wind", healpotency: 500, isGCD: false, multitarget: false, cooldown: 120, cast: 0 },
-            { name: "Foot Graze", potency: 0, isGCD: false, multitarget: false, cooldown: 30, cast: 0, debuff: "Bind", debuffProcRate: 1 },
-            { name: "Leg Graze", potency: 0, isGCD: false, multitarget: false, cooldown: 30, cast: 0, debuff: "Heavy", debuffProcRate: 1 },
-            { name: "Peloton", potency: 0, isGCD: false, multitarget: true, cooldown: 5, cast: 0 },
-            { name: "Invigorate", potency: 0, tprecovery: 400, target: "self", isGCD: false, multitarget: false, cooldown: 120, cast: 0 },
-            { name: "Tactician", potency: 0, isGCD: false, multitarget: true, cooldown: 180, cast: 0, enmitymultiplied: 0.5, buff: "Tactician", buffProcRate: 1 },
-            { name: "Refresh", potency: 0, isGCD: false, multitarget: true, cooldown: 180, cast: 0, enmitymultiplied: 0.5, buff: "Refresh", buffProcRate: 1 },
-            { name: "Head Graze", potency: 0, isGCD: false, multitarget: false, cooldown: 30, cast: 0, debuff: "Silence", debuffProcRate: 1 },
-            { name: "Arm Graze", potency: 0, isGCD: false, multitarget: false, cooldown: 30, cast: 0, debuff: "Stun", debuffProcRate: 1 },
-            { name: "Palisade", potency: 0, isGCD: false, multitarget: false, cooldown: 150, cast: 0, buff: "Palisade", buffProcRate: 1 }
-        ];
-    }    
-
-    static get rangedMagicalRoleSkills() {
-        return [
-            { name: "Addle", potency: 0, isGCD: false, multitarget: false, cooldown: 90, cast: 0, debuff: "Addle", debuffProcRate: 1 },
-            { name: "Break", potency: 50, isGCD: true, multitarget: false, cooldown: null, cast: 2.5, debuff: "Heavy", debuffProcRate: 1 },
-            { name: "Drain", potency: 80, isGCD: true, multitarget: false, cooldown: null, cast: 2.5 },
-            { name: "Diversion", potency: 0, isGCD: false, multitarget: false, cooldown: 120, cast: 0 },
-            { name: "Lucid Dreaming", potency: 0, isGCD: false, multitarget: false, cooldown: 120, cast: 0, enmitymultiplied: 0.5},
-            { name: "Swiftcast", potency: 0, isGCD: false, multitarget: false, cooldown: 60, cast: 0 },
-            { name: "Mana Shift", potency: 0, isGCD: false, multitarget: false, cooldown: 120, cast: 0 },
-            { name: "Apocatastasis", potency: 0, isGCD: false, multitarget: false, cooldown: 90, cast: 0, buff: "Apocatastatis", buffProcRate: 1 },
-            { name: "Surecast", potency: 0, isGCD: false, multitarget: false, cooldown: 30, cast: 0, buff: "Surecast", buffProcRate: 1 },
-            { name: "Erase", potency: 0, isGCD: false, multitarget: false, cooldown: 90, cast: 0 }
-        ];
-    }
-
-    static get meleeRoleSkills() {
-        return [
-            { name: "Second Wind", healpotency: 500, isGCD: false, multitarget: false, cooldown: 120, cast: 0 },
-            { name: "Arm's Length", potency: 0, isGCD: false, multitarget: false, cooldown: 60, cast: 0 },
-            { name: "Leg Sweep", potency: 0, isGCD: false, multitarget: false, cooldown: 40, cast: 0, debuff: "Stun", debuffProcRate: 1 },
-            { name: "Diversion", potency: 0, isGCD: false, multitarget: false, cooldown: 120, cast: 0, buff: "Diversion", buffProcRate: 1 },
-            { name: "Invigorate", potency: 0, isGCD: false, multitarget: false, tprecovery: 400, cooldown: 120, cast: 0 },
-            { name: "Bloodbath", potency: 0, isGCD: false, multitarget: false, cooldown: 90, cast: 0, buff: "Bloodbath", buffProcRate: 1 },
-            { name: "Goad", potency: 0, isGCD: false, multitarget: false, cooldown: 180, cast: 0, buff: "Goad", buffProcRate: 1 },
-            { name: "Feint", potency: 0, isGCD: false, multitarget: false, cooldown: 120, cast: 0, debuff: "Feint", debuffProcRate: 1 },
-            { name: "Crutch", potency: 0, isGCD: false, multitarget: false, cooldown: 90, cast: 0 },
-            { name: "True North", potency: 0, isGCD: false, multitarget: false, cooldown: 150, cast: 0, buff: "True North", buffProcRate: 1 }
-        ];
-    }    
-
-    static get healerRoleSkills() {
-        return [
-            { name: "Cleric Stance", potency: 0, isGCD: false, multitarget: false, cooldown: 90, cast: 0, buff: "Cleric Stance", buffProcRate: 1 },
-            { name: "Break", potency: 50, isGCD: true, multitarget: false, cooldown: null, cast: 2.5, debuff: "Heavy", debuffProcRate: 1 },
-            { name: "Protect", healpotency: 0, isGCD: true, multitarget: true, cooldown: null, cast: 3, buff: "Protect", buffProcRate: 1 },
-            { name: "Esuna", healpotency: 0, isGCD: true, multitarget: false, cooldown: null, cast: 1 },
-            { name: "Lucid Dreaming", potency: 0, isGCD: false, multitarget: false, cooldown: 120, cast: 0, enmitymultiplied: 0.5, buff: "Lucid Dreaming", buffProcRate: 1 },
-            { name: "Swiftcast", potency: 0, isGCD: false, multitarget: false, cooldown: 60, cast: 0, buff: "Swiftcast", buffProcRate: 1 },
-            { name: "Eye for an Eye", potency: 0, isGCD: false, multitarget: false, cooldown: 180, cast: 0, buff: "Eye for an Eye", buffProcRate: 1 },
-            { name: "Largesse", potency: 0, isGCD: false, multitarget: false, cooldown: 90, cast: 0, buff: "Largesse", buffProcRate: 1 },
-            { name: "Surecast", potency: 0, isGCD: false, multitarget: false, cooldown: 30, cast: 0, buff: "Surecast", buffProcRate: 1 },
-            { name: "Rescue", potency: 0, isGCD: false, multitarget: false, cooldown: 150, cast: 0 }
-        ];
-    }
-    
-    static get tankRoleSkills() {
-        return [
-            { name: "Rampart", potency: 0, isGCD: false, multitarget: false, cooldown: 90, cast: 0, buff: "Rampart", buffProcRate: 1 },
-            { name: "Low Blow", potency: 0, isGCD: false, multitarget: false, cooldown: 25, cast: 0, debuff: "Stun", debuffProcRate: 1 },
-            { name: "Provoke", potency: 0, isGCD: false, multitarget: false, cooldown: 40, cast: 0 },
-            { name: "Convalescence", potency: 0, isGCD: false, multitarget: false, cooldown: 120, cast: 0, buff: "Convalescence", buffProcRate: 1 },
-            { name: "Anticipation", potency: 0, isGCD: false, multitarget: false, cooldown: 60, cast: 0, buff: "Anticipation", buffProcRate: 1 },
-            { name: "Reprisal", potency: 0, isGCD: false, multitarget: false, cooldown: 60, cast: 0, debuff: "Reprisal", debuffProcRate: 1 },
-            { name: "Awareness", potency: 0, isGCD: false, multitarget: false, cooldown: 120, cast: 0, buff: "Awareness", buffProcRate: 1 },
-            { name: "Interject", potency: 0, isGCD: false, multitarget: false, cooldown: 30, cast: 0, debuff: "Silence", debuffProcRate: 1 },
-            { name: "Ultimatum", potency: 0, isGCD: false, multitarget: true, cooldown: 90, cast: 0 },
-            { name: "Shirk", potency: 0, isGCD: false, multitarget: false, cooldown: 120, cast: 0 }
-        ];
-    }
-    
-    parseActions(events) {
-        let actions = [],
-            curAction = null,
-            e;
-
-        // Pull the first event off the stack - will always create a new fight event for this
-        while ( e = events.shift() ) {
-            if (curAction === null) {
-                curAction = new fightAction(e);
-                // Skip further processing if this first event is a begincast or cast event - avoid pushing a duplicate first action onto the parsedAction stack
-                if (e.type === "begincast" || e.type === cast) {
-                    continue;
-                }
-            }
-            if ( this.eventParsers.__proto__.hasOwnProperty(e.type) ) { curAction = this.eventParsers[e.type](e,curAction,actions); }
-            else { console.log("Unhandled event of type " + e.type); }
-        }
-        // After processing all events in log, add current usage information to stack (if any)
-        if ( curAction !== null ) { actions.push(curAction); }
-
-        return actions;
-    }
-
-    aggregateActions(actions) {
-        // return an empty object if the name property of the classParser is empty, or if the actions parameter is empty - nothing to do
-        if ( !this.hasOwnProperty(name) ) { return {} }
-        if ( actions.length === 0 ) { return {} }
-
-        let aggActions = {};
-        // collect aggregations for job skills
-        if ( this.hasOwnProperty("skills") && this.skills.length > 0 ) {
-            aggActions.skills = [];
-            let curSkill;
-
-            // Aggregate skill usage information per skill
-            this.skills.forEach(function (skill) {
-                curSkill = $.extend(true, {
-                    count: 0,
-                    hits: 0,
-                    crits: 0,
-                    dhits: 0,
-                    critdhits: 0,
-                    damage: 0,
-                    heal: 0,
-                    overheal: 0,
-                    absorb: 0
-                }, skill);
-                let usages = actions.filter(function (obj) {
-                    return obj.ability.name === skill.name;
-                });
-
-                curSkill.count = usages.length;
-                usages.forEach(function (u) {
-                    if (u.hasOwnProperty("damage")) {
-                        curSkill.hits += u.damage.length;
-                        u.damage.forEach(function (hit) {
-                            if (hit.criticalhit) {
-                                if (hit.directhit) curSkill.critdhits++;
-                                else curSkill.crits++;
-                            } else {
-                                if (hit.directhit) curSkill.dhits++;
-                            }
-                            curSkill.damage += hit.amount;
-                        });
-                    }
-
-                    if (u.hasOwnProperty("heal")) {
-                        curSkill.hits += u.heal.length;
-                        u.heal.forEach(function (hit) {
-                            curSkill.heal += hit.amount;
-                            curSkill.absorb += hit.absorbed;
-                            curSkill.overheal += hit.overheal;
-                            if (hit.criticalhit) curSkill.crits++;
-                        });
-                    }
-                });
-
-                if ( curSkill.hits > 0 ) {
-                    curSkill.critPct = (Math.floor(curSkill.crits / curSkill.hits * 10000) / 100).toFixed(2) + "%";
-                    curSkill.dhitPct = (Math.floor(curSkill.dhits / curSkill.hits * 10000) / 100).toFixed(2) + "%";
-                    curSkill.critdhitPct = (Math.floor(curSkill.critdhits / curSkill.hits * 10000) / 100).toFixed(2) + "%";
-                } else {
-                    curSkill.critPct = "";
-                    curSkill.dhitPct = "";
-                    curSkill.critdhitPct = "";
-                }
-
-                aggActions.skills.push(curSkill);
-            });
-        }
-
-        return(aggActions);
-    }
-
-    aggregateGCD(skills) {
-        // No actions, return early -- nothing to do
-        if ( skills.length === 0 ) { return []; }
-        let gcds = [],
-            intervals = [],
-            minGCD,
-            skillList = this.skills;
-
-        skills.forEach(function(curSkill){
-            // determine if current skill is a GCD
-            let skill = skillList.filter(function(obj){
-                return obj.isGCD === true && obj.name === curSkill.ability.name;
-            });
-            // No matching GCD skills found, continue to next action
-            if (skill.length === 0) return;
-
-            gcds.push({begincast: curSkill.begincast, endcast: curSkill.endcast, name: curSkill.ability.name});
-        });
-
-        if ( gcds.length > 0 ) {
-            for ( let i = 1; i < gcds.length; i++) {
-                intervals.push({
-                    interval: gcds[i].begincast - gcds[i - 1].begincast,
-                    casttime: gcds[i - 1].endcast - gcds[i - 1].begincast,
-                    actiontimestamp: gcds[i].begincast
-                });
-            }
-            minGCD = intervals.reduce(function (prev, curr, currentIndex) {
-                // First check will be currentIndex = 1, check second value of array against first
-                // We want to always take the 2nd interval value in this case, to disregard the initial cast to keep
-                //    pre-pull timing issues from artificially deflating the minGCD guess
-                if ( currentIndex <= 1 ) { return curr }
-
-                return prev.interval < curr.interval ? prev : curr;
-            });
-        }
-
-        return { "gcds": gcds, "intervals": intervals, "min": minGCD.interval, "thresholds": this.calculateGCDThresholds(intervals,minGCD.interval) }
-    }
-
-    calculateGCDThresholds(intervals,minGCD) {
-        let thresholds = [
-            // Initialize minimum GCD to 0 for classes that have speed effects - will set to minGCD after processing events to prepare display values
-            { min: 0, max: Math.floor(1.03*minGCD), count: 0 },
-            { min: Math.floor(1.03*minGCD), max: Math.floor(1.10*minGCD), count: 0 },
-            { min: Math.floor(1.10*minGCD), max: Math.floor(1.25*minGCD), count: 0 },
-            { min: Math.floor(1.25*minGCD), max: Math.floor(1.5*minGCD), count: 0 },
-            { min: Math.floor(1.5*minGCD), max: null, count: 0 }
-        ];
-
-        thresholds.forEach(function(thresh) {
-            thresh.count = intervals.filter(function (obj) {
-                return (obj.interval > thresh.min && (thresh.max === null || obj.interval < thresh.max));
-            }).length;
-
-            // Reset initial minimum threshold value to calculated minGCD
-            if ( thresh.min === 0 ) { thresh.min = minGCD }
-
-            // Calculate display range for thresholds, round to 2 decimal places
-            thresh.display = (thresh.min / 1000).toFixed(2).toString();
-            thresh.display += (thresh.max === null) ? "+" : " - " + (thresh.max / 1000).toFixed(2).toString();
-        });
-
-        thresholds[0].min = minGCD;
-
-        return thresholds;
-    }
-};
+classParsers.defParser = new defParser();
 
 classParsers.Astrologian = class Astrologian extends classParsers.defParser {
     constructor() {
@@ -277,7 +36,7 @@ classParsers.Astrologian = class Astrologian extends classParsers.defParser {
             { name: "Lord of Crowns", potency: 300, isGCD: false, multitarget: false, cooldown: 5, cast: 0 },
             { name: "Lady of Crowns", healpotency: 500, isGCD: false, multitarget: false, cooldown: 5, cast: 0 }
         ];
-        self.skills.concat(classParsers.defParser.healerRoleSkills()());
+        self.skills.concat(defParser.healerRoleSkills()());
         self.dots = [
             { name: "Combust II", potency: 50, duration: 30 }
         ];
@@ -407,7 +166,7 @@ classParsers.Bard = class Bard extends classParsers.defParser {
             { name: "Nature's Minne", potency: 0, isGCD: false, multitarget: false, cooldown: 45, cast: 0, buff: "Nature's Minne", buffProcRate: 1 },
             { name: "Refulgent Arrow", potency: 300, isGCD: true, multitarget: false, cooldown: null, cast: 0, requiredBuff: "Straighter Shot" }
         ];
-        self.skills.concat(classParsers.defParser.rangedPhysicalRoleSkills()());
+        self.skills.concat(defParser.rangedPhysicalRoleSkills()());
         self.dots = [
             {name: "Caustic Bite", potency: 45, duration: 30},
             {name: "Stormbite", potency: 55, duration: 30}
@@ -618,7 +377,7 @@ classParsers.BlackMage = class BlackMage extends classParsers.defParser {
             { name: "Triplecast", potency: 0, isGCD: true, multitarget: false, cooldown: 60, cast: 0 },
             { name: "Foul", potency: 650, isGCD: true, multitarget: true, falloffratio: 0.1, falloffmax: 0.5, cooldown: null, cast: 2.5 }
         ];
-        self.skills.concat(classParsers.defParser.rangedMagicalRoleSkills());
+        self.skills.concat(defParser.rangedMagicalRoleSkills());
         self.dots = [
             { name: "Thunder III", potency: 40, duration: 24 },
             { name: "Thunder IV", potency: 30, duration: 18 }
@@ -764,7 +523,7 @@ classParsers.DarkKnight = class DarkKnight extends classParsers.defParser {
             { name: "Bloodspiller", potency: 400, darkarts: 140, isGCD: true, multitarget: false, cooldown: null, cast: 0 },
             { name: "The Blackest Night", potency: 0, isGCD: false, multitarget: false, cooldown: 15, cast: 0, buff: "The Blackest Night", buffProcRate: 1 },
         ];
-        self.skills.concat(classParsers.defParser.tankRoleSkills());
+        self.skills.concat(defParser.tankRoleSkills());
         self.dots = [
             { name: "Salted Earth", potency: 75, duration: 21, groundarea: true }
         ];
@@ -946,7 +705,7 @@ classParsers.Dragoon = class Dragoon extends classParsers.defParser {
             { name: "Mirage Dive", potency: 210, isGCD: false, multitarget: false, cooldown: 1, cast: 0, requiredBuff: "Dive Ready" },
             { name: "Nastrond", potency: 330, isGCD: false, multitarget: false, cooldown: 10, cast: 0, requiredStance: "Life of the Dragon" },
         ];
-        self.skills.concat(classParsers.defParser.meleeRoleSkills());
+        self.skills.concat(defParser.meleeRoleSkills());
         self.dots = [
             { name: "Chaos Thrust", potency: 35, duration: 30 }
         ];
@@ -1099,7 +858,7 @@ classParsers.Machinist = class Machinist extends classParsers.defParser {
             { name: "Bishop Overdrive", potency: 0, isGCD: true, multitarget: false, cooldown: 120, cast: 0 },
             { name: "Flamethrower", potency: 60, isGCD: true, multitarget: true, cooldown: 60, cast: 0 }
         ];
-        self.skills.concat(classParsers.defParser.rangedPhysicalRoleSkills());
+        self.skills.concat(defParser.rangedPhysicalRoleSkills());
         self.dots = [];
         self.buffs = [];
         self.debuffs = [];
@@ -1447,7 +1206,7 @@ classParsers.Monk = class Monk extends classParsers.defParser {
                 }
             }
         ];
-        self.skills.concat(classParsers.defParser.meleeRoleSkills());
+        self.skills.concat(defParser.meleeRoleSkills());
         self.stances = [];
         self.currentStance = null;
 
@@ -1757,7 +1516,7 @@ classParsers.Ninja = class Ninja extends classParsers.defParser {
                 }
             }
         ];
-        self.skills.concat(classParsers.defParser.meleeRoleSkills());
+        self.skills.concat(defParser.meleeRoleSkills());
         self.stances = [];
         self.currentStance = null;
 
@@ -1771,7 +1530,7 @@ classParsers.Paladin = class Paladin extends classParsers.defParser {
         let self = this;
         self.name = "Paladin";
         self.skills = [];
-        self.skills.concat(classParsers.defParser.tankRoleSkills());
+        self.skills.concat(defParser.tankRoleSkills());
         self.dots = [];
         self.buffs = [];
         self.debuffs = [];
@@ -1788,7 +1547,7 @@ classParsers.RedMage = class RedMage extends classParsers.defParser {
         let self = this;
         self.name = "RedMage";
         self.skills = [];
-        self.skills.concat(classParsers.defParser.rangedMagicalRoleSkills());
+        self.skills.concat(defParser.rangedMagicalRoleSkills());
         self.dots = [];
         self.buffs = [];
         self.debuffs = [];
@@ -1805,7 +1564,7 @@ classParsers.Samurai = class Samurai extends classParsers.defParser {
         let self = this;
         self.name = "Samurai";
         self.skills = [];
-        self.skills.concat(classParsers.defParser.meleeRoleSkills());
+        self.skills.concat(defParser.meleeRoleSkills());
         self.dots = [];
         self.buffs = [];
         self.debuffs = [];
@@ -1822,7 +1581,7 @@ classParsers.Scholar = class Scholar extends classParsers.defParser {
         let self = this;
         self.name = "Scholar";
         self.skills = [];
-        self.skills.concat(classParsers.defParser.healerRoleSkills());
+        self.skills.concat(defParser.healerRoleSkills());
         self.dots = [];
         self.buffs = [];
         self.debuffs = [];
@@ -1839,7 +1598,7 @@ classParsers.Summoner = class Summoner extends classParsers.defParser {
         let self = this;
         self.name = "Summoner";
         self.skills = [];
-        self.skills.concat(classParsers.defParser.rangedMagicalRoleSkills());
+        self.skills.concat(defParser.rangedMagicalRoleSkills());
         self.dots = [];
         self.buffs = [];
         self.debuffs = [];
@@ -1856,7 +1615,7 @@ classParsers.Warrior = class Warrior extends classParsers.defParser {
         let self = this;
         self.name = "Warrior";
         self.skills = [];
-        self.skills.concat(classParsers.defParser.tankRoleSkills());
+        self.skills.concat(defParser.tankRoleSkills());
         self.dots = [];
         self.buffs = [];
         self.debuffs = [];
@@ -1873,7 +1632,7 @@ classParsers.WhiteMage = class WhiteMage extends classParsers.defParser {
         let self = this;
         self.name = "WhiteMage";
         self.skills = [];
-        self.skills.concat(classParsers.defParser.healerRoleSkills());
+        self.skills.concat(defParser.healerRoleSkills());
         self.dots = [];
         self.buffs = [];
         self.debuffs = [];
@@ -1883,6 +1642,249 @@ classParsers.WhiteMage = class WhiteMage extends classParsers.defParser {
         this.eventParsers = class whiteMageEventParsers extends eventParsers {}
     }
 };
+
+class defParser {
+    constructor() {
+        this.eventParsers = class e extends eventParsers{};
+    }
+
+    static get rangedPhysicalRoleSkills() {
+        return [
+            { name: "Second Wind", healpotency: 500, isGCD: false, multitarget: false, cooldown: 120, cast: 0 },
+            { name: "Foot Graze", potency: 0, isGCD: false, multitarget: false, cooldown: 30, cast: 0, debuff: "Bind", debuffProcRate: 1 },
+            { name: "Leg Graze", potency: 0, isGCD: false, multitarget: false, cooldown: 30, cast: 0, debuff: "Heavy", debuffProcRate: 1 },
+            { name: "Peloton", potency: 0, isGCD: false, multitarget: true, cooldown: 5, cast: 0 },
+            { name: "Invigorate", potency: 0, tprecovery: 400, target: "self", isGCD: false, multitarget: false, cooldown: 120, cast: 0 },
+            { name: "Tactician", potency: 0, isGCD: false, multitarget: true, cooldown: 180, cast: 0, enmitymultiplied: 0.5, buff: "Tactician", buffProcRate: 1 },
+            { name: "Refresh", potency: 0, isGCD: false, multitarget: true, cooldown: 180, cast: 0, enmitymultiplied: 0.5, buff: "Refresh", buffProcRate: 1 },
+            { name: "Head Graze", potency: 0, isGCD: false, multitarget: false, cooldown: 30, cast: 0, debuff: "Silence", debuffProcRate: 1 },
+            { name: "Arm Graze", potency: 0, isGCD: false, multitarget: false, cooldown: 30, cast: 0, debuff: "Stun", debuffProcRate: 1 },
+            { name: "Palisade", potency: 0, isGCD: false, multitarget: false, cooldown: 150, cast: 0, buff: "Palisade", buffProcRate: 1 }
+        ];
+    }
+
+    static get rangedMagicalRoleSkills() {
+        return [
+            { name: "Addle", potency: 0, isGCD: false, multitarget: false, cooldown: 90, cast: 0, debuff: "Addle", debuffProcRate: 1 },
+            { name: "Break", potency: 50, isGCD: true, multitarget: false, cooldown: null, cast: 2.5, debuff: "Heavy", debuffProcRate: 1 },
+            { name: "Drain", potency: 80, isGCD: true, multitarget: false, cooldown: null, cast: 2.5 },
+            { name: "Diversion", potency: 0, isGCD: false, multitarget: false, cooldown: 120, cast: 0 },
+            { name: "Lucid Dreaming", potency: 0, isGCD: false, multitarget: false, cooldown: 120, cast: 0, enmitymultiplied: 0.5},
+            { name: "Swiftcast", potency: 0, isGCD: false, multitarget: false, cooldown: 60, cast: 0 },
+            { name: "Mana Shift", potency: 0, isGCD: false, multitarget: false, cooldown: 120, cast: 0 },
+            { name: "Apocatastasis", potency: 0, isGCD: false, multitarget: false, cooldown: 90, cast: 0, buff: "Apocatastatis", buffProcRate: 1 },
+            { name: "Surecast", potency: 0, isGCD: false, multitarget: false, cooldown: 30, cast: 0, buff: "Surecast", buffProcRate: 1 },
+            { name: "Erase", potency: 0, isGCD: false, multitarget: false, cooldown: 90, cast: 0 }
+        ];
+    }
+
+    static get meleeRoleSkills() {
+        return [
+            { name: "Second Wind", healpotency: 500, isGCD: false, multitarget: false, cooldown: 120, cast: 0 },
+            { name: "Arm's Length", potency: 0, isGCD: false, multitarget: false, cooldown: 60, cast: 0 },
+            { name: "Leg Sweep", potency: 0, isGCD: false, multitarget: false, cooldown: 40, cast: 0, debuff: "Stun", debuffProcRate: 1 },
+            { name: "Diversion", potency: 0, isGCD: false, multitarget: false, cooldown: 120, cast: 0, buff: "Diversion", buffProcRate: 1 },
+            { name: "Invigorate", potency: 0, isGCD: false, multitarget: false, tprecovery: 400, cooldown: 120, cast: 0 },
+            { name: "Bloodbath", potency: 0, isGCD: false, multitarget: false, cooldown: 90, cast: 0, buff: "Bloodbath", buffProcRate: 1 },
+            { name: "Goad", potency: 0, isGCD: false, multitarget: false, cooldown: 180, cast: 0, buff: "Goad", buffProcRate: 1 },
+            { name: "Feint", potency: 0, isGCD: false, multitarget: false, cooldown: 120, cast: 0, debuff: "Feint", debuffProcRate: 1 },
+            { name: "Crutch", potency: 0, isGCD: false, multitarget: false, cooldown: 90, cast: 0 },
+            { name: "True North", potency: 0, isGCD: false, multitarget: false, cooldown: 150, cast: 0, buff: "True North", buffProcRate: 1 }
+        ];
+    }
+
+    static get healerRoleSkills() {
+        return [
+            { name: "Cleric Stance", potency: 0, isGCD: false, multitarget: false, cooldown: 90, cast: 0, buff: "Cleric Stance", buffProcRate: 1 },
+            { name: "Break", potency: 50, isGCD: true, multitarget: false, cooldown: null, cast: 2.5, debuff: "Heavy", debuffProcRate: 1 },
+            { name: "Protect", healpotency: 0, isGCD: true, multitarget: true, cooldown: null, cast: 3, buff: "Protect", buffProcRate: 1 },
+            { name: "Esuna", healpotency: 0, isGCD: true, multitarget: false, cooldown: null, cast: 1 },
+            { name: "Lucid Dreaming", potency: 0, isGCD: false, multitarget: false, cooldown: 120, cast: 0, enmitymultiplied: 0.5, buff: "Lucid Dreaming", buffProcRate: 1 },
+            { name: "Swiftcast", potency: 0, isGCD: false, multitarget: false, cooldown: 60, cast: 0, buff: "Swiftcast", buffProcRate: 1 },
+            { name: "Eye for an Eye", potency: 0, isGCD: false, multitarget: false, cooldown: 180, cast: 0, buff: "Eye for an Eye", buffProcRate: 1 },
+            { name: "Largesse", potency: 0, isGCD: false, multitarget: false, cooldown: 90, cast: 0, buff: "Largesse", buffProcRate: 1 },
+            { name: "Surecast", potency: 0, isGCD: false, multitarget: false, cooldown: 30, cast: 0, buff: "Surecast", buffProcRate: 1 },
+            { name: "Rescue", potency: 0, isGCD: false, multitarget: false, cooldown: 150, cast: 0 }
+        ];
+    }
+
+    static get tankRoleSkills() {
+        return [
+            { name: "Rampart", potency: 0, isGCD: false, multitarget: false, cooldown: 90, cast: 0, buff: "Rampart", buffProcRate: 1 },
+            { name: "Low Blow", potency: 0, isGCD: false, multitarget: false, cooldown: 25, cast: 0, debuff: "Stun", debuffProcRate: 1 },
+            { name: "Provoke", potency: 0, isGCD: false, multitarget: false, cooldown: 40, cast: 0 },
+            { name: "Convalescence", potency: 0, isGCD: false, multitarget: false, cooldown: 120, cast: 0, buff: "Convalescence", buffProcRate: 1 },
+            { name: "Anticipation", potency: 0, isGCD: false, multitarget: false, cooldown: 60, cast: 0, buff: "Anticipation", buffProcRate: 1 },
+            { name: "Reprisal", potency: 0, isGCD: false, multitarget: false, cooldown: 60, cast: 0, debuff: "Reprisal", debuffProcRate: 1 },
+            { name: "Awareness", potency: 0, isGCD: false, multitarget: false, cooldown: 120, cast: 0, buff: "Awareness", buffProcRate: 1 },
+            { name: "Interject", potency: 0, isGCD: false, multitarget: false, cooldown: 30, cast: 0, debuff: "Silence", debuffProcRate: 1 },
+            { name: "Ultimatum", potency: 0, isGCD: false, multitarget: true, cooldown: 90, cast: 0 },
+            { name: "Shirk", potency: 0, isGCD: false, multitarget: false, cooldown: 120, cast: 0 }
+        ];
+    }
+
+    parseActions(events) {
+        let actions = [],
+            curAction = null,
+            e;
+
+        // Pull the first event off the stack - will always create a new fight event for this
+        while ( e = events.shift() ) {
+            if (curAction === null) {
+                curAction = new fightAction(e);
+                // Skip further processing if this first event is a begincast or cast event - avoid pushing a duplicate first action onto the parsedAction stack
+                if (e.type === "begincast" || e.type === cast) {
+                    continue;
+                }
+            }
+            if ( this.eventParsers.__proto__.hasOwnProperty(e.type) ) { curAction = this.eventParsers[e.type](e,curAction,actions); }
+            else { console.log("Unhandled event of type " + e.type); }
+        }
+        // After processing all events in log, add current usage information to stack (if any)
+        if ( curAction !== null ) { actions.push(curAction); }
+
+        return actions;
+    }
+
+    aggregateActions(actions) {
+        // return an empty object if the name property of the classParser is empty, or if the actions parameter is empty - nothing to do
+        if ( !this.hasOwnProperty(name) ) { return {} }
+        if ( actions.length === 0 ) { return {} }
+
+        let aggActions = {};
+        // collect aggregations for job skills
+        if ( this.hasOwnProperty("skills") && this.skills.length > 0 ) {
+            aggActions.skills = [];
+            let curSkill;
+
+            // Aggregate skill usage information per skill
+            this.skills.forEach(function (skill) {
+                curSkill = $.extend(true, {
+                    count: 0,
+                    hits: 0,
+                    crits: 0,
+                    dhits: 0,
+                    critdhits: 0,
+                    damage: 0,
+                    heal: 0,
+                    overheal: 0,
+                    absorb: 0
+                }, skill);
+                let usages = actions.filter(function (obj) {
+                    return obj.ability.name === skill.name;
+                });
+
+                curSkill.count = usages.length;
+                usages.forEach(function (u) {
+                    if (u.hasOwnProperty("damage")) {
+                        curSkill.hits += u.damage.length;
+                        u.damage.forEach(function (hit) {
+                            if (hit.criticalhit) {
+                                if (hit.directhit) curSkill.critdhits++;
+                                else curSkill.crits++;
+                            } else {
+                                if (hit.directhit) curSkill.dhits++;
+                            }
+                            curSkill.damage += hit.amount;
+                        });
+                    }
+
+                    if (u.hasOwnProperty("heal")) {
+                        curSkill.hits += u.heal.length;
+                        u.heal.forEach(function (hit) {
+                            curSkill.heal += hit.amount;
+                            curSkill.absorb += hit.absorbed;
+                            curSkill.overheal += hit.overheal;
+                            if (hit.criticalhit) curSkill.crits++;
+                        });
+                    }
+                });
+
+                if ( curSkill.hits > 0 ) {
+                    curSkill.critPct = (Math.floor(curSkill.crits / curSkill.hits * 10000) / 100).toFixed(2) + "%";
+                    curSkill.dhitPct = (Math.floor(curSkill.dhits / curSkill.hits * 10000) / 100).toFixed(2) + "%";
+                    curSkill.critdhitPct = (Math.floor(curSkill.critdhits / curSkill.hits * 10000) / 100).toFixed(2) + "%";
+                } else {
+                    curSkill.critPct = "";
+                    curSkill.dhitPct = "";
+                    curSkill.critdhitPct = "";
+                }
+
+                aggActions.skills.push(curSkill);
+            });
+        }
+
+        return(aggActions);
+    }
+
+    aggregateGCD(skills) {
+        // No actions, return early -- nothing to do
+        if ( skills.length === 0 ) { return []; }
+        let gcds = [],
+            intervals = [],
+            minGCD,
+            skillList = this.skills;
+
+        skills.forEach(function(curSkill){
+            // determine if current skill is a GCD
+            let skill = skillList.filter(function(obj){
+                return obj.isGCD === true && obj.name === curSkill.ability.name;
+            });
+            // No matching GCD skills found, continue to next action
+            if (skill.length === 0) return;
+
+            gcds.push({begincast: curSkill.begincast, endcast: curSkill.endcast, name: curSkill.ability.name});
+        });
+
+        if ( gcds.length > 0 ) {
+            for ( let i = 1; i < gcds.length; i++) {
+                intervals.push({
+                    interval: gcds[i].begincast - gcds[i - 1].begincast,
+                    casttime: gcds[i - 1].endcast - gcds[i - 1].begincast,
+                    actiontimestamp: gcds[i].begincast
+                });
+            }
+            minGCD = intervals.reduce(function (prev, curr, currentIndex) {
+                // First check will be currentIndex = 1, check second value of array against first
+                // We want to always take the 2nd interval value in this case, to disregard the initial cast to keep
+                //    pre-pull timing issues from artificially deflating the minGCD guess
+                if ( currentIndex <= 1 ) { return curr }
+
+                return prev.interval < curr.interval ? prev : curr;
+            });
+        }
+
+        return { "gcds": gcds, "intervals": intervals, "min": minGCD.interval, "thresholds": this.calculateGCDThresholds(intervals,minGCD.interval) }
+    }
+
+    calculateGCDThresholds(intervals,minGCD) {
+        let thresholds = [
+            // Initialize minimum GCD to 0 for classes that have speed effects - will set to minGCD after processing events to prepare display values
+            { min: 0, max: Math.floor(1.03*minGCD), count: 0 },
+            { min: Math.floor(1.03*minGCD), max: Math.floor(1.10*minGCD), count: 0 },
+            { min: Math.floor(1.10*minGCD), max: Math.floor(1.25*minGCD), count: 0 },
+            { min: Math.floor(1.25*minGCD), max: Math.floor(1.5*minGCD), count: 0 },
+            { min: Math.floor(1.5*minGCD), max: null, count: 0 }
+        ];
+
+        thresholds.forEach(function(thresh) {
+            thresh.count = intervals.filter(function (obj) {
+                return (obj.interval > thresh.min && (thresh.max === null || obj.interval < thresh.max));
+            }).length;
+
+            // Reset initial minimum threshold value to calculated minGCD
+            if ( thresh.min === 0 ) { thresh.min = minGCD }
+
+            // Calculate display range for thresholds, round to 2 decimal places
+            thresh.display = (thresh.min / 1000).toFixed(2).toString();
+            thresh.display += (thresh.max === null) ? "+" : " - " + (thresh.max / 1000).toFixed(2).toString();
+        });
+
+        thresholds[0].min = minGCD;
+
+        return thresholds;
+    }
+}
 
 class fightAction {
     constructor(e) {
