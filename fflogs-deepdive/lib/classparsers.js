@@ -184,10 +184,11 @@ classParsers.defParser = class defParser {
             skillList = this.skills;
 
         skills.forEach(function(curSkill){
+            // Exclude cancelled casts
+            if ( curSkill.cancelled ) { return; }
             // determine if current skill is a GCD
             let skill = skillList.filter(function(obj){
-                // Exclude cancelled casts
-                return obj.isGCD === true && !obj.cancelled && obj.name === curSkill.ability.name;
+                return obj.isGCD === true && obj.name === curSkill.ability.name;
             });
             // No matching GCD skills found, continue to next action
             if (skill.length === 0) return;
