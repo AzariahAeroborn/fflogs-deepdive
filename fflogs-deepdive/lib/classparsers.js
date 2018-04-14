@@ -372,7 +372,7 @@ classParsers.Astrologian = class Astrologian extends classParsers.defParser {
         ];
         self.currentStance = null;
 
-        this.eventParsers = class astrologianEventParsers extends eventparsers {}
+        this.eventParsers = class astrologianEventParsers extends eventParsers {}
     }
 };
 
