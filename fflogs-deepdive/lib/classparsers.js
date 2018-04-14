@@ -133,6 +133,10 @@ classParsers.defParser = class defParser {
 
                 curSkill.casts = usages.length;
                 usages.forEach(function (u) {
+                    if (u.cancelled) {
+                        // Do not count cancelled casts
+                        return;
+                    }
                     if (u.hasOwnProperty("damage")) {
                         curSkill.hits += u.damage.length;
                         u.damage.forEach(function (hit) {
