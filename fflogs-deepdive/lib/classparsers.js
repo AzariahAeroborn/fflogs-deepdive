@@ -425,7 +425,7 @@ classParsers.Bard = class Bard extends classParsers.defParser {
                     ]
                 },
                 incorrect: {
-                    logic: or,
+                    logic: "or",
                     skills: [
                         {name: "Straight Shot", "quantity": 1, "comparison": ">="},
                         {name: "Heavy Shot", "quantity": 1, "comparison": ">="}
