@@ -921,142 +921,309 @@ classParsers.Dragoon = class Dragoon extends classParsers.defParser {
         let self = this;
         self.name = "Dragoon";
         self.skills = [
-            { name: "True Thrust", potency: 160, isGCD: true, multitarget: false, cooldown: null, cast: 0 },
-            { name: "Vorpal Thrust", potency: 100, combopotency: 150, comboskill: "True Thrust", isGCD: true, multitarget: false, cooldown: null, cast: 0 },
-            { name: "Impulse Drive", potency: 200, isGCD: true, multitarget: false, cooldown: null, cast: 0 },
-            { name: "Heavy Thrust", potency: 150, position: flank, positionpotency: 40, isGCD: true, multitarget: false, cooldown: null, cast: 0, buff: "Heavy Thrust", buffProcRate: 1 },
-            { name: "Piercing Talon", potency: 120, isGCD: true, multitarget: false, cooldown: null, cast: 0 },
-            { name: "Life Surge", potency: 0, isGCD: false, multitarget: false, cooldown: 50, cast: 0, buff: "Life Surge", buffProcRate: 1 },
-            { name: "Full Thrust", potency: 100, combopotency: 350, comboskill: "Vorpal Thrust", isGCD: true, multitarget: false, cooldown: null, cast: 0 },
-            { name: "Blood for Blood", potency: 0, isGCD: false, multitarget: false, cooldown: 80, cast: 0, buff: "Blood for Blood", buffProcRate: 1 },
-            { name: "Jump", potency: 260, combopotency: 78, combostance: "Blood of the Dragon", isGCD: false, multitarget: false, cooldown: 30, cast: 0, buff: "Dive Ready", buffProcRate: 1 },
-            { name: "Elusive Jump", potency: 0, isGCD: false, multitarget: false, cooldown: 30, cast: 0, enmitymultiplied: 0 },
-            { name: "Disembowel", potency: 100, combopotency: 140, comboskill: "Impulse Drive", isGCD: true, multitarget: false, cooldown: null, cast: 0, debuff: "Piercing Resistance Down", debuffProcRate: 1 },
-            { name: "Doom Spike", potency: 140, isGCD: true, multitarget: true, cooldown: null, cast: 0 },
-            { name: "Spineshatter Dive", potency: 210, combopotency: 63, combostance: "Blood of the Dragon", isGCD: false, multitarget: false, cooldown: 60, cast: 0, buff: "Dive Ready", buffProcRate: 1, debuff: "Stun", debuffProcRate: 1 },
-            { name: "Chaos Thrust", potency: 100, position: rear, positionpotency: 40, combopotency: 140, comboskill: "Disembowel", isGCD: true, multitarget: false, cooldown: null, cast: 0, dot: "Chaos Thrust", dotProcRate: 1 },
-            { name: "Dragonfire Dive", potency: 320, isGCD: false, multitarget: true, cooldown: 120, cast: 0 },
-            { name: "Battle Litany", potency: 0, isGCD: false, multitarget: true, cooldown: 180, cast: 0, buff: "Battle Litany", buffProcRate: 1 },
-            { name: "Blood of the Dragoon", potency: 0, isGCD: true, multitarget: false, cooldown: 30, cast: 0 },
-            { name: "Fang and Claw", potency: 260, position: flank, positionpotency: 40, isGCD: true, multitarget: false, cooldown: null, cast: 0 },
-            { name: "Wheeling Thrust", potency: 260, position: rear, positionpotency: 40, isGCD: true, multitarget: false, cooldown: null, cast: 0 },
-            { name: "Geirskogul", potency: 230, isGCD: false, multitarget: true, cooldown: 30, cast: 0 },
-            { name: "Sonic Thrust", potency: 100, combopotency: 80, comboskill: "Doom Spike", isGCD: true, multitarget: false, cooldown: null, cast: 0 },
-            { name: "Dragon Sight", potency: 0, isGCD: false, multitarget: true, cooldown: 120, cast: 0, buff: "Dragon Sight", buffProcRate: 1 },
-            { name: "Mirage Dive", potency: 210, isGCD: false, multitarget: false, cooldown: 1, cast: 0, requiredBuff: "Dive Ready" },
-            { name: "Nastrond", potency: 330, isGCD: false, multitarget: false, cooldown: 10, cast: 0, requiredStance: "Life of the Dragon" },
-        ];
-        self.skills.concat(classParsers.defParser.meleeRoleSkills);
-        self.dots = [
-            { name: "Chaos Thrust", potency: 35, duration: 30 }
-        ];
-        self.buffs = [
+            {
+                name: "True Thrust",
+                potency: 160,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Vorpal Thrust",
+                potency: 100,
+                combo: { action: "True Thrust", potency: 150},
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Impulse Drive",
+                potency: 200,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0
+            },
             {
                 name: "Heavy Thrust",
-                affects: "self",
-                duration: 30,
-                consumed: false,
-                damage: 1.1
+                potency: 150,
+                positional: {position: "flank", potency: 40},
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0,
+                buff: {
+                    name: "Heavy Thrust",
+                    procRate: 1,
+                    target: "self",
+                    duration: 30,
+                    consumed: false,
+                    damage: 1.1
+                },
+            },
+            {
+                name: "Piercing Talon",
+                potency: 120,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0
             },
             {
                 name: "Life Surge",
-                affects: "self",
-                duration: 10,
-                consumed: true,
-                expected: {
-                    logic: "and",
-                    skills: [
-                        { name: "Full Thrust", quantity: 1, comparison: "=" }
-                    ]
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 50,
+                cast: 0,
+                buff: {
+                    name: "Life Surge",
+                    procRate: 1,
+                    target: "self",
+                    duration: 10,
+                    consumed: true,
+                    expected: {
+                        logic: "and",
+                        skills: [
+                            { name: "Full Thrust", quantity: 1, comparison: "=" }
+                        ]
+                    }
                 }
+            },
+            {
+                name: "Full Thrust",
+                potency: 100,
+                combo: { action: "Vorpal Thrust", potency: 350 },
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0
             },
             {
                 name: "Blood for Blood",
-                affects: "self",
-                duration: 20,
-                consumed: false,
-                damage: 1.15,
-                damagereceived: 1.1
-            },
-            {
-                name: "Battle Litany",
-                affects: "party",
-                duration: 20,
-                consumed: false,
-                criticalhit: 1.15
-            },
-            {
-                name: "Dragon Sight",
-                affects: "party",
-                duration: 20,
-                consumed: false,
-                damageself: 1.1,
-                damageother: 1.05
-            },
-            {
-                name: "Dive Ready",
-                affects: "self",
-                duration: 15,
-                consumed: true,
-                expected: {
-                    logic: "and",
-                    skills: [
-                        { name: "Mirage Dive", quantity: 1, comparison: "=" }
-                    ]
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 80,
+                cast: 0,
+                buff: {
+                    name: "Blood for Blood",
+                    procRate: 1,
+                    target: "self",
+                    duration: 20,
+                    consumed: false,
+                    damage: 1.15,
+                    damagereceived: 1.1
                 }
             },
             {
-                name: "Diversion",
-                affects: "self",
-                duration: 30,
-                consumed: false,
-                enmityrate: 0.1
+                name: "Jump",
+                potency: 260,
+                combo: {stance: "Blood of the Dragon", potency: 78},
+                isGCD: false,
+                multitarget: false,
+                cooldown: 30,
+                cast: 0,
+                buff: {
+                    name: "Dive Ready",
+                    affects: "self",
+                    duration: 15,
+                    consumed: true,
+                    expected: {
+                        logic: "and",
+                        skills: [
+                            {name: "Mirage Dive", quantity: 1, comparison: "="}
+                        ]
+                    }
+                }
             },
             {
-                name: "Bloodbath",
-                affects: "self",
-                duration: 20,
-                consumed: false,
-                damagetohealth: 0.1
+                name: "Elusive Jump",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 30,
+                cast: 0,
+                enmitymultiplied: 0.5
             },
             {
-                name: "Goad",
-                affects: "partyother",
-                duration: 30,
-                consumed: false,
-                tprecovery: 50
+                name: "Disembowel",
+                potency: 100,
+                combo: {action: "Impulse Drive", potency: 140},
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0,
+                debuff: {
+                    name: "Piercing Resistance Down",
+                    procRate: 1,
+                    target: "enemy",
+                    duration: 30,
+                    damageremoves: false,
+                    piercingdamagerecieved: 1.05
+                }
             },
             {
-                name: "True North",
-                affects: "self",
-                duration: 15,
-                consumed: false
+                name: "Doom Spike",
+                potency: 140,
+                isGCD: true,
+                multitarget: true,
+                cooldown: null,
+                cast: 0
             },
-
+            {
+                name: "Spineshatter Dive",
+                potency: 210,
+                combo: {stance: "Blood of the Dragon", potency: 78},
+                isGCD: false,
+                multitarget: false,
+                cooldown: 60,
+                cast: 0,
+                buff: {
+                    name: "Dive Ready",
+                    procRate: 1,
+                    target: "self",
+                    duration: 15,
+                    consumed: true,
+                    expected: {
+                        logic: "and",
+                        skills: [
+                            {name: "Mirage Dive", quantity: 1, comparison: "="}
+                        ]
+                    }
+                },
+                debuff: {
+                    name: "Stun",
+                    procRate: 1,
+                    target: "enemy",
+                    duration: 2,
+                    damageremoves: false,
+                    actionspeed: 0
+                },
+            },
+            {
+                name: "Chaos Thrust",
+                potency: 100,
+                positional: { position: "rear", potency: 40 },
+                combo: { action: "Disembowel", potency: 140 },
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0,
+                dot: {
+                    name: "Chaos Thrust",
+                    procRate: 1,
+                    potency: 35,
+                    duration: 30
+                }
+            },
+            {
+                name: "Dragonfire Dive",
+                potency: 320,
+                isGCD: false,
+                multitarget: true,
+                cooldown: 120,
+                cast: 0
+            },
+            {
+                name: "Battle Litany",
+                potency: 0,
+                isGCD: false,
+                multitarget: true,
+                cooldown: 180,
+                cast: 0,
+                buff: {
+                    name: "Battle Litany",
+                    procRate: 1,
+                    target: "party",
+                    duration: 20,
+                    consumed: false,
+                    criticalhitadd: 0.15
+                }
+            },
+            {
+                name: "Blood of the Dragon",
+                potency: 0,
+                isGCD: true,
+                multitarget: false,
+                cooldown: 30,
+                cast: 0,
+                stance: "Blood of the Dragon"
+            },
+            {
+                name: "Fang and Claw",
+                potency: 260,
+                positional: { position: "flank", potency: 40 },
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Wheeling Thrust",
+                potency: 260,
+                positional: { position: "rear", potency: 40 },
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Geirskogul",
+                potency: 230,
+                isGCD: false,
+                multitarget: true,
+                cooldown: 30,
+                cast: 0
+            },
+            {
+                name: "Sonic Thrust",
+                potency: 100,
+                combo: { action: "Doom Spike", potency: 80 },
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Dragon Sight",
+                potency: 0,
+                isGCD: false,
+                multitarget: true,
+                cooldown: 120,
+                cast: 0,
+                buff: {
+                    name: "Dragon Sight",
+                    procRate: 1,
+                    target: "party",
+                    duration: 20,
+                    consumed: false,
+                    damageself: 1.1,
+                    damageother: 1.05
+                }
+            },
+            {
+                name: "Mirage Dive",
+                potency: 210,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 1,
+                cast: 0,
+                requiredBuff: "Dive Ready"
+            },
+            {
+                name: "Nastrond",
+                potency: 330,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 10,
+                cast: 0,
+                requiredStance: "Life of the Dragon"
+            },
         ];
-        self.debuffs = [
-            {
-                name: "Piercing Resistance Down",
-                affects: "enemy",
-                duration: 30,
-                damageremoves: false,
-                piercingdamagerecieved: 1.05
-            },
-            {
-                name: "Stun",
-                affects: "enemy",
-                duration: 2,
-                damageremoves: false,
-                actionspeed: 0
-            },
-            {
-                name: "Feint",
-                affects: "enemy",
-                duration: 10,
-                damageremoves: false,
-                physicaldamage: 0.9
-            }
-        ];
+        self.skills.concat(classParsers.defParser.meleeRoleSkills);
         self.stances = [
             { name: "Blood of the Dragon", active: [] },
             { name: "Life of the Dragon", active: [] }
