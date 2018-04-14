@@ -128,15 +128,12 @@ classParsers.defParser = class defParser {
                     absorb: 0
                 }, skill);
                 let usages = actions.filter(function (obj) {
-                    return obj.ability.name === skill.name;
+                    // Exclude cancelled casts
+                    return !obj.cancelled && obj.ability.name === skill.name;
                 });
 
                 curSkill.casts = usages.length;
                 usages.forEach(function (u) {
-                    if (u.cancelled) {
-                        // Do not count cancelled casts
-                        return;
-                    }
                     if (u.hasOwnProperty("damage")) {
                         curSkill.hits += u.damage.length;
                         u.damage.forEach(function (hit) {
@@ -189,7 +186,8 @@ classParsers.defParser = class defParser {
         skills.forEach(function(curSkill){
             // determine if current skill is a GCD
             let skill = skillList.filter(function(obj){
-                return obj.isGCD === true && obj.name === curSkill.ability.name;
+                // Exclude cancelled casts
+                return obj.isGCD === true && !obj.cancelled && obj.name === curSkill.ability.name;
             });
             // No matching GCD skills found, continue to next action
             if (skill.length === 0) return;
