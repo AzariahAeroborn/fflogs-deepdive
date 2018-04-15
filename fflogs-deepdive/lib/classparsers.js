@@ -2658,9 +2658,9 @@ classParsers.Scholar = class Scholar extends classParsers.defParser {
             {
                 name: "Rouse",
                 potency: 0,
-                isGCD: true,
+                isGCD: false,
                 multitarget: false,
-                cooldown: null,
+                cooldown: 60,
                 cast: 0,
                 buff: {
                     name: "Rouse",
