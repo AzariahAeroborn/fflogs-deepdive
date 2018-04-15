@@ -3976,9 +3976,9 @@ classParsers.Warrior = class Warrior extends classParsers.defParser {
             {
                 name: "Unchained",
                 potency: 0,
-                isGCD: true,
+                isGCD: false,
                 multitarget: false,
-                cooldown: null,
+                cooldown: 90,
                 cast: 0,
                 requiredStance: "Defiance",
                 buff: {
