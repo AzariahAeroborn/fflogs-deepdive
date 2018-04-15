@@ -4420,7 +4420,7 @@ class eventParsers {
     }
 
     static cast(e, curAction, actions) {
-        if (e.ability === curAction.ability && curAction.begincast > 0 && curAction.endcast == null) {
+        if (e.ability.name === curAction.ability.name && curAction.begincast > 0 && curAction.endcast === null) {
             // Cast event for a channeled skill that is currently being processed
             curAction.endcast = e.timestamp;
             return curAction;
