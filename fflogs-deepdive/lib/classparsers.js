@@ -201,7 +201,8 @@ classParsers.defParser = class defParser {
                 intervals.push({
                     interval: gcds[i].begincast - gcds[i - 1].begincast,
                     casttime: gcds[i - 1].endcast - gcds[i - 1].begincast,
-                    actiontimestamp: gcds[i].begincast
+                    actiontimestamp: gcds[i].begincast,
+                    intervaldec: ((gcds[i].begincast - gcds[i - 1].begincast)/1000).toFixed(2) * 1000
                 });
             }
             minGCD = intervals.reduce(function (prev, curr, currentIndex) {
@@ -214,7 +215,42 @@ classParsers.defParser = class defParser {
             });
         }
 
-        return { "gcds": gcds, "intervals": intervals, "min": minGCD.interval, "thresholds": this.calculateGCDThresholds(intervals,minGCD.interval) }
+        let sortedintervals = $.extend(true, [], intervals).sort(function(a,b){return a.interval - b.interval});
+        let percentile95 = (sortedintervals.length * 0.05).toFixed(1);
+        let median = (sortedintervals.length * 0.5).toFixed(1);
+
+        let gcd95 = sortedintervals[Math.floor(percentile95)].intervaldec;
+        let gcd50 = sortedintervals[Math.floor(median)].intervaldec;
+
+        if ( percentile95 % 1 > 0 ) {
+            gcd95 *= ( 1 - percentile95 % 1 );
+            gcd95 += ( percentile95 % 1 ) * sortedintervals[Math.floor(percentile95) + 1].intervaldec;
+        }
+
+        if ( median % 1 > 0 ) {
+            gcd50 *= ( 1 - median % 1 );
+            gcd50 += ( median % 1 ) * sortedintervals[Math.floor(median) + 1].intervaldec;
+        }
+
+        let mode;
+        mode = intervals.reduce(function(current, item) {
+            let val = current.numMapping[item.intervaldec] = ( current.numMapping[item.intervaldec] || 0) + 1;
+            if (val > current.greatestFreq) {
+                current.greatestFreq = val;
+                current.mode = item.intervaldec;
+            }
+            return current;
+        }, {mode: null, greatestFreq: -Infinity, numMapping: {}}, intervals);
+
+        return {
+            "gcds": gcds,
+            "intervals": intervals,
+            "min": minGCD.interval,
+            "median": gcd50,
+            "95th": gcd95,
+            "mode": mode.mode,
+            "thresholds": this.calculateGCDThresholds(intervals,gcd95)
+        }
     }
 
     calculateGCDThresholds(intervals,minGCD) {
@@ -2739,7 +2775,7 @@ classParsers.RedMage = class RedMage extends classParsers.defParser {
                 name: "Manafication",
                 potency: 0,
                 isGCD: false,
-                multitarget: fales,
+                multitarget: false,
                 cooldown: 120,
                 cast: 0
             },
