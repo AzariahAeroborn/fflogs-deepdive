@@ -193,7 +193,8 @@ classParsers.defParser = class defParser {
             // No matching GCD skills found, continue to next action
             if (skill.length === 0) return;
 
-            gcds.push({begincast: curSkill.begincast, endcast: curSkill.endcast, name: curSkill.ability.name});
+            // If the "exclude" flag is set (e.g. skill was cast under Bard's Army's Paeon, mark this GCD to be excluded from interval percentile/min calculations
+            gcds.push({begincast: curSkill.begincast, endcast: curSkill.endcast, name: curSkill.ability.name, exclude: curSkill.hasOwnProperty("exclude")});
         });
 
         if ( gcds.length > 0 ) {
@@ -204,7 +205,7 @@ classParsers.defParser = class defParser {
                     actiontimestamp: gcds[i].begincast,
                     intervaldec: Math.floor((gcds[i].begincast - gcds[i - 1].begincast)/10) * 10,
                     // If either GCD is marked as "exclude" (e.g. they were cast under Bard's Army's Paeon), mark this interval to ignore
-                    exclude: ( gcds[i].hasOwnProperty("exclude") || gcds[i - 1].hasOwnProperty("exclude") )
+                    exclude: ( gcds[i].exclude || gcds[i - 1].exclude )
                 });
             }
             minGCD = intervals.reduce(function (prev, curr, currentIndex) {
