@@ -875,7 +875,7 @@ classParsers.BlackMage = class BlackMage extends classParsers.defParser {
                 affects: "enemy",
                 duration: 8,
                 damageremoves: true,
-                movementspeed: 0
+                movespeed: 0
             },
             {
                 name: "Addle",
@@ -889,7 +889,7 @@ classParsers.BlackMage = class BlackMage extends classParsers.defParser {
                 affects: "enemy",
                 duration: 20,
                 damageremoves: false,
-                movementspeed: 0.8
+                movespeed: 0.8
             }
         ];
         self.stances = [
@@ -2482,11 +2482,342 @@ classParsers.RedMage = class RedMage extends classParsers.defParser {
         super();
         let self = this;
         self.name = "RedMage";
-        self.skills = [];
+        self.skills = [
+            {
+                name: "Riposte",
+                potency: 130,
+                enchanted: { reducedgcd: 1.5, potency: 80 },
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Jolt II",
+                potency: 240,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 2,
+                buff: {
+                    name: "Impactful",
+                    procRate: 1,
+                    target: "self",
+                    duration: 30,
+                    consumed: true,
+                    expected: {
+                        logic: "and",
+                        skills: [
+                            { name: "Impact", quantity: 1, comparison: "=" }
+                        ]
+                    },
+                    incorrect: {
+                        logic: "or",
+                        skills: [
+                            { name: "Jolt II", quantity: 1, comparison: "=" }
+                        ]
+                    }
+                }
+            },
+            {
+                name: "Verthunder",
+                potency: 300,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 5,
+                buff: {
+                    name: "Verfire Ready",
+                    procRate: 0.5,
+                    duration: 30,
+                    target: "self",
+                    consumed: true,
+                    expected: {
+                        logic: "and",
+                        skills: [
+                            { name: "Verfire", quantity: 1, comparison: "=" }
+                        ]
+                    },
+                    incorrect: {
+                        logic: "or",
+                        skills: [
+                            { name: "Verthunder", quantity: 1, comparison: "=" }
+                        ]
+                    }
+                }
+            },
+            {
+                name: "Corps-a-corps",
+                potency: 130,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 40,
+                cast: 0
+            },
+            {
+                name: "Veraero",
+                potency: 300,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 5,
+                buff: {
+                    name: "Verstone Ready",
+                    procRate: 0.5,
+                    duration: 30,
+                    target: "self",
+                    consumed: true,
+                    expected: {
+                        logic: "and",
+                        skills: [
+                            { name: "Verstone", quantity: 1, comparison: "=" }
+                        ]
+                    },
+                    incorrect: {
+                        logic: "or",
+                        skills: [
+                            { name: "Veraero", quantity: 1, comparison: "=" }
+                        ]
+                    }
+                }
+            },
+            {
+                name: "Tether",
+                potency: 0,
+                isGCD: true,
+                multitarget: true,
+                cooldown: 40,
+                cast: 2.5,
+                debuff: {
+                    name: "Bind",
+                    duration: 20,
+                    target: "enemyparty",
+                    damageremoves: true,
+                    movespeed: 0
+                }
+            },
+            {
+                name: "Scatter",
+                potency: 100,
+                isGCD: true,
+                multitarget: false,
+                cooldown: 40,
+                cast: 2,
+                buff: {
+                    name: "Enhanced Scatter",
+                    duration: 10,
+                    consumed: true,
+                    target: "self",
+                    expected: {
+                        logic: "and",
+                        skills: [
+                            { name: "Scatter", quantity: 1, comparison: "=" }
+                        ]
+                    }
+                }
+            },
+            {
+                name: "Verfire",
+                potency: 270,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 2,
+                requiredBuff: "Verfire Ready"
+            },
+            {
+                name: "Verstone",
+                potency: 270,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 2,
+                requiredBuff: "Verstone Ready"
+            },
+            {
+                name: "Zwerchhau",
+                potency: 100,
+                combo: { action: "Riposte", potency: 50 },
+                enchanted: { reducedgcd: 1.5, combopotency: 140 },
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Displacement",
+                potency: 130,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 35,
+                cast: 0
+            },
+            {
+                name: "Fleche",
+                potency: 420,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 25,
+                cast: 0
+            },
+            {
+                name: "Redoublement",
+                potency: 100,
+                combo: { action: "Zwerchhau", potency: 130 },
+                enchanted: { reducedgcd: 2.2, combopotency: 240 },
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Acceleration",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 35,
+                cast: 0,
+                buff: {
+                    name: "Acceleration",
+                    target: "self",
+                    duration: 10,
+                    consumed: true,
+                    expected: {
+                        logic: "or",
+                        skills: [
+                            { name: "Verthunder", quantity: 1, comparison: "=" },
+                            { name: "Veraero", quantity: 1, comparison: "=" }
+                        ]
+                    }
+                }
+            },
+            {
+                name: "Moulinet",
+                potency: 60,
+                enchanted: { reducedgcd: 1.5, potency: 140 },
+                isGCD: true,
+                multitarget: true,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Vercure",
+                healpotency: 350,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 2
+            },
+            {
+                name: "Contre Sixte",
+                potency: 300,
+                isGCD: false,
+                multitarget: true,
+                falloffratio: 0.1,
+                falloffmax: 0.5,
+                cooldown: 45,
+                cast: 0
+            },
+            {
+                name: "Embolden",
+                potency: 0,
+                isGCD: false,
+                multitarget: true,
+                cooldown: 120,
+                cast: 0,
+                buff: {
+                    name: "Embolden",
+                    target: "party",
+                    procRate: 1,
+                    duration: 20,
+                    consumed: false,
+                    magicdamageself: 1.1,
+                    physicaldamageother: 1.1
+                }
+            },
+            {
+                name: "Manafication",
+                potency: 0,
+                isGCD: false,
+                multitarget: fales,
+                cooldown: 120,
+                cast: 0
+            },
+            {
+                name: "Verraise",
+                potency: 0,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 10
+            },
+            {
+                name: "Impact",
+                potency: 270,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 2,
+                requiredBuff: "Impactful"
+            },
+            {
+                name: "Verflare",
+                potency: 550,
+                combo: { action: "Redoublement", required: true, enchanted: true },
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0,
+                buff: {
+                    name: "Verfire Ready",
+                    procRate: 1,
+                    target: "self",
+                    duration: 30,
+                    consumed: true,
+                    expected: {
+                        logic: "and",
+                        skills: [
+                            { name: "Verfire", quantity: 1, comparison: "=" }
+                        ]
+                    },
+                    incorrect: {
+                        logic: "or",
+                        skills: [
+                            { name: "Verthunder", quantity: 1, comparison: "=" }
+                        ]
+                    }
+                }
+            },
+            {
+                name: "Verholy",
+                potency: 550,
+                combo: { action: "Redoublement", required: true, enchanted: true },
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0,
+                buff: {
+                    name: "Verstone Ready",
+                    procRate: 1,
+                    target: "self",
+                    duration: 30,
+                    consumed: true,
+                    expected: {
+                        logic: "and",
+                        skills: [
+                            { name: "Verstone", quantity: 1, comparison: "=" }
+                        ]
+                    },
+                    incorrect: {
+                        logic: "or",
+                        skills: [
+                            { name: "Veraero", quantity: 1, comparison: "=" }
+                        ]
+                    }
+                }
+            }
+        ];
         self.skills.concat(classParsers.defParser.rangedMagicalRoleSkills);
-        self.dots = [];
-        self.buffs = [];
-        self.debuffs = [];
         self.stances = [];
         self.currentStance = null;
 
@@ -2499,11 +2830,325 @@ classParsers.Samurai = class Samurai extends classParsers.defParser {
         super();
         let self = this;
         self.name = "Samurai";
-        self.skills = [];
+        self.skills = [
+            {
+                name: "Hakaze",
+                potency: 150,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Jinpu",
+                potency: 100,
+                combo: { action: "Hakaze", potency: 180, buffProcRate: 1 },
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0,
+                buff: {
+                    name: "Jinpu",
+                    procRate: 0,
+                    target: "self",
+                    duration: 30,
+                    consumed: false
+                }
+            },
+            {
+                name: "Third Eye",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 15,
+                cast: 0,
+                buff: {
+                    name: "Third Eye",
+                    procRate: 1,
+                    target: "self",
+                    duration: 3,
+                    consumed: true,
+                    damagereceived: 0.95
+                }
+            },
+            {
+                name: "Ageha",
+                potency: 250,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 60,
+                cast: 0,
+                enemyHealthBelow: 0.2
+            },
+            {
+                name: "Enpi",
+                potency: 100,
+                combo: { buff: "Enhanced Enpi", potency: 300 },
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Shifu",
+                potency: 100,
+                combo: { action: "Hakaze", potency: 180, buffProcRate: 1 },
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0,
+                buff: {
+                    name: "Shifu",
+                    procRate: 0,
+                    target: "self",
+                    duration: 30,
+                    consumed: false,
+                    speedadd: 0.1
+                }
+            },
+            {
+                name: "Fuga",
+                potency: 100,
+                isGCD: true,
+                multitarget: true,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Gekko",
+                potency: 100,
+                combo: { action: "Jinpu", potency: 300, sen: "Getsu" },
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Mangetsu",
+                potency: 100,
+                combo: { action: "Fuga", potency: 100, sen: "Getsu" },
+                falloffratio: 0.1,
+                falloffmax: 0.5,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Kasha",
+                potency: 100,
+                combo: { action: "Shifu", potency: 300, sen: "Ka" },
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Oka",
+                potency: 100,
+                combo: { action: "Fuga", potency: 300, sen: "Ka" },
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Yukikaze",
+                potency: 100,
+                combo: { action: "Hakaze", potency: 240, sen: "Setsu", debuffProcRate: 1 },
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0,
+                debuff: {
+                    name: "Slashing Resistance Down",
+                    procRate: 0,
+                    target: "enemy",
+                    duration: 30,
+                    damageremoves: false,
+                    slashingdamagerecieved: 1.1
+                }
+            },
+            {
+                name: "Meikyo Shisui",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 80,
+                cast: 0,
+                buff: {
+                    name: "Meikyo Shisui",
+                    procRate: 1,
+                    target: "self",
+                    duration: 10,
+                    consumed: true,
+                    expected: {
+                        logic: "and",
+                        skills: [
+                            { name: "Gekko", quantity: 1, comparison: "=" },
+                            { name: "Kasha", quantity: 1, comparison: "=" },
+                            { name: "Yukikaze", quantity: 1, comparison: "=" }
+                        ]
+                    }
+                }
+            },
+            {
+                name: "Hissatsu: Kaiten",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: null,
+                cast: 0,
+                resourcecost: 20,
+                buff: {
+                    name: "Kaiten",
+                    procRate: 1,
+                    target: "self",
+                    duration: 10,
+                    consumed: true,
+                    damage: 1.5,
+                    expected: {
+                        logic: "or",
+                        skills: [
+                            { name: "Higanbana", quantity: 1, comparison: "=" },
+                            { name: "Midare Setsugekka", quantity: 1, comparison: "=" }
+                        ]
+                    }
+                }
+            },
+            {
+                name: "Hissatsu: Gyoten",
+                potency: 100,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 10,
+                cast: 0,
+                resourcecost: 10
+            },
+            {
+                name: "Hissatsu: Yaten",
+                potency: 100,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 10,
+                cast: 0,
+                resourcecost: 10,
+                buff: {
+                    name: "Enhanced Enpi",
+                    procRate: 1,
+                    target: "self",
+                    duration: 15,
+                    consumed: true,
+                    expected: {
+                        logic: "and",
+                        skills: [
+                            { name: "Enpi", quantity: 1, comparison: "=" },
+                        ]
+                    }
+                }
+            },
+            {
+                name: "Merciful Eyes",
+                curepotency: 200,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 1,
+                cast: 0,
+                requiredBuff: "Open Eyes",
+                sharedCooldown: "Hissatsu: Seigan"
+            },
+            {
+                name: "Meditate",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 60,
+                cast: 0
+            },
+            {
+                name: "Hissatsu: Shinten",
+                potency: 300,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 1,
+                cast: 0,
+                resourcecost: 25
+            },
+            {
+                name: "Hissatsu: Kyuten",
+                potency: 150,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 1,
+                cast: 0,
+                resourcecost: 25
+            },
+            {
+                name: "Hissatsu: Seigan",
+                potency: 200,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 1,
+                cast: 0,
+                resourcecost: 15,
+                requiredBuff: "Open Eyes",
+                sharedCooldown: "Merciful Eyes"
+            },
+            {
+                name: "Hagakure",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 40,
+                cast: 0
+            },
+            {
+                name: "Hissatsu: Guren",
+                potency: 800,
+                isGCD: false,
+                multitarget: true,
+                falloffratio: 0.25,
+                falloffmax: 0.5,
+                cooldown: 120,
+                cast: 0,
+                resourcecost: 50
+            },
+            {
+                name: "Higanbana",
+                potency: 240,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 1.8,
+                sencost: 1,
+                dot: {
+                    name: "Higanbana",
+                    potency: 35,
+                    duration: 60
+                }
+            },
+            {
+                name: "Tenka Goken",
+                potency: 360,
+                isGCD: true,
+                multitarget: true,
+                falloffratio: 0.1,
+                falloffmax: 0.5,
+                cooldown: null,
+                cast: 1.8,
+                sencost: 2
+            },
+            {
+                name: "Midare Setsugekka",
+                potency: 720,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 1.8,
+                sencost: 3
+            }
+        ];
         self.skills.concat(classParsers.defParser.meleeRoleSkills);
-        self.dots = [];
-        self.buffs = [];
-        self.debuffs = [];
         self.stances = [];
         self.currentStance = null;
 
@@ -2668,7 +3313,8 @@ classParsers.Scholar = class Scholar extends classParsers.defParser {
                     target: "pet",
                     duration: 20,
                     consumed: false,
-                    healing: 1.4
+                    healing: 1.4,
+                    damage: 1.4
                 }
             },
             {
@@ -2835,12 +3481,296 @@ classParsers.Summoner = class Summoner extends classParsers.defParser {
         super();
         let self = this;
         self.name = "Summoner";
-        self.skills = [];
+        self.skills = [
+            {
+                name: "Ruin III",
+                potency: 120,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 2.5,
+                stanceeffect: { name: "Dreadwyrm Trance", cast: 0 }
+            },
+            {
+                name: "Bio III",
+                potency: 0,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0,
+                dot: {
+                    name: "Bio III",
+                    procRate: 1,
+                    potency: 50,
+                    duration: 30
+                }
+            },
+            {
+                name: "Summon",
+                potency: 0,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 3,
+                summonPet: "Garuda"
+            },
+            {
+                name: "Physick",
+                healpotency: 400,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 2
+            },
+            {
+                name: "Aetherflow",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 60,
+                cast: 0
+            },
+            {
+                name: "Energy Drain",
+                potency: 150,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 3,
+                cast: 0,
+                resourcecost: 1
+            },
+            {
+                name: "Miasma III",
+                potency: 50,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 2.5,
+                dot: {
+                    name: "Miasma III",
+                    procRate: 1,
+                    potency: 50,
+                    duration: 30
+                }
+            },
+            {
+                name: "Summon II",
+                potency: 0,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 3,
+                summonPet: "Titan"
+            },
+            {
+                name: "Sustain",
+                potency: 0,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 1,
+                buff: {
+                    name: "Sustain",
+                    procRate: 1,
+                    target: "pet",
+                    duration: 9,
+                    consumed: false,
+                    maxhealthrestore: 0.08
+                }
+            },
+            {
+                name: "Resurrection",
+                potency: 0,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 8
+            },
+            {
+                name: "Bane",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 10,
+                cast: 0,
+                resourcecost: 1
+            },
+            {
+                name: "Summon II",
+                potency: 0,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 3,
+                summonPet: "Ifrit"
+            },
+            {
+                name: "Fester",
+                potency: 0,
+                combo: { dots: ["Miasma III","Bio III"], potency: 300 },
+                isGCD: false,
+                multitarget: false,
+                cooldown: 5,
+                cast: 0,
+                resourcecost: 1
+            },
+            {
+                name: "Ruin II",
+                potency: 100,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Tri-bind",
+                potency: 30,
+                stanceeffect: { name: "Dreadwyrm Trance", potency: 40, debuffProcRate: 0 },
+                isGCD: true,
+                multitarget: true,
+                cooldown: null,
+                cast: 2.5,
+                debuff: {
+                    name: "Bind",
+                    procRate: 1,
+                    target: "enemy",
+                    damageremoves: true,
+                    duration: 20,
+                    movespeed: 0
+                }
+            },
+            {
+                name: "Rouse",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 60,
+                cast: 0,
+                buff: {
+                    name: "Rouse",
+                    procRate: 1,
+                    target: "pet",
+                    duration: 20,
+                    consumed: false,
+                    healing: 1.4,
+                    damage: 1.4
+                }
+            },
+            {
+                name: "Shadow Flare",
+                potency: 0,
+                isGCD: false,
+                multitarget: true,
+                cooldown: 60,
+                cast: 0,
+                dot: {
+                    name: "Shadow Flare",
+                    procRate: 1,
+                    potency: 50,
+                    duration: 15
+                },
+                debuff: {
+                    name: "Slow",
+                    procRate: 1,
+                    actionspeed: 0.95,
+                    damageremoves: false,
+                    duration: 15
+                }
+            },
+            {
+                name: "Enkindle",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 180,
+                cast: 0
+            },
+            {
+                name: "Painflare",
+                potency: 180,
+                isGCD: false,
+                multitarget: true,
+                cooldown: 5,
+                cast: 0,
+                resourcecost: 1
+            },
+            {
+                name: "Tri-disaster",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 60,
+                cast: 0
+            },
+            {
+                name: "Dreadwyrm Trance",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 20,
+                stance: "Dreadwyrm Trance"
+            },
+            {
+                name: "Deathflare",
+                potency: 400,
+                isGCD: false,
+                multitarget: true,
+                falloffratio: 0.1,
+                falloffmax: 0.5,
+                cooldown: 15,
+                cast: 0,
+                requiredStance: "Dreadwyrm Trance"
+            },
+            {
+                name: "Ruin IV",
+                potency: 200,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0,
+                requiredBuff: "Further Ruin"
+            },
+            {
+                name: "Aetherpact",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 120,
+                cast: 0,
+                buff: {
+                    name: "Devotion",
+                    procRate: 1,
+                    target: "party",
+                    duration: 15,
+                    consumed: false,
+                    damage: 1.02,
+                    healing: 1.05
+                }
+            },
+            {
+                name: "Summon Bahamut",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 30,
+                cast: 0,
+                stance: "Bahamut"
+            },
+            {
+                name: "Enkindle Bahamut",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 13,
+                cast: 0,
+                requiredStance: "Bahamut"
+            }
+        ];
         self.skills.concat(classParsers.defParser.rangedMagicalRoleSkills);
-        self.dots = [];
-        self.buffs = [];
-        self.debuffs = [];
-        self.stances = [];
+        self.stances = [
+            { name: "Dreadwyrm Trance", active: [] },
+            { name: "Bahamut", active: [] }
+        ];
         self.currentStance = null;
 
         this.eventParsers = class summonerEventParsers extends eventParsers {}
@@ -2852,12 +3782,338 @@ classParsers.Warrior = class Warrior extends classParsers.defParser {
         super();
         let self = this;
         self.name = "Warrior";
-        self.skills = [];
+        self.skills = [
+            {
+                name: "Heavy Swing",
+                potency: 160,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Skull Sunder",
+                potency: 100,
+                combo: { action: "Heavy Swing", potency: 110 },
+                enmity: 6.3,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Inner Release",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 90,
+                cast: 0,
+                buff: {
+                    name: "Inner Release",
+                    procRate: 1,
+                    target: "self",
+                    duration: 10,
+                    consumed: false,
+                    criticalhitadd: 1,
+                    directhitadd: 1,
+                    expected: {
+                        logic: "and",
+                        skills: [
+                            { name: "Fell Cleave", quantity: 5, comparison: "=" },
+                            { name: "Onslaught", quantity: 1, comparison: "=" },
+                            { name: "Upheaval", quantity: 1, comparison: "=" }
+                        ]
+                    }
+                }
+            },
+            {
+                name: "Overpower",
+                potency: 130,
+                enmity: 10,
+                isGCD: true,
+                multitarget: true,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Tomahawk",
+                potency: 140,
+                enmity: 7,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Maim",
+                potency: 100,
+                combo: { action: "Heavy Swing", potency: 100, debuffProcRate: 1 },
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0,
+                debuff: {
+                    name: "Slashing Resistance Down",
+                    procRate: 0,
+                    target: "enemy",
+                    duration: 24,
+                    damageremoves: false,
+                    slashingdamagerecieved: 1.1
+                }
+            },
+            {
+                name: "Thrill of Battle",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 120,
+                cast: 0,
+                buff: {
+                    name: "Thrill of Battle",
+                    procRate: 1,
+                    target: "self",
+                    duration: 20,
+                    consumed: false,
+                    maximumhp: 1.2,
+                    expected: {
+                        logic: "and",
+                        skills: [
+                            { name: "Upheaval", quantity: 1, comparison: "=" }
+                        ]
+                    }
+                }
+            },
+            {
+                name: "Butcher's Block",
+                potency: 100,
+                combo: { action: "Skull Sunder", potency: 200 },
+                enmity: 7,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Defiance",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 10,
+                cast: 0,
+                stance: "Defiance"
+            },
+            {
+                name: "Inner Beast",
+                potency: 350,
+                isGCD: true,
+                maintainscombo: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0,
+                resourcecost: 50,
+                requiredStance: "Defiance"
+            },
+            {
+                name: "Storm's Path",
+                potency: 100,
+                combo: { action: "Maim", potency: 180 },
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Unchained",
+                potency: 0,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0,
+                requiredStance: "Defiance",
+                buff: {
+                    name: "Unchained",
+                    procRate: 1,
+                    target: "self",
+                    duration: 20,
+                    consumed: false,
+                    damage: 1.25
+                }
+            },
+            {
+                name: "Holmgang",
+                potency: 0,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0,
+                buff: {
+                    name: "Holmgang",
+                    procRate: 1,
+                    target: "self",
+                    duration: 6,
+                    consumed: false,
+                    invulnerability: true
+                }
+            },
+            {
+                name: "Steel Cyclone",
+                potency: 200,
+                isGCD: true,
+                multitarget: true,
+                cooldown: null,
+                cast: 0,
+                resourcecost: 50,
+                requiredStance: "Defiance"
+            },
+            {
+                name: "Vengeance",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 120,
+                cast: 0,
+                buff: [
+                    {
+                        name: "Vulnerability Down",
+                        procRate: 1,
+                        target: "self",
+                        duration: 15,
+                        consumed: false,
+                        damagereceived: 0.7
+                    },
+                    {
+                        name: "Vengeance",
+                        procRate: 1,
+                        target: "self",
+                        duration: 15,
+                        consumed: false,
+                        reflectpotency: 55
+                    }
+                ]
+            },
+            {
+                name: "Storm's Eye",
+                potency: 100,
+                combo: { action: "Maim", potency: 180, buffProcRate: 1 },
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0,
+                buff: {
+                    name: "Storm's Eye",
+                    procRate: 0,
+                    target: "self",
+                    duration: 30,
+                    consumed: false,
+                    damage: 1.1
+                }
+            },
+            {
+                name: "Infuriate",
+                potency: 0,
+                isGCD: true,
+                multitarget: false,
+                cooldown: 60,
+                cast: 0
+            },
+            {
+                name: "Deliverance",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 10,
+                cast: 0,
+                stance: "Deliverance"
+            },
+            {
+                name: "Fell Cleave",
+                potency: 520,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0,
+                resourcecost: 50,
+                requiredStance: "Deliverance"
+            },
+            {
+                name: "Raw Intuition",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 90,
+                cast: 0,
+                buff: {
+                    name: "Raw Intuition",
+                    procRate: 1,
+                    target: "self",
+                    duration: 20,
+                    consumed: false,
+                    parryrateadd: 1
+                }
+            },
+            {
+                name: "Equilibrium",
+                healpotency: 0,
+                stanceeffect: [
+                    { name: "Defiance", healpotency: 1200 },
+                    { name: "Deliverance", tprecovery: 200 }
+                ],
+                isGCD: false,
+                multitarget: false,
+                cooldown: 60,
+                cast: 0
+            },
+            {
+                name: "Decimate",
+                potency: 280,
+                isGCD: true,
+                multitarget: true,
+                cooldown: null,
+                cast: 0,
+                resourcecost: 50,
+                requiredStance: "Deliverance"
+            },
+            {
+                name: "Onslaught",
+                potency: 100,
+                enmity: 10,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0,
+                resourcecost: 20
+            },
+            {
+                name: "Upheaval",
+                potency: 300,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0,
+                resourcecost: 20
+            },
+            {
+                name: "Shake It Off",
+                potency: 0,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0,
+                buff: {
+                    name: "Shake It Off",
+                    procRate: 1,
+                    target: "party",
+                    duration: 15,
+                    consumed: true,
+                    maxhealthabsorb: 0.08
+                }
+            },
+        ];
         self.skills.concat(classParsers.defParser.tankRoleSkills);
-        self.dots = [];
-        self.buffs = [];
-        self.debuffs = [];
-        self.stances = [];
+        self.stances = [
+            { name: "Defiance", active: [] },
+            { name: "Deliverance", active: [] }
+        ];
         self.currentStance = null;
 
         this.eventParsers = class warriorEventParsers extends eventParsers {}
@@ -2869,11 +4125,264 @@ classParsers.WhiteMage = class WhiteMage extends classParsers.defParser {
         super();
         let self = this;
         self.name = "WhiteMage";
-        self.skills = [];
+        self.skills = [
+            {
+                name: "Stone IV",
+                potency: 250,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 2.5
+            },
+            {
+                name: "Cure",
+                healpotency: 450,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 2,
+                buff: {
+                    name: "Enhanced Cure II",
+                    procRate: 0.15,
+                    target: "self",
+                    duration: 15,
+                    consumed: true,
+                    expected: {
+                        logic: "and",
+                        skills: [
+                            { name: "Cure II", quantity: 1, comparison: "=" }
+                        ]
+                    }
+                }
+            },
+            {
+                name: "Aero II",
+                potency: 50,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0,
+                dot: {
+                    name: "Aero II",
+                    procRate: 1,
+                    potency: 50,
+                    duration: 18
+                }
+            },
+            {
+                name: "Medica",
+                healpotency: 300,
+                isGCD: true,
+                multitarget: true,
+                cooldown: null,
+                cast: 2.5
+            },
+            {
+                name: "Raise",
+                potency: 0,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 8
+            },
+            {
+                name: "Fluid Aura",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 30,
+                cast: 0,
+                debuff: {
+                    name: "Bind",
+                    procRate: 1,
+                    target: "enemy",
+                    duration: 6,
+                    damageremoves: true
+                }
+            },
+            {
+                name: "Repose",
+                potency: 0,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 2.5,
+                debuff: {
+                    name: "Sleep",
+                    procRate: 1,
+                    target: "enemy",
+                    duration: 30,
+                    damageRemoves: true
+                }
+            },
+            {
+                name: "Cure II",
+                healpotency: 700,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 2
+            },
+            {
+                name: "Presence of Mind",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 150,
+                cast: 0,
+                buff: {
+                    name: "Presence of Mind",
+                    procRate: 1,
+                    target: "self",
+                    duration: 15,
+                    consumed: false,
+                    castspeedadd: 0.2
+                }
+            },
+            {
+                name: "Regen",
+                healpotency: 0,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0,
+                hot: {
+                    name: "Regen",
+                    procRate: 1,
+                    target: "party",
+                    duration: 21,
+                    healpotency: 150
+                }
+            },
+            {
+                name: "Cure III",
+                potency: 550,
+                isGCD: true,
+                multitarget: true,
+                cooldown: null,
+                cast: 2
+            },
+            {
+                name: "Holy",
+                potency: 200,
+                isGCD: true,
+                multitarget: true,
+                falloffratio: 0.1,
+                falloffmax: 0.5,
+                cooldown: null,
+                cast: 3
+            },
+            {
+                name: "Medica II",
+                healpotency: 200,
+                isGCD: true,
+                multitarget: true,
+                cooldown: null,
+                cast: 3,
+                hot: {
+                    name: "Medica II",
+                    procRate: 1,
+                    target: "party",
+                    duration: 30,
+                    healpotency: 50
+                }
+            },
+            {
+                name: "Benediction",
+                healpotency: 0,
+                fullhealth: true,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 180,
+                cast: 0
+            },
+            {
+                name: "Asylum",
+                potency: 0,
+                isGCD: true,
+                multitarget: true,
+                cooldown: null,
+                cast: 0,
+                hot: {
+                    name: "Asylum",
+                    procRate: 1,
+                    target: "party",
+                    duration: 24,
+                    healpotency: 100
+                }
+            },
+            {
+                name: "Assize",
+                potency: 300,
+                healpotency: 300,
+                isGCD: true,
+                multitarget: true,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Aero III",
+                potency: 50,
+                isGCD: true,
+                multitarget: true,
+                cooldown: null,
+                cast: 0,
+                dot: {
+                    name: "Aero III",
+                    procRate: 1,
+                    potency: 40,
+                    duration: 24
+                }
+            },
+            {
+                name: "Tetragrammaton",
+                healpotency: 700,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 60,
+                cast: 0
+            },
+            {
+                name: "Thin Air",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 120,
+                cast: 0,
+                buff: {
+                    name: "Thin Air",
+                    procRate: 1,
+                    target: "self",
+                    duration: 12,
+                    consumed: false,
+                    mpcost: 0
+                }
+            },
+            {
+                name: "Divine Benison",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 30,
+                cast: 0,
+                buff: {
+                    name: "Divine Benison",
+                    procRate: 1,
+                    target: "party",
+                    duration: 15,
+                    maxhealthabsorb: 0.15
+                }
+            },
+            {
+                name: "Plenary Indulgence",
+                potency: 150,
+                isGCD: false,
+                multitarget: true,
+                cooldown: 60,
+                cast: 0
+            }
+        ];
         self.skills.concat(classParsers.defParser.healerRoleSkills);
-        self.dots = [];
-        self.buffs = [];
-        self.debuffs = [];
         self.stances = [];
         self.currentStance = null;
 
