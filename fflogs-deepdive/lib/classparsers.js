@@ -763,7 +763,7 @@ classParsers.Bard = class Bard extends classParsers.defParser {
     aggregateGCD(skills) {
         // Drop an exclude flag on skills that were triggered while "Army's Paeon" was active, to avoid having their GCD intervals effect the min/median/95th calculations
         let stanceList = this.stances;
-        skills.forEach(function(curSkill){
+        skills.forEach(function(curSkill, index, skills){
             let activePaeon = stanceList.filter(function(obj){
                 if ( obj.name === "Army's Paeon" ) {
                     return obj.active.filter(function(activeStance){
@@ -776,7 +776,7 @@ classParsers.Bard = class Bard extends classParsers.defParser {
                 }
             });
             if ( activePaeon.length > 0 ) {
-                curSkill.exclude = true;
+                skills[index].exclude = true;
             }
         });
 
