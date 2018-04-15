@@ -202,7 +202,7 @@ classParsers.defParser = class defParser {
                     interval: gcds[i].begincast - gcds[i - 1].begincast,
                     casttime: gcds[i - 1].endcast - gcds[i - 1].begincast,
                     actiontimestamp: gcds[i].begincast,
-                    intervaldec: ((gcds[i].begincast - gcds[i - 1].begincast)/1000).toFixed(2) * 1000
+                    intervaldec: Math.floor((gcds[i].begincast - gcds[i - 1].begincast)/10) * 10
                 });
             }
             minGCD = intervals.reduce(function (prev, curr, currentIndex) {
@@ -4047,7 +4047,7 @@ classParsers.Warrior = class Warrior extends classParsers.defParser {
             {
                 name: "Infuriate",
                 potency: 0,
-                isGCD: true,
+                isGCD: false,
                 multitarget: false,
                 cooldown: 60,
                 cast: 0
@@ -4122,7 +4122,7 @@ classParsers.Warrior = class Warrior extends classParsers.defParser {
             {
                 name: "Upheaval",
                 potency: 300,
-                isGCD: true,
+                isGCD: false,
                 multitarget: false,
                 cooldown: null,
                 cast: 0,
@@ -4131,7 +4131,7 @@ classParsers.Warrior = class Warrior extends classParsers.defParser {
             {
                 name: "Shake It Off",
                 potency: 0,
-                isGCD: true,
+                isGCD: false,
                 multitarget: false,
                 cooldown: null,
                 cast: 0,
@@ -4335,7 +4335,7 @@ classParsers.WhiteMage = class WhiteMage extends classParsers.defParser {
             {
                 name: "Asylum",
                 potency: 0,
-                isGCD: true,
+                isGCD: false,
                 multitarget: true,
                 cooldown: null,
                 cast: 0,
@@ -4351,7 +4351,7 @@ classParsers.WhiteMage = class WhiteMage extends classParsers.defParser {
                 name: "Assize",
                 potency: 300,
                 healpotency: 300,
-                isGCD: true,
+                isGCD: false,
                 multitarget: true,
                 cooldown: null,
                 cast: 0
