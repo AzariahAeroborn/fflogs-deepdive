@@ -809,12 +809,11 @@ classParsers.BlackMage = class BlackMage extends classParsers.defParser {
             { name: "Flare", potency: 260, isGCD: true, multitarget: true, falloffratio: 0.15, falloffmax: 0.7, cooldown: null, cast: 4 },
             { name: "Ley Lines", potency: 0, isGCD: false, multitarget: false, cooldown: 90, cast: 0 },
             { name: "Sharpcast", potency: 0, isGCD: false, multitarget: false, cooldown: 60, cast: 0, buff: "Sharpcast", buffProcRate: 1 },
-            { name: "Fire", potency: 180, isGCD: true, multitarget: false, cooldown: null, cast: 2.5 },
             { name: "Enochian", potency: 0, isGCD: false, multitarget: false, cooldown: 30, cast: 0 },
             { name: "Blizzard IV", potency: 260, isGCD: true, multitarget: false, cooldown: null, cast: 2.8 },
             { name: "Fire IV", potency: 280, isGCD: true, multitarget: false, cooldown: null, cast: 2.8 },
             { name: "Between the Lines", potency: 0, isGCD: true, multitarget: false, cooldown: null, cast: 0 },
-            { name: "Triplecast", potency: 0, isGCD: true, multitarget: false, cooldown: 60, cast: 0 },
+            { name: "Triplecast", potency: 0, isGCD: false, multitarget: false, cooldown: 60, cast: 0 },
             { name: "Foul", potency: 650, isGCD: true, multitarget: true, falloffratio: 0.1, falloffmax: 0.5, cooldown: null, cast: 2.5 }
         ];
         self.skills.concat(classParsers.defParser.rangedMagicalRoleSkills);
@@ -952,7 +951,7 @@ classParsers.DarkKnight = class DarkKnight extends classParsers.defParser {
             { name: "Dark Mind", potency: 0, darkarts: 0, isGCD: false, multitarget: false, cooldown: 60, cast: 0, buff: "Dark Mind", buffProcRate: 1 },
             { name: "Dark Arts", potency: 0, isGCD: false, multitarget: false, cooldown: 2, cast: 0, buff: "Dark Arts", buffProcRate: 1 },
             { name: "Shadow Wall", potency: 0, isGCD: false, multitarget: false, cooldown: 180, cast: 0, buff: "Shadow Wall", buffProcRate: 1 },
-            { name: "Living Dead", potency: 0, isGCD: true, multitarget: false, cooldown: null, cast: 0, buff: "Living Dead", buffProcRate: 1 },
+            { name: "Living Dead", potency: 0, isGCD: false, multitarget: false, cooldown: 300, cast: 0, buff: "Living Dead", buffProcRate: 1 },
             { name: "Salted Earth", potency: 0, isGCD: false, multitarget: true, cooldown: 45, cast: 0, dot: "Salted Earth", dotProcRate: 1 },
             { name: "Plunge", potency: 200, isGCD: false, multitarget: false, cooldown: 30, cast: 0 },
             { name: "Abyssal Drain", potency: 120, enmity: 5, darkarts: 0, isGCD: true, multitarget: true, cooldown: null, cast: 0 },
@@ -1463,7 +1462,7 @@ classParsers.Machinist = class Machinist extends classParsers.defParser {
             { name: "Barrel Stabilizer", potency: 0, isGCD: false, multitarget: false, cooldown: 60, cast: 0 },
             { name: "Rook Overdrive", potency: 0, isGCD: false, multitarget: false, cooldown: 120, cast: 0 },
             { name: "Bishop Overdrive", potency: 0, isGCD: true, multitarget: false, cooldown: 120, cast: 0 },
-            { name: "Flamethrower", potency: 60, isGCD: true, multitarget: true, cooldown: 60, cast: 0 }
+            { name: "Flamethrower", potency: 60, isGCD: false, multitarget: true, cooldown: 60, cast: 0 }
         ];
         self.skills.concat(classParsers.defParser.rangedPhysicalRoleSkills);
         self.dots = [];
@@ -1472,7 +1471,19 @@ classParsers.Machinist = class Machinist extends classParsers.defParser {
         self.stances = [];
         self.currentStance = null;
 
-        this.eventParsers = class machinistEventParsers extends eventParsers {}
+        this.eventParsers = class machinistEventParsers extends eventParsers {};
+    }
+
+    aggregateActions(actions) {
+        actions.forEach(function(curAction, index, actions){
+            // if action name includes "Heated", remove the Heated from the front of the action name and flag the action as heated
+            if ( curAction.ability.name.includes("Heated") ) {
+                actions[index].ability.name.replace("Heated ", "");
+                actions[index].heated = true;
+            }
+        });
+
+        return super.aggregateActions(actions);
     }
 };
 
@@ -2851,6 +2862,18 @@ classParsers.RedMage = class RedMage extends classParsers.defParser {
 
         this.eventParsers = class redMageEventParsers extends eventParsers {}
     }
+
+    aggregateActions(actions) {
+        actions.forEach(function(curAction, index, actions){
+            // if action name includes "Enchanted", remove the Enchanted from the front of the action name and flag the action as enchanted
+            if ( curAction.ability.name.includes("Enchanted") ) {
+                actions[index].ability.name.replace("Enchanted ", "");
+                actions[index].enchanted = true;
+            }
+        });
+
+        return super.aggregateActions(actions);
+    }
 };
 
 classParsers.Samurai = class Samurai extends classParsers.defParser {
@@ -3970,9 +3993,9 @@ classParsers.Warrior = class Warrior extends classParsers.defParser {
             {
                 name: "Holmgang",
                 potency: 0,
-                isGCD: true,
+                isGCD: false,
                 multitarget: false,
-                cooldown: null,
+                cooldown: 180,
                 cast: 0,
                 buff: {
                     name: "Holmgang",
@@ -4105,9 +4128,9 @@ classParsers.Warrior = class Warrior extends classParsers.defParser {
                 name: "Onslaught",
                 potency: 100,
                 enmity: 10,
-                isGCD: true,
+                isGCD: false,
                 multitarget: false,
-                cooldown: null,
+                cooldown: 15,
                 cast: 0,
                 resourcecost: 20
             },
