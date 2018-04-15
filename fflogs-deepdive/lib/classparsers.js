@@ -2516,11 +2516,313 @@ classParsers.Scholar = class Scholar extends classParsers.defParser {
         super();
         let self = this;
         self.name = "Scholar";
-        self.skills = [];
+        self.skills = [
+            {
+                name: "Broil II",
+                potency: 230,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 2.5
+            },
+            {
+                name: "Bio II",
+                potency: 0,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0,
+                dot: {
+                    name: "Bio II",
+                    procRate: 1,
+                    potency: 35,
+                    duration: 30
+                }
+            },
+            {
+                name: "Summon",
+                potency: 0,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 3,
+                summonPet: "Eos"
+            },
+            {
+                name: "Physick",
+                healpotency: 400,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 2
+            },
+            {
+                name: "Aetherflow",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 45,
+                cast: 0
+            },
+            {
+                name: "Energy Drain",
+                potency: 150,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 3,
+                cast: 0,
+                resourcecost: 1
+            },
+            {
+                name: "Miasma",
+                potency: 20,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 2.5,
+                dot: {
+                    name: "Miasma",
+                    procRate: 1,
+                    potency: 35,
+                    duration: 24
+                }
+            },
+            {
+                name: "Summon II",
+                potency: 0,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 3,
+                summonPet: "Selene"
+            },
+            {
+                name: "Sustain",
+                potency: 0,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 1,
+                buff: {
+                    name: "Sustain",
+                    procRate: 1,
+                    target: "pet",
+                    duration: 9,
+                    consumed: false,
+                    maxhealthrestore: 0.08
+                }
+            },
+            {
+                name: "Resurrection",
+                potency: 0,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 8
+            },
+            {
+                name: "Bane",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 10,
+                cast: 0,
+                resourcecost: 1
+            },
+            {
+                name: "Adloquium",
+                healpotency: 300,
+                absorbpotency: 300,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 2
+            },
+            {
+                name: "Succor",
+                healpotency: 150,
+                absorbpotency: 150,
+                isGCD: true,
+                multitarget: true,
+                cooldown: null,
+                cast: 2.5
+            },
+            {
+                name: "Ruin II",
+                potency: 100,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0
+            },
+            {
+                name: "Rouse",
+                potency: 0,
+                isGCD: true,
+                multitarget: false,
+                cooldown: null,
+                cast: 0,
+                buff: {
+                    name: "Rouse",
+                    procRate: 1,
+                    target: "pet",
+                    duration: 20,
+                    consumed: false,
+                    healing: 1.4
+                }
+            },
+            {
+                name: "Sacred Soil",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 30,
+                cast: 0,
+                resourcecost: 1,
+                buff: {
+                    name: "Sacred Soil",
+                    procRate: 1,
+                    target: party,
+                    duration: 15,
+                    consumed: false,
+                    healingreceived: 0.9
+                }
+            },
+            {
+                name: "Miasma II",
+                potency: 100,
+                isGCD: true,
+                multitarget: true,
+                cooldown: null,
+                cast: 0,
+                dot: {
+                    name: "Miasma II",
+                    procRate: 1,
+                    potency: 25,
+                    duration: 12
+                }
+            },
+            {
+                name: "Shadow Flare",
+                potency: 0,
+                isGCD: false,
+                multitarget: true,
+                cooldown: 60,
+                cast: 0,
+                dot: {
+                    name: "Shadow Flare",
+                    procRate: 1,
+                    potency: 50,
+                    duration: 15
+                },
+                debuff: {
+                    name: "Slow",
+                    procRate: 1,
+                    actionspeed: 0.95,
+                    damageremoves: false,
+                    duration: 15
+                }
+            },
+            {
+                name: "Lustrate",
+                healpotency: 600,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 1,
+                cast: 0,
+                resourcecost: 1
+            },
+            {
+                name: "Indomitability",
+                healpotency: 500,
+                isGCD: false,
+                multitarget: true,
+                cooldown: 30,
+                cast: 0,
+                resourcecost: 1
+            },
+            {
+                name: "Deployment Tactics",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 120,
+                cast: 0
+            },
+            {
+                name: "Emergency Tactics",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 20,
+                cast: 0,
+                buff: {
+                    name: "Emergency Tactics",
+                    target: "self",
+                    procRate: 1,
+                    duration: 15,
+                    consumed: true,
+                    expected: {
+                        logic: "or",
+                        skills: [
+                            { name: "Succor", quantity: 1, comparison: "=" },
+                            { name: "Adloquium", quantity: 1, comparison: "=" }
+                        ]
+                    }
+                }
+            },
+            {
+                name: "Dissipation",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 180,
+                cast: 0
+            },
+            {
+                name: "Excogitation",
+                healpotency: 800,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 45,
+                cast: 0,
+                resourcecost: 1
+            },
+            {
+                name: "Chain Stratagem",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 120,
+                cast: 0,
+                debuff: {
+                    name: "Chain Stratagem",
+                    procRate: 1,
+                    target: "enemy",
+                    duration: 15,
+                    damageremoves: false,
+                    criticalhitreceivedadd: 0.15
+                }
+            },
+            {
+                name: "Aetherpact",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 5,
+                cast: 0
+            },
+            {
+                name: "Dissolve Union",
+                potency: 0,
+                isGCD: false,
+                multitarget: false,
+                cooldown: 5,
+                cast: 0
+            }
+        ];
         self.skills.concat(classParsers.defParser.healerRoleSkills);
-        self.dots = [];
-        self.buffs = [];
-        self.debuffs = [];
+
         self.stances = [];
         self.currentStance = null;
 
