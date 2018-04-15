@@ -769,7 +769,7 @@ classParsers.Bard = class Bard extends classParsers.defParser {
                     return obj.active.filter(function(activeStance){
                         // If the effects of a song expire or are replaced, they may persist until the next server tick, up to 3 seconds later.
                         //   Fudge our exclusions to avoid having GCD estimation too low because of a GCD at the end of a Paeon.
-                        return ( activeStance.begintime < curSkill.actiontimestamp && curSkill.actiontimestamp < (activeStance.endtime + 3000) );
+                        return ( activeStance.begintime < curSkill.begincast && curSkill.begincast < (activeStance.endtime + 3000) );
                     }).length > 0
                 } else {
                     return false
