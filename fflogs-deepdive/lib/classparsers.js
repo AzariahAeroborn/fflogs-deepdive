@@ -4420,11 +4420,16 @@ class eventParsers {
     }
 
     static cast(e, curAction, actions) {
-        if (curAction.begincast > 0 && curAction.endcast == null) {
+        if (e.ability === curAction.ability && curAction.begincast > 0 && curAction.endcast == null) {
             // Cast event for a channeled skill that is currently being processed
             curAction.endcast = e.timestamp;
             return curAction;
         } else {
+            if (curAction.endcast === null) {
+                // If we get a cast event when the previous event on the stack started with a begincast (endcast timestamp is NULL)
+                //   and this isn't the matching cast event (e.g. different ability name) mark the previous cast as interrupted/cancelled
+                curAction.cancelled = true;
+            }
             actions.push(curAction);
             return new fightAction(e);
         }
