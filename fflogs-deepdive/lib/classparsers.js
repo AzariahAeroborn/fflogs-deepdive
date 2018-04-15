@@ -2682,7 +2682,7 @@ classParsers.Scholar = class Scholar extends classParsers.defParser {
                 buff: {
                     name: "Sacred Soil",
                     procRate: 1,
-                    target: party,
+                    target: "party",
                     duration: 15,
                     consumed: false,
                     healingreceived: 0.9
