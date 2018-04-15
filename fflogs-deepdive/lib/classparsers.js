@@ -202,7 +202,9 @@ classParsers.defParser = class defParser {
                     interval: gcds[i].begincast - gcds[i - 1].begincast,
                     casttime: gcds[i - 1].endcast - gcds[i - 1].begincast,
                     actiontimestamp: gcds[i].begincast,
-                    intervaldec: Math.floor((gcds[i].begincast - gcds[i - 1].begincast)/10) * 10
+                    intervaldec: Math.floor((gcds[i].begincast - gcds[i - 1].begincast)/10) * 10,
+                    // If either GCD is marked as "exclude" (e.g. they were cast under Bard's Army's Paeon), mark this interval to ignore
+                    exclude: ( gcds[i].hasOwnProperty("exclude") || gcds[i - 1].hasOwnProperty("exclude") )
                 });
             }
             minGCD = intervals.reduce(function (prev, curr, currentIndex) {
@@ -211,11 +213,15 @@ classParsers.defParser = class defParser {
                 //    pre-pull timing issues from artificially deflating the minGCD guess
                 if ( currentIndex <= 1 ) { return curr }
 
+                // If the current comparison interval is marked to be excluded, do not consider it for minGCD
+                if ( curr.exclude ) { return prev }
+
                 return prev.interval < curr.interval ? prev : curr;
             });
         }
 
-        let sortedintervals = $.extend(true, [], intervals).sort(function(a,b){return a.interval - b.interval});
+        // Exclude intervals that are marked for exclusion from 95% and median calculations
+        let sortedintervals = intervals.filter(function(obj){return !obj.exclude}).sort(function(a,b){return a.interval - b.interval});
         let percentile95 = (sortedintervals.length * 0.05).toFixed(1);
         let median = (sortedintervals.length * 0.5).toFixed(1);
 
@@ -755,41 +761,26 @@ classParsers.Bard = class Bard extends classParsers.defParser {
     }
 
     aggregateGCD(skills) {
-        let gcdSummary = super.aggregateGCD(skills),
-            stanceList = this.stances;
-
-        // override minGCD calculation to exclude casts under Army's Paeon, which reduces GCD by variable amounts
-        let minGCD = gcdSummary.intervals.reduce(function (prev,curr,currentIndex){
-            // First check will be currentIndex = 1, check second value of array against first
-            // We want to always take the 2nd interval value in this case, to disregard the initial cast to keep
-            //    pre-pull timing issues from artificially deflating the minGCD guess
-            if ( currentIndex <= 1 ) { return curr }
-
+        // Drop an exclude flag on skills that were triggered while "Army's Paeon" was active, to avoid having their GCD intervals effect the min/median/95th calculations
+        let stanceList = this.stances;
+        skills.forEach(function(curSkill){
             let activePaeon = stanceList.filter(function(obj){
                 if ( obj.name === "Army's Paeon" ) {
                     return obj.active.filter(function(activeStance){
-                        // Copy values from stance active time to avoid manipulating stance duration information on the actual object
-                        let begintime = activeStance.begintime,
-                            // If the effects of a song expire or are replaced, they may persist until the next server tick, up to 3 seconds later.
-                            //   Fudge our exclusions to avoid having GCD estimation too low because of a GCD at the end of a Paeon.
-                            endtime = activeStance.endtime + 3000;
-
-                        return ( begintime < curr.actiontimestamp && curr.actiontimestamp < endtime );
+                        // If the effects of a song expire or are replaced, they may persist until the next server tick, up to 3 seconds later.
+                        //   Fudge our exclusions to avoid having GCD estimation too low because of a GCD at the end of a Paeon.
+                        return ( activeStance.begintime < curSkill.actiontimestamp && curSkill.actiontimestamp < (activeStance.endtime + 3000) );
                     }).length > 0
+                } else {
+                    return false
                 }
             });
-
-            // If Army's Paeon was active during time of current action, do not compare the GCD interval of this action to the current minimum
-            if ( activePaeon.length > 0 ) return prev;
-            return prev.interval < curr.interval ? prev : curr;
+            if ( activePaeon.length > 0 ) {
+                curSkill.exclude = true;
+            }
         });
 
-        gcdSummary.min = minGCD.interval;
-
-        // re-run GCD Threshold calculation with new minimum GCD
-        gcdSummary.thresholds = this.calculateGCDThresholds(gcdSummary.intervals,minGCD.interval);
-
-        return gcdSummary;
+        return super.aggregateGCD(skills);
     }
 };
 
